@@ -91,3 +91,19 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PortfolioProject(models.Model):
+    """Model representing a website that the user has built 
+    """
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name="portfolio_projects"
+    )
+    name = models.CharField(max_length="255")
+    url = models.URLField()
+
+    def __str__(self):
+        return self.name
+        

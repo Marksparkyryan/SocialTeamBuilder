@@ -16,8 +16,8 @@ class Project(models.Model):
         ('C', 'Complete'),
     )
     owner = models.ForeignKey(
-        User, 
-        on_delete=models.PROTECT, 
+        User,
+        on_delete=models.PROTECT,
         related_name="projects"
     )
     title = models.CharField(max_length=255, unique=True)
@@ -48,7 +48,7 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 
 class Application(models.Model):
     """Model representing a user's application to a project's
@@ -61,19 +61,22 @@ class Application(models.Model):
     )
 
     user = models.OneToOneField(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name="applications"
     )
     position = models.OneToOneField(
-        Position, 
-        on_delete=models.CASCADE, 
+        Position,
+        on_delete=models.CASCADE,
         related_name="applications"
     )
     status = models.CharField(max_length=1)
 
     def __str__(self):
-        return "{} applied to {}".format(self.user.first_name, self.position.title)
+        return "{} applied to {}".format(
+            self.user.first_name,
+            self.position.title
+        )
 
     class Meta:
         unique_together = ['user', 'position']
