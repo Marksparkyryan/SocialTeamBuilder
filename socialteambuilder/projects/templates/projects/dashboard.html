@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block messages %}
+{{ block.super }}
+{% endblock %}
+
+{% block body %}
+<h1>dashboard</h1>
+{{ messages }}
+{% if messages %}True{% else %}False{% endif %}
+{% for message in messages %}
+{{ message }}
+{% endfor %}
+{% endblock %}

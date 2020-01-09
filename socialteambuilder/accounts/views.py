@@ -1,13 +1,25 @@
+# accounts/views.py
+
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.tokens import default_token_generator
-from django.views.generic import RedirectView, FormView
+from django.contrib.auth.views import LoginView
+from django.views.generic import RedirectView, TemplateView, CreateView
 from django.urls import reverse_lazy
 
-from django.contrib.auth.forms import AuthenticationForm 
+from django.contrib.auth.forms import AuthenticationForm
+
+from .forms import UserCreationForm
 
 
 User = get_user_model()
+
+
+class Register(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('projects:dashboard')
+    template_name = 'accounts/register.html' 
 
 
 class Activate(UserPassesTestMixin, RedirectView):
@@ -15,7 +27,7 @@ class Activate(UserPassesTestMixin, RedirectView):
     of user to active status so they can log in. If token is not valid,
     a 403 forbidden.
     """
-    url = reverse_lazy("accounts:login")
+    url = reverse_lazy("auth:login")
 
     def test_func(self):
         """If the token is valid, return True, else return False
@@ -29,18 +41,10 @@ class Activate(UserPassesTestMixin, RedirectView):
         return False
 
 
-class LogIn(FormView):
-    form_class = AuthenticationForm
-    # success_url = reverse_lazy("posts:all")
-    template_name = "accounts/login.html"
-    
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        return form_class(self.request, **self.get_form_kwargs())
-    
-    def form_valid(self, form):
-        login(self.request, form.get_user())
-        return super().form_valid(form)
-    pass
+class LogIn(LoginView):
+    def form_valid(self, form): 
+        response = super().form_valid(form)
+        messages.add_message(self.request, "You're logged in!") # this is not working
+        return response
+
 

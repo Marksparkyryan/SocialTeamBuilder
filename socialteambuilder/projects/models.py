@@ -54,7 +54,7 @@ class Application(models.Model):
     """Model representing a user's application to a project's
     position
     """
-    CHOICES = (
+    STATUS = (
         ('A', 'Accepted'),
         ('R', 'Rejected'),
         ('U', 'Undecided')
@@ -70,7 +70,7 @@ class Application(models.Model):
         on_delete=models.CASCADE,
         related_name="applications"
     )
-    status = models.CharField(max_length=1)
+    status = models.CharField(max_length=1, choices=STATUS)
 
     def __str__(self):
         return "{} applied to {}".format(
