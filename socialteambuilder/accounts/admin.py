@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .forms import UserChangeForm, UserCreationForm
 
-from .models import Skill
+from .models import Skill, PortfolioProject
 
 
 class UserAdmin(BaseUserAdmin):
@@ -42,3 +42,4 @@ admin.site.register(get_user_model(), UserAdmin)
 # unregister the Group model from admin.
 admin.site.unregister(Group)
 admin.site.register(Skill)
+admin.site.register(PortfolioProject)
