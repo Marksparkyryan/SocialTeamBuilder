@@ -50,6 +50,30 @@ class Position(models.Model):
         return self.title
     
 
-# class Application(models.Model):
-#     pass
-    
+class Application(models.Model):
+    """Model representing a user's application to a project's
+    position
+    """
+    CHOICES = (
+        ('A', 'Accepted'),
+        ('R', 'Rejected'),
+        ('U', 'Undecided')
+    )
+
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name="applications"
+    )
+    position = models.OneToOneField(
+        Position, 
+        on_delete=models.CASCADE, 
+        related_name="applications"
+    )
+    status = models.CharField(max_length=1)
+
+    def __str__(self):
+        return "{} applied to {}".format(self.user.first_name, self.position.title)
+
+    class Meta:
+        unique_together = ['user', 'position']
