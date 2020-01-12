@@ -10,165 +10,93 @@
 {% endblock %}
 
 {% block body %}
-<div class="bounds circle--page">
-    {{ user_form.errors }}
+<div class="circle--actions--bar">
+        <nav class="bounds">
+          <ul class="circle--pill--list">
+            <li><a href="applications.html">Applications</a></li>
+            <li><a class="selected" href="profile.html">Profile</a></li>
+          </ul>
+        </nav>
+      </div>
+    
+      <div class="bounds circle--page">
         <div class="circle--page--header circle--fluid">
           <div class="circle--fluid--cell circle--fluid--primary">
             <h2>Profile</h2>
           </div>
-
-          <!-- Form (all forms) -->
-          <form method="POST" id="userform_and_projectforms"enctype="multipart/form-data" action=""> 
-          {% csrf_token %}
-
           <div class="circle--fluid--cell circle--fluid--secondary">
-            <input type="submit" class="button button-primary icon-on-left" action="" value="Save Changes">
+              {% if user.id == user_profile.id %}
+            <a class="button icon-on-left" href="{% url 'accounts:updateuser' pk=user.id %}">Edit</a>
+                {% endif %}
           </div>
+        </div>
+    
+        <div class="grid-70">
+          <h1>{{ user_profile }}</h1>
+          <div class="circle--article--body">
+            <p>{{ user_profile.about }}</p>
           </div>
-          
-          <!-- User general info -->
-          <div class="grid-70">
-            {{ user_form.first_name.label}}
-            {{ user_form.first_name }}
-            {{ user_form.last_name.label }}
-            {{ user_form.last_name }}
-            <div class="circle--article--body">
-              {{ user_form.about.label }}
-              {{ user_form.about }}
-            </div>
-            <!-- /User general info -->
-          
-          <!-- Past Projects -->
+    
           <h2>Past Projects</h2>
           <table class="u-full-width circle--table">
             <thead>
               <tr>
                 <th>Project Title</th>
-                <th class="circle--cell--right">Position</th>
-                <th>Skills</th>
+                <th>Position</th>
+                <th class="circle--cell--right">Project Needs</th>
               </tr>
             </thead>
             <tbody>
-              {% for application in applications %}
+                
+                {% for application in applications %}
               <tr class="clickable-row" data-href="project.html">
                 <td>
                   <h3>{{ application.position.project.title }}</h3>
                 </td>
                 <td class="circle--cell--right">
-                  <span class="secondary-label">{{ application.position }}</span>
+                    {{ application.position.title }}
                 </td>
-                <td>
-                  {% for skill in application.position.skills.all %}
-                  {{ skill }}
-                  {% endfor %}
+                <td class="circle--cell--right">
+                    {% for skill in application.position.skills.all %}
+                  <span class="secondary-label">{{ skill }},</span>
+                    {% endfor %}
                 </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-        <!-- /Past Projects -->
-
-        
-        <!-- Avatar -->
+    
         <div class="grid-25 grid-push-5">
+    
           <div class="circle--secondary--module">
             <div class="circle--primary--avatar">
-              <img src="{{ user.avatar.url }}" class="avatar-photo">
-              <a class="button avatar-button">
-                Upload Photo
-                <input type="file" name="avatar" accept="image/*" id="id_avatar">
-              </a>
+                    {% if user_profile.avatar %}
+                    <img src="{{ user_profile.avatar.url }}" class="avatar-photo">
+                    {% endif %}
             </div>
           </div>
-          <!-- /Avatar -->
-
-          <!-- Skills -->
+    
           <div class="circle--secondary--module">
-            <h4>My Skills</h4>   
-            {{ user_form.skills }}
+            <h4>My Skills</h4>
+            <ul class="unloaded">
+                {% for skill in user_profile.skills.all %}
+              <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
           </div>
-          <!-- /Skills-->
     
           <div class="circle--secondary--module">
             <h4>My Projects</h4>
-            <div class="project-cards">
-              
-              <!-- Portfolio Project forms -->
-              {{ project_formset.management_form }}
-              {% for form in project_formset %}
-              <div class="project-card" style="display:block">
-                {{ form.name }}
-                {{ form.url }}
-                <span style="display:none">
-                  {{ form.DELETE }}
-                </span>
-                {% for hidden in form.hidden_fields %}
-                {{ hidden }}
+            <ul class="circle--link--list">
+                {% for project in user_profile.portfolio_projects.all %}
+              <li><a>{{ project }}</a></li>
                 {% endfor %}
-                <a class="circle--clone--remove" id="remove_form">- remove</a> 
-                <hr>
-              </div>
-              {% endfor %}
-              <!-- /Portfolio Project forms -->
-
-              <!-- Empty form to clone -->
-              <div id="empty_form" style="display:none">
-                <div class="project-card" style="display:block">
-                  {{ project_formset.empty_form.name }}
-                  {{ project_formset.empty_form.url }}
-                  <span style="display:none">
-                    {{ project_formset.empty_form.DELETE }}
-                  </span>
-                  {% for hidden in project_formset.empty_form.hidden_fields %}
-                  {{ hidden }}
-                  {% endfor %}
-                  <a class="circle--clone--remove" id="remove_form">- remove</a>
-                  <hr>
-                </div>
-              </div>
-              <!-- /Empty form to clone -->
-
-            </div>
-            <a class="circle--clone--add" id="add_form">+ add</a> 
+            </ul>
           </div>
         </div>
-    </form>
-    <!-- /Form -->
-</div>
 
-<!-- Skills js and css in body, only works outside of js and css blocks -->
-{{ user_form.media.js }}
-{{ user_form.media.css }}
-      
 {% endblock %}
-$(function () {
-  var loadForm = function () {
-      var btn = $(this);
-      $.ajax({
-          url: btn.attr("data-url"),
-          type: 'get',
-          dataType: 'json',
-          beforeSend: function () {
-              $('#id_company').djangoSelect2({multiple: true});
-              $("#modal").modal("show");
-          },
-          success: function (data) {
-              $("#modal .modal-content").html(data.html_product_form);
-          }
-      });
-  };
 
-  $("#product-add-button").click(loadForm);
-});
 {% block js %}
-
-// Refresh avatar image on upload //
-$('#id_avatar').change( function(event) {
-  var tmppath = URL.createObjectURL(event.target.files[0]);
-  $("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
-
-  $("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
-});
-
 {% endblock %}

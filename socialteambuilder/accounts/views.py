@@ -2,6 +2,7 @@
 
 from braces.views import PrefetchRelatedMixin
 
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -16,7 +17,7 @@ from django.views.generic import (
     UpdateView,
     View
 )
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -62,19 +63,9 @@ class LogIn(LoginView):
         messages.add_message(self.request, "You're logged in!") # this is not working
         return response
 
-
+@login_required()
 def update_user(request, pk): # do we need pk here?
     user = request.user
-    # user_skills = Skill.objects.filter(
-    #     users__id=user.id
-    # ).values()
-    # user_data = {
-    #     'first_name':  user.first_name,
-    #     'last_name': user.last_name,
-    #     'about': user.about,
-    #     'avatar': user.avatar,
-    #     'skills': Skill.objects.filter(users=user)
-    # } 
     instance = User.objects.filter(
         id=user.id
     ).prefetch_related(
@@ -85,15 +76,17 @@ def update_user(request, pk): # do we need pk here?
     project_formset = NewPortfolioProjectFormset(
         queryset=PortfolioProject.objects.filter(user=user)
     )
+    # get user's accepted applications from completed projects
     applications = Application.objects.filter(
-        user=user
+        user=user,
+        status='A',
+        position__project__status='C'
     ).prefetch_related(
         'position__skills',
     ).select_related(
         'position__project'
     )
 
-    
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
         project_formset = NewPortfolioProjectFormset(
@@ -120,11 +113,37 @@ def update_user(request, pk): # do we need pk here?
                 project.save()
 
             messages.success(request, 'Profile updated successfully!')
-            return HttpResponse("working")
+            return HttpResponseRedirect(reverse('accounts:profile',
+                                                kwargs={'pk': user.id})
+                                        )
 
     context = {
         'user_form': user_form,
         'project_formset': project_formset,
         'applications': applications
     }
-    return render(request, 'accounts/profile.html', context)
+    return render(request, 'accounts/edit_profile.html', context)
+
+
+class Profile(TemplateView):
+    template_name = "accounts/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_profile'] = User.objects.filter(
+            id=self.kwargs['pk']
+            ).prefetch_related(
+                'skills',
+                'portfolio_projects',
+            ).first()
+        # get user's accepted applications from completed projects
+        context['applications'] = Application.objects.filter(
+            user=self.kwargs['pk'],
+            status='A',
+            position__project__status='C'
+        )
+        return context
+
+
+
+    

@@ -78,5 +78,3 @@ class Application(models.Model):
             self.position.title
         )
 
-    class Meta:
-        unique_together = ['user', 'position']
