@@ -57,7 +57,7 @@ class User(AbstractBaseUser):
         max_length=2500, 
         default="A little about you"
     )
-    avatar = models.ImageField()
+    avatar = models.ImageField(blank=True)
     skills = models.ManyToManyField("Skill", related_name="users") # on delete issues?
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -101,8 +101,11 @@ class PortfolioProject(models.Model):
         on_delete=models.CASCADE, 
         related_name="portfolio_projects"
     )
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     url = models.URLField()
 
+    
     def __str__(self):
         return self.name
+    
+

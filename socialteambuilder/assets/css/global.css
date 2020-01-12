@@ -1372,24 +1372,42 @@ hr {
   text-decoration: none;
   font-family: "Work Sans", sans-serif;
   font-weight: bold;
+  float: right;
+  color: #a5c4c2;
 }
 /* line 62, ../sass/circle/components/lists.sass */
 .circle--clone--add, .circle--clone--remove {
   cursor: pointer;
+  color: #a5c4c2;
 }
 /* line 65, ../sass/circle/components/lists.sass */
 .circle--clone--remove {
   float: right;
   color: #a5c4c2;
+
 }
+
+.circle--clone--add {
+  float: left;
+  color: #a5c4c2;
+  margin-top: -2.5rem;
+}
+
+/* .circle--clone--add:last-child {
+  float: left;
+  color: #a5c4c2;
+  margin-top: -2.5rem;
+  display: none;
+} */
+
 /* line 68, ../sass/circle/components/lists.sass */
 .circle--clone--remove:hover {
-  color: #537d7b;
+  color: #c58585;
 }
 /* line 70, ../sass/circle/components/lists.sass */
-li:only-child .circle--clone--remove {
+/* .circle--clone--remove:nth-child(0) {
   display: none;
-}
+} */
 /* line 74, ../sass/circle/components/lists.sass */
 .circle--pill--list {
   margin: 0;
@@ -2122,3 +2140,38 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
   list-style: none;
   color: whitesmoke;
 }
+
+/* Skills Box */
+
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice {
+background-color: #a5c4c2 !important;
+color: white !important;
+padding: 3px 10px !important;
+margin-bottom: 0;
+border: none !important;
+border-radius: 15px !important;
+font-size: 1.25rem !important;
+}
+
+.select2-container--default 
+.select2-selection--multiple 
+.select2-selection__choice__remove {
+  color: #000 !important;
+  padding-right: 5px !important;
+}
+
+.select2-container--default 
+.select2-selection--multiple {
+border: 1px solid #c4d8d7 !important;
+border-radius: 8px !important;
+}
+
+/* Projects Delete Checkbox Magic */
+
+/* Project Card */
+
+
+
+

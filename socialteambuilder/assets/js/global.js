@@ -1,20 +1,26 @@
-$( document ).ready(function() {
-
+$( document ).ready(function() {  
   $('textarea').autogrow({onInitialize: true});
-
-
-  //Cloner for infinite input lists
-  $(".circle--clone--list").on("click", ".circle--clone--add", function(){
-    var parent = $(this).parent("li");
-    var copy = parent.clone();
-    parent.after(copy);
-    copy.find("input, textarea, select").val("");
-    copy.find("*:first-child").focus();
+  
+  // Add Form
+  $('#add_form').click(function() {
+    var form_idx = $('#id_form-TOTAL_FORMS').val();
+    $('.project-cards').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+    $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    var forms = $('.project-cards').find("div:visible").length;
+    console.log(forms);
+    if (forms > 2) $('#add_form').attr('style', 'display:none');
   });
 
-  $(".circle--clone--list").on("click", "li:not(:only-child) .circle--clone--remove", function(){
-    var parent = $(this).parent("li");
-    parent.remove();
+  // Remove Form
+  $(".project-cards").on("click", "#remove_form", function(){
+    var parent = $(this).parent("div");
+    var index = parent.find("input:first").attr("id")[8]
+    $('#id_form-' + index + '-DELETE').prop('checked', true);
+    // var index = parent.find("input:first").attr("id")[8]
+    // parent.append('<input type="checkbox" name="form-' + index + '-DELETE" id="id_form-' + index + '-DELETE" checked>')
+    parent.attr("style", "display:none");
+    forms = parent.length; 
+    if (forms < 2) $('#add_form').attr('style', 'display:inline-block');
   });
 
   // Adds class to selected item
@@ -50,8 +56,4 @@ $( document ).ready(function() {
   input.wrap(function() {
     return "<a class='button " + state + "'>" + text + "</div>";
   });
-
-
-
-
 });

@@ -1,8 +1,11 @@
 from django import forms
+from django.forms import formset_factory, modelformset_factory
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from accounts.models import User
+from accounts.models import User, PortfolioProject, Skill
+
+from django_select2.forms import Select2MultipleWidget
 
 
 class UserCreationForm(forms.ModelForm):
@@ -48,3 +51,45 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+# class CustomModelChoiceField(forms.ModelChoiceField):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.empty_label = None
+
+
+class UserUpdateForm(forms.ModelForm):
+    skills = forms.ModelMultipleChoiceField(widget=Select2MultipleWidget(), queryset=Skill.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'about', 'avatar', 'skills']
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['skills'].queryset = Skill.objects.all()
+    
+
+class PortfolioProjectForm(forms.ModelForm):
+    class Meta:
+        model = PortfolioProject
+        fields = ['name', 'url']
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Project Name'}),
+            'url': forms.TextInput(attrs={'placeholder': 'Project URL'}),
+        }
+
+    
+
+# PortfolioProjectFormset = formset_factory(PortfolioProjectForm, extra=0)
+NewPortfolioProjectFormset = modelformset_factory(
+    PortfolioProject,
+    form=PortfolioProjectForm,
+    can_delete=True,
+    max_num=5,
+    extra=0,
+    can_order=True
+    )
+
+
