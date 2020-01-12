@@ -95,12 +95,13 @@ def update_user(request, pk): # do we need pk here?
 
     
     if request.method == 'POST':
-        user_form = UserUpdateForm(data=request.POST, instance=user)
+        user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
         project_formset = NewPortfolioProjectFormset(
             request.POST,
             queryset=PortfolioProject.objects.filter(user=user)
         )
         print("request data: ", request.POST)
+        print(request.FILES)
         if user_form.is_valid() and project_formset.is_valid():
             # user info form
             user_form.save()
