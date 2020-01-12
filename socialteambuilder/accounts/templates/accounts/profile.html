@@ -9,9 +9,7 @@
 {% block css %}
 {% endblock %}
 
-
 {% block body %}
-
 <div class="bounds circle--page">
     {{ user_form.errors }}
         <div class="circle--page--header circle--fluid">
@@ -19,23 +17,28 @@
             <h2>Profile</h2>
           </div>
 
-          <form method="POST" id="userform_and_projectforms"enctype="multipart/form-data" action="">
+          <!-- Form (all forms) -->
+          <form method="POST" id="userform_and_projectforms"enctype="multipart/form-data" action=""> 
           {% csrf_token %}
+
           <div class="circle--fluid--cell circle--fluid--secondary">
             <input type="submit" class="button button-primary icon-on-left" action="" value="Save Changes">
           </div>
-        </div>
-    
-        <div class="grid-70">
+          </div>
+          
+          <!-- User general info -->
+          <div class="grid-70">
             {{ user_form.first_name.label}}
             {{ user_form.first_name }}
             {{ user_form.last_name.label }}
-            {{ user_form.last_name }} 
-          <div class="circle--article--body">
-            {{ user_form.about.label }}
-            {{ user_form.about }}    
-          </div>
-    
+            {{ user_form.last_name }}
+            <div class="circle--article--body">
+              {{ user_form.about.label }}
+              {{ user_form.about }}
+            </div>
+            <!-- /User general info -->
+          
+          <!-- Past Projects -->
           <h2>Past Projects</h2>
           <table class="u-full-width circle--table">
             <thead>
@@ -48,55 +51,53 @@
             <tbody>
               {% for application in applications %}
               <tr class="clickable-row" data-href="project.html">
-                  <td>
-                    <h3>{{ application.position.project.title }}</h3>
-                  </td>
-                  <td class="circle--cell--right">
-                    <span class="secondary-label">{{ application.position }}</span>
-                  </td>
-                  <td>
-                    {% for skill in application.position.skills.all %}
-                    {{ skill }}
-                    {% endfor %}
-                  </td>
-                </tr>
+                <td>
+                  <h3>{{ application.position.project.title }}</h3>
+                </td>
+                <td class="circle--cell--right">
+                  <span class="secondary-label">{{ application.position }}</span>
+                </td>
+                <td>
+                  {% for skill in application.position.skills.all %}
+                  {{ skill }}
+                  {% endfor %}
+                </td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-    
+        <!-- /Past Projects -->
+
+        
+        <!-- Avatar -->
         <div class="grid-25 grid-push-5">
-    
           <div class="circle--secondary--module">
-              
             <div class="circle--primary--avatar">
-                <img src="{{ user.avatar.url }}" class="avatar-photo">
+              <img src="{{ user.avatar.url }}" class="avatar-photo">
               <a class="button avatar-button">
                 Upload Photo
                 <input type="file" name="avatar" accept="image/*" id="id_avatar">
               </a>
             </div>
           </div>
-          <!-- <div id="disp_tmp_path"></div> -->
+          <!-- /Avatar -->
+
+          <!-- Skills -->
           <div class="circle--secondary--module">
-
-              
             <h4>My Skills</h4>   
-
-                {{ user_form.skills }}
-      
+            {{ user_form.skills }}
           </div>
+          <!-- /Skills-->
     
           <div class="circle--secondary--module">
             <h4>My Projects</h4>
-
-            
-
             <div class="project-cards">
+              
+              <!-- Portfolio Project forms -->
               {{ project_formset.management_form }}
               {% for form in project_formset %}
               <div class="project-card" style="display:block">
-
                 {{ form.name }}
                 {{ form.url }}
                 <span style="display:none">
@@ -109,29 +110,34 @@
                 <hr>
               </div>
               {% endfor %}
+              <!-- /Portfolio Project forms -->
 
-              <div id="empty_form"  style="display:none">
-                <div class="project-card" style="display:block">   
-                    {{ project_formset.empty_form.name }}
-                    {{ project_formset.empty_form.url }}
-                    <span style="display:none">
-                        {{ project_formset.empty_form.DELETE }}
-                      </span>
-                    {% for hidden in project_formset.empty_form.hidden_fields %}
-                    {{ hidden }}
-                    {% endfor %}
-                    <a class="circle--clone--remove" id="remove_form">- remove</a> 
-                    <hr>
+              <!-- Empty form to clone -->
+              <div id="empty_form" style="display:none">
+                <div class="project-card" style="display:block">
+                  {{ project_formset.empty_form.name }}
+                  {{ project_formset.empty_form.url }}
+                  <span style="display:none">
+                    {{ project_formset.empty_form.DELETE }}
+                  </span>
+                  {% for hidden in project_formset.empty_form.hidden_fields %}
+                  {{ hidden }}
+                  {% endfor %}
+                  <a class="circle--clone--remove" id="remove_form">- remove</a>
+                  <hr>
                 </div>
-              </div>           
+              </div>
+              <!-- /Empty form to clone -->
+
             </div>
             <a class="circle--clone--add" id="add_form">+ add</a> 
           </div>
         </div>
     </form>
-      </div>
+    <!-- /Form -->
+</div>
 
-
+<!-- Skills js and css in body, only works outside of js and css blocks -->
 {{ user_form.media.js }}
 {{ user_form.media.css }}
       
