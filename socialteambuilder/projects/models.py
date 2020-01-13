@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.text import slugify
 
 from accounts.models import Skill
 
@@ -26,9 +28,15 @@ class Project(models.Model):
     applicant_requirements = models.TextField(max_length=2000)
     status = models.CharField(max_length=1, choices=STATUS)
     created = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(blank=True)
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title, allow_unicode=True)
+        super().save(*args, **kwargs)
+    
 
 
 class Position(models.Model):
@@ -45,9 +53,16 @@ class Position(models.Model):
     skills = models.ManyToManyField(Skill, related_name="positions")
     status = models.CharField(max_length=1, choices=STATUS)
     time_estimate = models.IntegerField()
+    slug = models.SlugField(editable=False, blank=True)
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title, allow_unicode=True)
+        super().save(*args, **kwargs)
+    
+
 
 
 class Application(models.Model):
@@ -60,12 +75,12 @@ class Application(models.Model):
         ('U', 'Undecided')
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="applications"
     )
-    position = models.OneToOneField(
+    position = models.ForeignKey(
         Position,
         on_delete=models.CASCADE,
         related_name="applications"
@@ -73,8 +88,17 @@ class Application(models.Model):
     status = models.CharField(max_length=1, choices=STATUS)
 
     def __str__(self):
+        if self.status in ('A', 'R'):
+            return "{} was {} for {}".format(self.user.first_name, dict(self.STATUS)[self.status], self.position)
         return "{} applied to {}".format(
             self.user.first_name,
             self.position.title
         )
+    
+    class Meta:
+        unique_together = ['user', 'position']
+
+
+    
+
 

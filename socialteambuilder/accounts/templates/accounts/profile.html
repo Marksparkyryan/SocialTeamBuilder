@@ -13,7 +13,9 @@
 <div class="circle--actions--bar">
         <nav class="bounds">
           <ul class="circle--pill--list">
-            <li><a href="applications.html">Applications</a></li>
+            {% if user.id == user_profile.id %}
+            <li><a href="{% url 'projects:applications' category='all' q='all' %}">Applications</a></li>
+            {% endif %}
             <li><a class="selected" href="profile.html">Profile</a></li>
           </ul>
         </nav>
@@ -42,8 +44,8 @@
             <thead>
               <tr>
                 <th>Project Title</th>
-                <th>Position</th>
-                <th class="circle--cell--right">Project Needs</th>
+                <th>Project Needs</th>
+                <th class="circle--cell--right">Skills</th>
               </tr>
             </thead>
             <tbody>

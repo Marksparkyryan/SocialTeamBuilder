@@ -1,0 +1,166 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+{% load project_extras %}
+
+{% block messages %}
+{{ block.super }}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+
+<div class="circle--actions--bar">
+        <nav class="bounds">
+          <ul class="circle--pill--list">
+            <li><a class="selected" href="">Applications</a></li>
+            <li><a href="{% url 'accounts:profile'  pk=user.pk %}">Profile</a></li>
+          </ul>
+        </nav>
+      </div>
+    
+      <div class="bounds circle--page">
+        <div class="circle--page--header grid-100">
+          <h2>Applications</h2>
+        </div>
+    
+        <div class="grid-25">
+          <div class="circle--filter circle--secondary--module">
+            <h4>Status</h4>
+            <ul class="circle--filter--list">
+              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='all' %}">All Applications</a></li>
+              <li><a {% if q == 'u' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='u' %}" id="new-applications">New Applications</a></li>
+              <li><a {% if q == 'a' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='a' %}">Accepted</a></li>
+              <li><a {% if q == 'r' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='r' %}">Rejected</a></li>
+            </ul>
+          </div>
+    
+          <div class="circle--filter circle--secondary--module">
+            <h4>My Projects</h4>
+            <ul class="circle--filter--list">
+              <li><a class="selected">All Projects</a></li>
+              {% if filtered %}
+              {% select_distinct_projects as titles %}
+              {% for title in titles %}
+              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' category='project' q=title|slugify %}">{{ title }}</a></li>
+              {% endfor %}
+              {% else %}
+              You have no projects.
+              create?
+              {% endif %}
+              
+             
+            </ul>
+          </div>
+    
+          <div class="circle--filter circle--secondary--module">
+            <h4>Project Needs</h4>
+            <ul class="circle--filter--list">
+              {% select_distinct_positions as titles %}
+              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' category='all' q='all' %}">All Needs</a></li>
+              {% for title in titles %}
+              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' category='need' q=title|slugify %}">{{ title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+    
+        </div>
+    
+        <div class="grid-70 grid-push-5">
+
+            <!-- Applications List -->
+            {% if filtered %}   
+          <table class="u-full-width circle--table">
+            <thead>
+              <tr>
+                <th class="avatar-th"> </th>
+                <th>Applicant</th>
+                <th class="circle--cell--right">Applicant Position</th>
+                <th class="app-th">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for application in filtered %}
+            <tr class="" data-href="profile.html" id="tr-for-app-{{ application.id }}">
+                <td class="clickable-td avatar-td">
+                    <div class="image-cropper">
+                        <img src="{{ application.user.avatar.url }}" alt="avatar" class="profile-pic">
+                      </div> 
+                </td>
+                <td class="clickable-td">
+                    <h3>{% if user == application.user %}You{% else%}
+                        {{ application.user.first_name}} {{ application.user.last_name }}{% endif %}
+                    </h3>
+                    <p>{{ application.position.project }}</p>
+                </td>
+                <td class="circle--cell--right clickable-td app-position">
+                    <span class="secondary-label">{{ application.position.title }}</span>
+                </td>
+                <td id="td-for-app-{{ application.id }}" class="app-td">
+                    <!-- if owner of project -->
+
+                    {% if application.position.project.owner == user %}
+                    {% if application.status == 'U' %}
+                    <a class="button-accept" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}">Accept</a>
+                    <a class="button-reject">Reject</a>
+                    {% else %}
+                    <span class="secondary-label">{{ application.get_status_display }}</span>
+                    {% endif %}
+
+                    <!-- if not owner of project -->
+                    {% else %}
+                        {% if application.status == 'U' %}
+                        <span class="secondary-label">Pending</span>
+                        {% else %}
+                        <span class="secondary-label">{{ application.get_status_display }}</span>
+                        {% endif %}
+                    {% endif %}   
+                </td>
+            </tr>   
+            
+              {% endfor %}
+            </tbody>
+    
+          {% else %}
+          No applications match that filter
+          {% endif %}
+          <!-- /Applications List -->
+        </div>
+    
+      </div>
+{% endblock %}
+
+{% block js %}
+// Accept User Button
+$(".button-accept").click(function () {
+  console.log( $(this) );
+
+  var app_pk = $(this).attr("app_pk");
+  var status = "A"
+  var dataurl = $(this).attr("data-url");
+  var category = $('#new-applications').attr('class');
+
+  console.log(app_pk, status, category);
+
+  $.ajax({
+        url: dataurl,
+        data: {
+          'app_pk': parseInt(app_pk),
+          'status': status
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.updated) {
+            document.getElementById('td-for-app-' + app_pk).innerHTML = '<span class="secondary-label">Accepted</span>';
+            if (category == 'selected') $('#tr-for-app-' + app_pk).hide('slow');
+          } else {
+            alert("Error :(", data.error);
+          }
+        }
+      });
+
+      
+});
+{% endblock %}

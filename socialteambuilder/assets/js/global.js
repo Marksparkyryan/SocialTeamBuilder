@@ -49,6 +49,19 @@ $( document ).ready(function() {
       }
   });
 
+  // Clickable td
+  $(".clickable-td").click(function() {
+    var link = $(this).parent("tr").data("href");
+    var target = $(this).parent("tr").data("target");
+
+    if ($(this).attr("data-target")) {
+      window.open(link, target);
+    }
+    else {
+      window.open(link, "_self");
+    }
+});
+
   // Custom File Inputs
   var input = $(".circle--input--file");
   var text = input.data("text");

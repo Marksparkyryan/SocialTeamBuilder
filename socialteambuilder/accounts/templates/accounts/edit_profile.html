@@ -44,7 +44,7 @@
             <thead>
               <tr>
                 <th>Project Title</th>
-                <th class="circle--cell--right">Position</th>
+                <th class="circle--cell--right">Project Needs</th>
                 <th>Skills</th>
               </tr>
             </thead>
@@ -77,7 +77,7 @@
               {% if user_profile.avatar %}
               <img src="{{ user.avatar.url }}" class="avatar-photo">
               {% else %}
-              <img src="{{ user.avatar.url }}" class="avatar-photo">
+              <img src="{% static 'default_avatars/icons8-customer-96.png' %}" class="avatar-photo">
               {% endif %}
               <a class="button avatar-button">
                 Upload Photo

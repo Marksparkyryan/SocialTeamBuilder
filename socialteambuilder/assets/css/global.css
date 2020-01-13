@@ -273,6 +273,14 @@ body {
   left: 5%;
 }
 @media screen and (max-width: 640px) {
+  .avatar-td,
+  .avatar-th {
+    display: none;
+  }
+
+  .app-position {
+    padding: 15px;
+  }
   /* line 31, ../sass/circle/core/layout.sass */
   .grid-5 {
     width: 100%;
@@ -1598,11 +1606,11 @@ hr {
 }
 /* line 11, ../sass/circle/components/tables.sass */
 .circle--table th {
-  padding: 0 0 15px 0;
+  padding: 25px 15px; 
 }
 /* line 13, ../sass/circle/components/tables.sass */
 .circle--table td {
-  padding: 25px 0;
+  padding: 25px 15px; 
 }
 
 /* line 17, ../sass/circle/components/tables.sass */
@@ -2180,6 +2188,31 @@ border-radius: 8px !important;
   left: 0;
 }
 
+.image-cropper {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.profile-pic {
+display: inline;
+margin: 0 auto;
+/* margin-left: -25%; //centers the image */
+height: auto;
+width: 40px;
+}
+
+.avatar-small {
+  max-height: 40px;
+  max-width: 40px;
+  overflow: hidden;
+}
+
+.avatar-position {
+  display: flex;
+}
 
 .avatar-button {
   color: white;
@@ -2187,3 +2220,77 @@ border-radius: 8px !important;
 }
 
 
+/* Buttons */
+
+.button-accept,
+.button-reject {
+  min-width: 75px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.25rem;
+  padding: 18px 30px;
+  border: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+  white-space: nowrap;
+  box-sizing: border-box;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  background: none;
+  position: relative;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
+  transition: 0.2s;
+  padding: 10px 10px;
+  cursor: pointer;
+}
+
+.button-reject {
+  box-shadow: 0 0 0 2px rgb(202, 102, 102);
+  color: rgb(202, 102, 102);
+}
+
+.button-reject:hover {
+  background-color: rgb(202, 102, 102);
+  color: white;
+}
+
+.button-accept {
+  box-shadow: 0 0 0 2px #689b98;
+}
+
+.button-accept:hover {
+  background-color: #689b98;
+  color: white;
+}
+
+.clickable-td {
+  cursor: pointer;
+  color: #a5c4c2;
+}
+/* line 20, ../sass/circle/components/tables.sass */
+.clickable-td h3 {
+  color: #689b98;
+}
+
+.app-td {
+  text-align: center;
+  width: 175px;
+}
+
+.app-td a {
+  margin: 0;
+}
+
+.app-th {
+  text-align: center;
+}
+
+.clickable-td {
+  margin: 0 25px;
+}
