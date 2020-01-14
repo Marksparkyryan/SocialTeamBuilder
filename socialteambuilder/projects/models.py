@@ -86,6 +86,7 @@ class Application(models.Model):
         related_name="applications"
     )
     status = models.CharField(max_length=1, choices=STATUS)
+    unread = models.NullBooleanField()
 
     def __str__(self):
         if self.status in ('A', 'R'):
@@ -97,6 +98,8 @@ class Application(models.Model):
     
     class Meta:
         unique_together = ['user', 'position']
+    
+
 
 
     

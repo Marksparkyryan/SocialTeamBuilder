@@ -75,10 +75,20 @@
                     <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
                     <li><a href="{% url 'login' %}">Sign In</a></li>
                 {% endif %}
+                
             </ul>
+            
           </nav>
         </div>
+        <div class="circle--fluid--cell">
+            <div class="image-cropper">
+                <img src="{{ user.avatar.url }}" alt="avatar" class="profile-pic">
+              </div> 
+        </div>
+        
+        
       </div>
+      
     </div>
   </header>
 <!-- /Nav Bar -->

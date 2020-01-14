@@ -103,8 +103,8 @@
 
                     {% if application.position.project.owner == user %}
                     {% if application.status == 'U' %}
-                    <a class="button-accept" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}">Accept</a>
-                    <a class="button-reject">Reject</a>
+                    <a class="button-accept-reject button-accept" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="A">Accept</a>
+                    <a class="button-accept-reject button-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="R">Reject</a>
                     {% else %}
                     <span class="secondary-label">{{ application.get_status_display }}</span>
                     {% endif %}
@@ -133,34 +133,63 @@
 {% endblock %}
 
 {% block js %}
-// Accept User Button
-$(".button-accept").click(function () {
-  console.log( $(this) );
 
+// Accept Reject User Buttons
+$(".button-accept-reject").click(function () {
+
+    // get the csrf token for ajax request  
+    
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+  
   var app_pk = $(this).attr("app_pk");
-  var status = "A"
+  var status = $(this).attr("value")
   var dataurl = $(this).attr("data-url");
   var category = $('#new-applications').attr('class');
 
-  console.log(app_pk, status, category);
+  function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+  });
 
   $.ajax({
         url: dataurl,
         data: {
-          'app_pk': parseInt(app_pk),
-          'status': status
+          "app_pk": parseInt(app_pk),
+          "status": status
         },
         dataType: 'json',
+        method: 'POST',
         success: function (data) {
           if (data.updated) {
-            document.getElementById('td-for-app-' + app_pk).innerHTML = '<span class="secondary-label">Accepted</span>';
+            document.getElementById('td-for-app-' + app_pk).innerHTML = '<span class="secondary-label">' + data.new_status + '</span>';
             if (category == 'selected') $('#tr-for-app-' + app_pk).hide('slow');
           } else {
-            alert("Error :(", data.error);
+            alert("Error.", data.error);
           }
         }
       });
-
-      
 });
+
 {% endblock %}

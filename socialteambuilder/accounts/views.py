@@ -5,6 +5,7 @@ from braces.views import PrefetchRelatedMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView
@@ -19,8 +20,6 @@ from django.views.generic import (
 )
 from django.urls import reverse_lazy, reverse
 
-from django.contrib.auth.forms import AuthenticationForm
-
 from .forms import (
     UserCreationForm, 
     UserUpdateForm, 
@@ -28,6 +27,7 @@ from .forms import (
 )
 from .models import PortfolioProject, Skill
 from projects.models import Application
+from projects.views import CustomLoginRequired
 
 User = get_user_model()
 
@@ -125,7 +125,7 @@ def update_user(request, pk): # do we need pk here?
     return render(request, 'accounts/edit_profile.html', context)
 
 
-class Profile(TemplateView):
+class Profile(CustomLoginRequired, TemplateView):
     template_name = "accounts/profile.html"
 
     def get_context_data(self, **kwargs):

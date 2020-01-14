@@ -74,7 +74,7 @@
         <div class="grid-25 grid-push-5">
           <div class="circle--secondary--module">
             <div class="circle--primary--avatar">
-              {% if user_profile.avatar %}
+              {% if user_form.avatar %}
               <img src="{{ user.avatar.url }}" class="avatar-photo">
               {% else %}
               <img src="{% static 'default_avatars/icons8-customer-96.png' %}" class="avatar-photo">
