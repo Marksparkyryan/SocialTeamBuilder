@@ -23,8 +23,6 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="{% static 'css/global.css' %}">
 
-  {% block css %}
-  {% endblock %}
 
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -32,6 +30,11 @@
   <script type="text/javascript" src="{% static 'js/autogrow.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/global.js' %}"></script>
 
+
+  <!-- Additional
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  {% block css %}
+  {% endblock %}
 
 <div class="message-container">
     <ul>
@@ -53,7 +56,7 @@
     <div class="bounds">
       <div class="circle--fluid">
         <div class="circle--fluid--cell">
-          <h1 class="hide-text circle--logo"><a class="logo" href="index.html">Circle</a></h1>
+          <h1 class="hide-text circle--logo"><a class="logo" href="{% url 'projects:dashboard' category='all' q='all' %}">Circle</a></h1>
         </div>
         <div class="circle--fluid--cell circle--fluid--primary">
           <div class="circle--search">
@@ -81,9 +84,13 @@
           </nav>
         </div>
         <div class="circle--fluid--cell">
+          {% if user.is_authenticated %}
             <div class="image-cropper">
-                <img src="{{ user.avatar.url }}" alt="avatar" class="profile-pic">
+                <a href="{% url 'accounts:profile' %}">
+                <img src="{{ user.avatar.url }}" alt="avatar" class="profile-pic" href="{% url 'accounts:profile' %}">
+                </a>
               </div> 
+          {% endif %}
         </div>
         
         

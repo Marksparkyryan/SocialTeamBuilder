@@ -5,8 +5,11 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from accounts.models import User, PortfolioProject, Skill
 
-from django_select2.forms import Select2MultipleWidget
+from django_select2.forms import Select2TagWidget, ModelSelect2TagWidget
+from select2_tags import forms as f
 
+
+# Admin Forms
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
@@ -52,24 +55,19 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
-# class CustomModelChoiceField(forms.ModelChoiceField):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.empty_label = None
 
 
-class UserUpdateForm(forms.ModelForm):
-    skills = forms.ModelMultipleChoiceField(widget=Select2MultipleWidget(), queryset=Skill.objects.all())
+# Project and Accounts Forms  
+
+class UserUpdateForm(f.Select2ModelForm):
+    skills = f.Select2ModelMultipleChoiceField(
+        'name', queryset=Skill.objects.all(), required=False, save_new=True)
 
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'about', 'avatar', 'skills']
-        
+             
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['skills'].queryset = Skill.objects.all()
-    
 
 class PortfolioProjectForm(forms.ModelForm):
     class Meta:
@@ -81,7 +79,6 @@ class PortfolioProjectForm(forms.ModelForm):
         }
 
     
-
 # PortfolioProjectFormset = formset_factory(PortfolioProjectForm, extra=0)
 NewPortfolioProjectFormset = modelformset_factory(
     PortfolioProject,

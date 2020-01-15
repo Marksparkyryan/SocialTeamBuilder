@@ -15,8 +15,9 @@
 <div class="circle--actions--bar">
         <nav class="bounds">
           <ul class="circle--pill--list">
-            <li><a class="selected" href="">Applications</a></li>
-            <li><a href="{% url 'accounts:profile'  pk=user.pk %}">Profile</a></li>
+            <li><a {% if box == 'inbox' %}class="selected"{% else %}class="deselected"{% endif %} href="{% url 'projects:applications' box='inbox' category='status' q='u' %}" id="inbox-button">Inbox {% if inbox_count %}({{ inbox_count }}){% endif %}</a></li>
+            <li><a {% if box == 'outbox' %}class="selected"{% else %}class="deselected"{% endif %} href="{% url 'projects:applications' box='outbox' category='all' q='all' %}">Outbox</a></li>
+            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
           </ul>
         </nav>
       </div>
@@ -24,27 +25,32 @@
       <div class="bounds circle--page">
         <div class="circle--page--header grid-100">
           <h2>Applications</h2>
+          {% if box == 'inbox' %}
+          <p>for projects that you own</p>
+          {% else %}
+          <p>for projects you've applied to</p>
+          {% endif %}
         </div>
     
         <div class="grid-25">
           <div class="circle--filter circle--secondary--module">
             <h4>Status</h4>
             <ul class="circle--filter--list">
-              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='all' %}">All Applications</a></li>
-              <li><a {% if q == 'u' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='u' %}" id="new-applications">New Applications</a></li>
-              <li><a {% if q == 'a' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='a' %}">Accepted</a></li>
-              <li><a {% if q == 'r' %}class="selected"{% endif %} href="{% url 'projects:applications' category='status' q='r' %}">Rejected</a></li>
+              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='all' %}">All Applications</a></li>
+              <li><a {% if q == 'u' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='u' %}" id="new-applications">New Applications</a></li>
+              <li><a {% if q == 'a' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='a' %}">Accepted</a></li>
+              <li><a {% if q == 'r' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='r' %}">Rejected</a></li>
             </ul>
           </div>
     
           <div class="circle--filter circle--secondary--module">
             <h4>My Projects</h4>
             <ul class="circle--filter--list">
-              <li><a class="selected">All Projects</a></li>
+              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q='all' %}">All Projects</a></li>
               {% if filtered %}
               {% select_distinct_projects as titles %}
               {% for title in titles %}
-              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' category='project' q=title|slugify %}">{{ title }}</a></li>
+              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q=title|slugify %}">{{ title }}</a></li>
               {% endfor %}
               {% else %}
               You have no projects.
@@ -59,9 +65,9 @@
             <h4>Project Needs</h4>
             <ul class="circle--filter--list">
               {% select_distinct_positions as titles %}
-              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' category='all' q='all' %}">All Needs</a></li>
+              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='all' q='all' %}">All Needs</a></li>
               {% for title in titles %}
-              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' category='need' q=title|slugify %}">{{ title }}</a></li>
+              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='need' q=title|slugify %}">{{ title }}</a></li>
               {% endfor %}
             </ul>
           </div>
@@ -160,6 +166,8 @@ $(".button-accept-reject").click(function () {
   var status = $(this).attr("value")
   var dataurl = $(this).attr("data-url");
   var category = $('#new-applications').attr('class');
+  var inbox_count = $('#inbox-button').html()[7]
+  console.log(inbox_count)
 
   function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -185,6 +193,11 @@ $(".button-accept-reject").click(function () {
           if (data.updated) {
             document.getElementById('td-for-app-' + app_pk).innerHTML = '<span class="secondary-label">' + data.new_status + '</span>';
             if (category == 'selected') $('#tr-for-app-' + app_pk).hide('slow');
+            if (inbox_count > 1) {
+              document.getElementById('inbox-button').innerHTML = 'Inbox (' +  (inbox_count - 1) + ')';
+            } else {
+              document.getElementById('inbox-button').innerHTML = 'Inbox';
+            };
           } else {
             alert("Error.", data.error);
           }

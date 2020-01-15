@@ -16,7 +16,8 @@ from django.views.generic import (
     TemplateView,
     CreateView,
     UpdateView,
-    View
+    View,
+    DetailView
 )
 from django.urls import reverse_lazy, reverse
 
@@ -24,6 +25,7 @@ from .forms import (
     UserCreationForm, 
     UserUpdateForm, 
     NewPortfolioProjectFormset
+    
 )
 from .models import PortfolioProject, Skill
 from projects.models import Application
@@ -63,8 +65,9 @@ class LogIn(LoginView):
         messages.add_message(self.request, "You're logged in!") # this is not working
         return response
 
+
 @login_required()
-def update_user(request, pk): # do we need pk here?
+def update_user(request):
     user = request.user
     instance = User.objects.filter(
         id=user.id
@@ -113,9 +116,7 @@ def update_user(request, pk): # do we need pk here?
                 project.save()
 
             messages.success(request, 'Profile updated successfully!')
-            return HttpResponseRedirect(reverse('accounts:profile',
-                                                kwargs={'pk': user.id})
-                                        )
+            return HttpResponseRedirect(reverse('accounts:profile'))
 
     context = {
         'user_form': user_form,
@@ -131,18 +132,21 @@ class Profile(CustomLoginRequired, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user_profile'] = User.objects.filter(
-            id=self.kwargs['pk']
+            id=self.request.user.id
             ).prefetch_related(
                 'skills',
                 'portfolio_projects',
             ).first()
         # get user's accepted applications from completed projects
         context['applications'] = Application.objects.filter(
-            user=self.kwargs['pk'],
+            user=self.request.user,
             status='A',
             position__project__status='C'
         )
         return context
+
+
+
 
 
 

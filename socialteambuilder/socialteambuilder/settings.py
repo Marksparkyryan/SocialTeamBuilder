@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 AUTH_USER_MODEL = "accounts.User"
-LOGIN_REDIRECT_URL = "/projects/dashboard/"
-LOGOUT_REDIRECT_URL = "/projects/dashboard/"
+LOGIN_REDIRECT_URL = "/projects/dashboard/all/all/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'accounts',
     'projects',
     'django_select2',
+    'select2_tags',
 ]
 
 MIDDLEWARE = [

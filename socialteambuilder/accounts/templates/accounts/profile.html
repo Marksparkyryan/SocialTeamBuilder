@@ -14,9 +14,9 @@
         <nav class="bounds">
           <ul class="circle--pill--list">
             {% if user.id == user_profile.id %}
-            <li><a href="{% url 'projects:applications' category='all' q='all' %}">Applications</a></li>
+            <li><a href="{% url 'projects:applications' box='inbox' category='status' q='u' %}">Applications</a></li>
             {% endif %}
-            <li><a class="selected" href="profile.html">Profile</a></li>
+            <li><a class="selected" href="{% url 'accounts:profile' %}">Profile</a></li>
           </ul>
         </nav>
       </div>
@@ -28,7 +28,7 @@
           </div>
           <div class="circle--fluid--cell circle--fluid--secondary">
               {% if user.id == user_profile.id %}
-            <a class="button icon-on-left" href="{% url 'accounts:updateuser' pk=user.id %}">Edit</a>
+            <a class="button icon-on-left" href="{% url 'accounts:updateuser' %}">Edit</a>
                 {% endif %}
           </div>
         </div>
@@ -40,16 +40,16 @@
           </div>
     
           <h2>Past Projects</h2>
+          {% if applications %}
           <table class="u-full-width circle--table">
             <thead>
               <tr>
                 <th>Project Title</th>
                 <th>Project Needs</th>
-                <th class="circle--cell--right">Skills</th>
+                
               </tr>
             </thead>
             <tbody>
-                
                 {% for application in applications %}
               <tr class="clickable-row" data-href="project.html">
                 <td>
@@ -58,13 +58,11 @@
                 <td class="circle--cell--right">
                     {{ application.position.title }}
                 </td>
-                <td class="circle--cell--right">
-                    {% for skill in application.position.skills.all %}
-                  <span class="secondary-label">{{ skill }},</span>
-                    {% endfor %}
-                </td>
               </tr>
               {% endfor %}
+              {% else %}
+              <p>You haven't completed any projects on Circle.com. <a href="{% url 'projects:dashboard' category='all' q='all' %}">See open projects!</a></p>
+              {% endif %}
             </tbody>
           </table>
         </div>
@@ -81,15 +79,19 @@
     
           <div class="circle--secondary--module">
             <h4>My Skills</h4>
-            <ul class="unloaded">
+            <ul class="unloaded skill-bubble-ul">
                 {% for skill in user_profile.skills.all %}
-              <li>{{ skill }}</li>
-                {% endfor %}
+              <li><a href="{% url 'projects:dashboard' category='skill' q=skill %}"><span class="skill-bubble">{{ skill }}</span></a></li>
+                {% endfor %}   
             </ul>
+            <div class="skill-bubble-footer">
+                <p><a href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">see projects that match your skills!</p></a>
+            </div>
+            
           </div>
     
           <div class="circle--secondary--module">
-            <h4>My Projects</h4>
+            <h4>My Portfolio</h4>
             <ul class="circle--link--list">
                 {% for project in user_profile.portfolio_projects.all %}
               <li><a>{{ project }}</a></li>

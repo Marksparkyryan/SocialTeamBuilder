@@ -92,6 +92,10 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(Skill, self).save(*args, **kwargs)
+
 
 class PortfolioProject(models.Model):
     """Model representing a website that the user has built 
@@ -104,8 +108,9 @@ class PortfolioProject(models.Model):
     name = models.CharField(max_length=255, unique=True)
     url = models.URLField()
 
-    
     def __str__(self):
         return self.name
     
+    
+        
 

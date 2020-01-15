@@ -10,13 +10,15 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.views.generic import TemplateView, ListView, UpdateView, View
+from django.views.generic import TemplateView, UpdateView, View
+from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.text import slugify
 
 from .models import Application, Project
 
 User = get_user_model()
+
 
 class CustomLoginRequired(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -35,30 +37,18 @@ class CustomLoginRequired(LoginRequiredMixin):
 
 
 class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
-    model = Project
+    queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
-
-    get get_queryset(self):
-        super().get_queryset(*args, **kwargs)
-        queryset = self.queryset.filter(
-            status='A' # status A means project is open for applications
-        )
-        return queryset
-    
-
-
-
-
-
-class ApplicationsList(CustomLoginRequired, ListView):
-    model = Application
+    prefetch_related = ['position_set',]
+    paginate_by = 2
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(
-            Q(position__project__owner=self.request.user) |
-            Q(user_id=self.request.user)
-        )
+        super().get_queryset(*args, **kwargs)
+        # get distinct projects that are currently open and have empty positions
+        queryset = self.queryset.filter(
+            status='A',
+            position__status='E' 
+        ).distinct()
         return queryset
     
     def get_context_data(self, **kwargs):
@@ -66,26 +56,75 @@ class ApplicationsList(CustomLoginRequired, ListView):
         category = self.kwargs['category']
         q = self.kwargs['q']
         if q != 'all':
-            if category == 'status':
-                filtered = self.get_queryset().filter(
-                    status__icontains=q
-                )
-            elif category == 'project':
-                filtered =  self.get_queryset().filter(
-                    position__project__slug=q
-                )
-            elif category == 'need':
+            if category == 'need':
                 filtered =  self.get_queryset().filter(
                     position__slug=q
                 )
+            if category == 'skill':
+                filtered = self.get_queryset().filter(
+                    position__skills__name=q
+                )       
+            if category == 'skills':
+                filtered = self.get_queryset().filter(
+                    position__skills__in=self.request.user.skills.all()
+                )             
         else:
             filtered = self.get_queryset()
-        
+
         context['q'] = self.kwargs['q']
         context['filtered'] = filtered
         return context
 
+
+class ApplicationsList(CustomLoginRequired, ListView):
+    model = Application
+    paginate_by = 2
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs) 
+        queryset = queryset = queryset.filter(
+            Q(position__project__owner=self.request.user) |
+            Q(user=self.request.user)
+        ).distinct()
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        box = self.kwargs['box']
+        if box == 'inbox':
+            filtered = self.get_queryset().filter(
+                position__project__owner=self.request.user
+            )
+        else:
+            filtered = self.get_queryset().filter(
+                user=self.request.user
+            )
+        category = self.kwargs['category']
+        q = self.kwargs['q']
+        if q != 'all':
+            if category == 'status':
+                filtered = filtered.filter(
+                    status__icontains=q
+                )
+            elif category == 'project':
+                filtered =  filtered.filter(
+                    position__project__slug=q
+                )
+            elif category == 'need':
+                filtered =  filtered.filter(
+                    position__slug=q
+                )
+        
+        context['q'] = self.kwargs['q']
+        context['box'] = self.kwargs['box']
+        context['filtered'] = filtered
+        context['inbox_count'] = self.get_queryset().filter(
+            status='U',
+            position__project__owner=self.request.user
+        ).count()
+        return context
       
+
 class UpdateAppStatus(CustomLoginRequired, View):
     http_method_names = ['post',]
 

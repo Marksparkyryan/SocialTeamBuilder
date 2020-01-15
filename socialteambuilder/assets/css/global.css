@@ -1460,6 +1460,16 @@ hr {
   color: #fff;
 }
 
+.circle--pill--list a:active,
+.circle--pill--list .deselected,
+.circle--pill--list .deselected:hover {
+  /* background: #fff; */
+  color: #444;
+  background-color: #eee;
+}
+
+
+
 /* line 2, ../sass/circle/components/headers.sass */
 .circle--header {
   background: #537d7b;
@@ -2156,7 +2166,7 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
 .select2-selection__choice {
 background-color: #a5c4c2 !important;
 color: white !important;
-padding: 3px 10px !important;
+padding: 6px 9px !important;
 margin-bottom: 0;
 border: none !important;
 border-radius: 15px !important;
@@ -2293,3 +2303,23 @@ width: 40px;
 .clickable-td {
   margin: 0 25px;
 }
+
+/* Profile Skills */
+
+.skill-bubble {
+  background-color: #a5c4c2;
+  color: white;
+  padding: 6px 15px;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.25rem;
+  float: left;
+  margin: 5px 5px 5px 0;
+  }
+
+  .skill-bubble-footer {
+    float: left;
+    margin-top: 15px;
+  }
+

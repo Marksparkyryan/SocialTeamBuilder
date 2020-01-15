@@ -16,7 +16,12 @@ class InlinePositionAdmin(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
    inlines = [InlinePositionAdmin,]
 
+
+class ApplicationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'position', 'status', 'unread']
+    list_editable = ['status', 'unread']
+
 admin.site.register(Project, ProjectAdmin)
 
 admin.site.register(Position, PositionAdmin)
-admin.site.register(Application)
+admin.site.register(Application, ApplicationAdmin)

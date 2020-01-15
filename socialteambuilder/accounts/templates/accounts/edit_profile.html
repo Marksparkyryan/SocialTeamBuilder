@@ -7,9 +7,12 @@
 {% endblock %}
 
 {% block css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 {% endblock %}
 
 {% block body %}
+
 <div class="bounds circle--page">
     {{ user_form.errors }}
         <div class="circle--page--header circle--fluid">
@@ -92,10 +95,11 @@
             <h4>My Skills</h4>   
             {{ user_form.skills }}
           </div>
+          
           <!-- /Skills-->
     
           <div class="circle--secondary--module">
-            <h4>My Projects</h4>
+            <h4>My Portfolio</h4>
             <div class="project-cards">
               
               <!-- Portfolio Project forms -->
@@ -154,7 +158,11 @@ $(function () {
           type: 'get',
           dataType: 'json',
           beforeSend: function () {
-              $('#id_company').djangoSelect2({multiple: true});
+              $('#id_skills').djangoSelect2({
+                multiple: true,
+                tags: true
+              });
+              
               $("#modal").modal("show");
           },
           success: function (data) {
@@ -167,6 +175,11 @@ $(function () {
 });
 {% block js %}
 
+$('#id_skills').select2({
+  multiple: true,
+  tags: true
+});
+
 // Refresh avatar image on upload //
 $('#id_avatar').change( function(event) {
   var tmppath = URL.createObjectURL(event.target.files[0]);
@@ -174,5 +187,8 @@ $('#id_avatar').change( function(event) {
 
   $("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
 });
+
+
+
 
 {% endblock %}
