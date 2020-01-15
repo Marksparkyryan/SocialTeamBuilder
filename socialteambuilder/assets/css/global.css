@@ -2318,6 +2318,23 @@ width: 40px;
   margin: 5px 5px 5px 0;
   }
 
+  .skill-container-project {
+  
+  }
+
+  .skill-bubble-project {
+    background-color: #a5c4c2;
+    color: white;
+    padding: 6px 15px;
+    margin-bottom: 0;
+    border: none;
+    border-radius: 15px;
+    font-size: 1.25rem;
+    float: left;
+    margin: 5px 5px 5px 0;
+   
+    }
+
   .skill-bubble-footer {
     float: left;
     margin-top: 15px;

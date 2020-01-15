@@ -9,4 +9,5 @@ urlpatterns = [
     path('dashboard/<category>/<q>/', views.DashboardView.as_view(), name='dashboard'),
     path('applications/<box>/<category>/<q>/', views.ApplicationsList.as_view(), name='applications'),
     path('ajax/update_app_status/', views.UpdateAppStatus.as_view(), name='update_app_status'),
+    path('project/<slug>/', views.ProjectView.as_view(), name='project'),
 ]

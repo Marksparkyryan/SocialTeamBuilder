@@ -10,7 +10,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.views.generic import TemplateView, UpdateView, View
+from django.views.generic import TemplateView, UpdateView, View, DetailView
 from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.text import slugify
@@ -149,6 +149,9 @@ class UpdateAppStatus(CustomLoginRequired, View):
         raise PermissionDenied
 
 
+class ProjectView(DetailView):
+    model = Project
+    template_name = 'projects/project.html'
 
 
 
