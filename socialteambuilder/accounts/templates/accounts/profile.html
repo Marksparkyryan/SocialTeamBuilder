@@ -51,7 +51,7 @@
             </thead>
             <tbody>
                 {% for application in applications %}
-              <tr class="clickable-row" data-href="project.html">
+              <tr class="clickable-row" data-href="{% url 'projects:project' slug=project.slug %}">
                 <td>
                   <h3>{{ application.position.project.title }}</h3>
                 </td>
@@ -61,7 +61,7 @@
               </tr>
               {% endfor %}
               {% else %}
-              <p>You haven't completed any projects on Circle.com. <a href="{% url 'projects:dashboard' category='all' q='all' %}">See open projects!</a></p>
+              <p>You haven't completed any projects yet. <a href="{% url 'projects:dashboard' category='all' q='all' %}">See open projects!</a></p>
               {% endif %}
             </tbody>
           </table>

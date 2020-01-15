@@ -30,11 +30,21 @@ class Project(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(blank=True)
 
+    class Meta:
+        ordering = ['-created']
+
     def __str__(self):
         return self.title
     
     def save(self, *args, **kwargs):
+        # set the slug
         self.slug = slugify(self.title, allow_unicode=True)
+        
+        # set project status based on existance of related positons
+        if self.position_set.exists():
+            self.status = 'A'
+        else:
+            self.status = 'B'
         super().save(*args, **kwargs)
     
 
@@ -54,6 +64,10 @@ class Position(models.Model):
     status = models.CharField(max_length=1, choices=STATUS)
     time_estimate = models.IntegerField()
     slug = models.SlugField(editable=False, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
 
     def __str__(self):
         return self.title
@@ -87,6 +101,7 @@ class Application(models.Model):
     )
     status = models.CharField(max_length=1, choices=STATUS)
     unread = models.NullBooleanField()
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         if self.status in ('A', 'R'):
@@ -98,6 +113,7 @@ class Application(models.Model):
     
     class Meta:
         unique_together = ['user', 'position']
+        ordering = ['-created']
     
 
 

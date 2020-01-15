@@ -14,7 +14,7 @@
           <div class="circle--fluid--cell circle--fluid--primary">
             <h2>Projects</h2>
             <p>
-              open for applications
+              that are ready to hire
             </p>
           </div>
           <div class="circle--fluid--cell circle--fluid--secondary">
@@ -42,9 +42,9 @@
             </ul>
           </div>
           <div class="circle--filter circle--secondary--module">
-              <h4>All About You</h4>
+              <h4>Personalized</h4>
               <ul class="circle--filter--list">
-                <li><a href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Projects that match your skillset</a></li>
+                <li><a {% if q == 'my-skills' %}class="selected"{% endif %} href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Projects that match your skillset</a></li>
               </ul>
             </div>
         </div>
@@ -62,7 +62,7 @@
             </thead>
             {% for project in filtered %}
             <tbody>
-              <tr class="clickable-row" data-href="#">
+              <tr class="clickable-row" data-href="{% url 'projects:project' slug=project.slug %}">
                 <td>
                   <h3>{{ project.title|title }}</h3>
                 </td>
