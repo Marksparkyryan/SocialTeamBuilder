@@ -8,14 +8,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.views.generic import TemplateView, UpdateView, View, DetailView
+from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.text import slugify
 
-from .models import Application, Project
+from .models import Application, Project, Position
 
 User = get_user_model()
 
@@ -147,6 +147,31 @@ class UpdateAppStatus(CustomLoginRequired, View):
                 return JsonResponse(data)
             return HttpResponseBadRequest()
         raise PermissionDenied
+
+
+class CreateApp(CustomLoginRequired, View):
+    http_method_names = ['post',]
+    
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        position_pk = self.request.POST.get('position_pk')
+        position = Position.objects.get(id=position_pk)
+        user = self.request.user 
+        try:
+            app = Application(
+                user=user,
+                position=position,
+                status='U'
+            )
+            app.save()  
+            data = {
+                    'updated': True,
+                }
+            return JsonResponse(data)
+
+        except Exception as err:
+            print("not working: {}".format(err))
+            return HttpResponseServerError
 
 
 class ProjectView(DetailView):

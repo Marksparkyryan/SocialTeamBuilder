@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% load project_extras %}
+{% csrf_token %}
 
 {% block body %}
 
@@ -39,46 +40,26 @@
                         <h3>{{ position.title }}</h3>
                         <p>{% for skill in position.skills.all %}{% if forloop.last %} {{ skill }}{% else %} {{ skill }} |{% endif %}{% endfor %}</p>
                         <p>{{ position.description }}</p>
-                        
-                        
-                        
-                        <!-- Undecided -->
-                        {% if position.status == 'U' %}
-                            {% if user.applications != None %}
-                                {% for application in position.applications.all %}
-                                    {% if application.user == user and application.status == 'U' %}
-                                        {% if application in user.applications.all %}
-                                        <a class="button button-primary button-inactive">You've Applied!</a>
-                                        {% endif %}
-                                    {% endif %}       
-                                {% endfor%}
-                            {% endif %}
-                        
+
                         <!-- Filled -->
-                        {% elif position.status == 'F' %}
+                        {% if position.status == 'F' %}               
                         <a class="button button-primary button-inactive">Position Filled</a>
                         
-
                         <!-- Empty-->
-                        {% elif position.status == 'E' %}
-                        <a class="button button-primary">Apply</a>
-                        
-                        {% endif %}
-    
-
-                            
-                        
-                        
-                        
+                        {% else %}
+                        {% already_applied position as var %}
+                        {% if var == True %}
+                        <a class="button button-primary button-inactive">You've applied.</a>
+                        {% else %}
+                        <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}" data-url="{% url 'projects:newapp' %}">Apply</a>
+                        {% endif %}  
+                        {% endif %}   
                     </li>
                     {% endfor %}
                 </ul>
-            </div>
-               
-           
+            </div>          
           </div>
        
-    
         <div class="grid-25 grid-push-5">
           <div class="circle--secondary--module">
             <h3>Project Needs</h3>
@@ -103,4 +84,62 @@
         </div>
       </div>
 
+{% endblock %}
+
+{% block js %}
+// Apply Button
+$(".apply-button").click(function () {
+
+    // get the csrf token for ajax request  
+    
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+
+  button = $(this)
+  var dataurl = $(this).attr("data-url");
+  var position_pk = $(this).attr("pk");
+  console.log(position_pk, dataurl)
+
+  function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+  });
+
+  $.ajax({
+        url: dataurl,
+        data: {
+          "position_pk": position_pk
+        },
+        dataType: 'json',
+        method: 'POST',
+        success: function (data) {
+          if (data.updated) {
+            button.replaceWith('<a class="button button-primary button-inactive">Applied!</a>');
+          } else {
+            alert("Error.", data.error);
+          }
+        }
+      });
+});
 {% endblock %}

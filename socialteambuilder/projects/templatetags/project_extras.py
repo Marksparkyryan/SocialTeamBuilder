@@ -56,3 +56,10 @@ def select_distinct_positions_from_project(context):
         title = position.title
         positions.add(title)
     return list(positions)
+
+@register.simple_tag(takes_context=True)
+def already_applied(context, position):
+    for application in position.applications.all():
+        if application.user == context['user']:
+            return True
+    return False
