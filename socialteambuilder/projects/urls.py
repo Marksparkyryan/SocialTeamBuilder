@@ -11,4 +11,5 @@ urlpatterns = [
     path('ajax/update_app_status/', views.UpdateAppStatus.as_view(), name='update_app_status'),
     path('ajax/create_app/', views.CreateApp.as_view(), name='newapp'),
     path('project/<slug>/', views.ProjectView.as_view(), name='project'),
+    path('create-project/', views.create_project, name="create_project"),
 ]

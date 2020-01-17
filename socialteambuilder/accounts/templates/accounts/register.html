@@ -8,7 +8,7 @@
 <div class="bounds">
     <div class="grid-30 centered">
       <h2>Sign Up</h2>
-      <form>
+      <form method="POST">
         {% csrf_token %}
         {{ form }}
         <button type="submit" button-primary">Sign Up</button>

@@ -8,14 +8,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, HttpResponse, reverse
 from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.text import slugify
 
 from .models import Application, Project, Position
+from .forms import CreateProjectForm, PositionFormset
 
 User = get_user_model()
 
@@ -30,7 +31,13 @@ class CustomLoginRequired(LoginRequiredMixin):
         )
         if apps.exists():
             for app in apps:
-                messages.success(request, "You've been {} for the position of {}, {}.".format(app.get_status_display().lower(), app.position.title, app.position.project.title))
+                messages.success(
+                    request, 
+                    "You've been {} for the position of {}, {}.".format(
+                        app.get_status_display().lower(), 
+                        app.position.title, 
+                        app.position.project.title
+                    ))
                 app.unread = False
                 app.save()
         return super().dispatch(request, *args, **kwargs)
@@ -43,8 +50,10 @@ class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
     paginate_by = 2
 
     def get_queryset(self, *args, **kwargs):
+        """get distinct projects that are currently open and have empty
+        positions
+        """
         super().get_queryset(*args, **kwargs)
-        # get distinct projects that are currently open and have empty positions
         queryset = self.queryset.filter(
             status='A',
             position__status='E' 
@@ -174,9 +183,43 @@ class CreateApp(CustomLoginRequired, View):
             return HttpResponseServerError
 
 
-class ProjectView(DetailView):
+class ProjectView(CustomLoginRequired, DetailView):
     model = Project
     template_name = 'projects/project.html'
+
+
+@login_required
+def create_project(request):
+    request_user = request.user
+    project_form = CreateProjectForm()
+    position_formset = PositionFormset(
+        queryset=Position.objects.none()
+    )
+
+    if request.method == 'POST':
+        project_form = CreateProjectForm(request.POST)
+        position_formset = PositionFormset(request.POST)
+        if project_form.is_valid() and position_formset.is_valid():
+            project = project_form.save(commit=False)
+            project.owner = request_user
+            project.status = 'A'
+            project.save()
+            positions = position_formset.save(commit=False)
+            for position in positions:
+                position.project = project
+                position.status = 'E'
+                position.save()
+            position_formset.save_m2m()
+            messages.success(request, 'Project {} created!'.format(project.title))
+            return HttpResponseRedirect(reverse('projects:project', kwargs={'slug': project.slug})) 
+
+    context = {
+        'project_form': project_form,
+        'position_formset': position_formset,
+    }
+    return render(request, 'projects/create_project.html', context)
+
+
 
 
 

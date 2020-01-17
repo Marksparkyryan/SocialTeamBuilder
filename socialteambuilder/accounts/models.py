@@ -1,16 +1,13 @@
+from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
-    PermissionsMixin
 )
 from django.db import models
-from django.utils import timezone
-
-from .utils import send_confirmation_email
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, password=None, confirmed=False):
+    def create_user(self, email, first_name, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -24,8 +21,6 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save()
-        if not confirmed:
-            send_confirmation_email(user)
         return user
 
     def create_superuser(self, email, first_name, password=None):
@@ -37,7 +32,6 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             first_name=first_name,
-            confirmed=True
         )
         user.is_active = True
         user.is_admin = True
@@ -57,7 +51,7 @@ class User(AbstractBaseUser):
         max_length=2500, 
         default="A little about you"
     )
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(default="default_avatars/icons8-customer-100.png")
     skills = models.ManyToManyField("Skill", related_name="users") # on delete issues?
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -65,7 +59,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name']
+    REQUIRED_FIELDS = ['first_name',]
 
     def __str__(self):
         if not self.first_name:
@@ -101,7 +95,7 @@ class PortfolioProject(models.Model):
     """Model representing a website that the user has built 
     """
     user = models.ForeignKey(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         related_name="portfolio_projects"
     )
@@ -110,7 +104,3 @@ class PortfolioProject(models.Model):
 
     def __str__(self):
         return self.name
-    
-    
-        
-

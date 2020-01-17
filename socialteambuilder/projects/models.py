@@ -1,11 +1,9 @@
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
 
 from accounts.models import Skill
-
-User = get_user_model()
 
 
 class Project(models.Model):
@@ -18,7 +16,7 @@ class Project(models.Model):
         ('C', 'Complete'),
     )
     owner = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="projects"
     )
@@ -39,12 +37,7 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         # set the slug
         self.slug = slugify(self.title, allow_unicode=True)
-        
         # set project status based on existance of related positons
-        if self.position_set.exists():
-            self.status = 'A'
-        else:
-            self.status = 'B'
         super().save(*args, **kwargs)
     
 
@@ -60,7 +53,7 @@ class Position(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=2000)
-    skills = models.ManyToManyField(Skill, related_name="positions")
+    skills = models.ManyToManyField('accounts.Skill', related_name="positions")
     status = models.CharField(max_length=1, choices=STATUS)
     time_estimate = models.IntegerField()
     slug = models.SlugField(editable=False, blank=True)
@@ -90,12 +83,12 @@ class Application(models.Model):
     )
 
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="applications"
     )
     position = models.ForeignKey(
-        Position,
+        'Position',
         on_delete=models.CASCADE,
         related_name="applications"
     )

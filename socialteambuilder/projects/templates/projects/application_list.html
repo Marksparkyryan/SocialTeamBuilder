@@ -17,7 +17,7 @@
           <ul class="circle--pill--list">
             <li><a {% if box == 'inbox' %}class="selected"{% else %}class="deselected"{% endif %} href="{% url 'projects:applications' box='inbox' category='status' q='u' %}" id="inbox-button">Inbox {% if inbox_count %}({{ inbox_count }}){% endif %}</a></li>
             <li><a {% if box == 'outbox' %}class="selected"{% else %}class="deselected"{% endif %} href="{% url 'projects:applications' box='outbox' category='all' q='all' %}">Outbox</a></li>
-            <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+            <li><a href="{% url 'accounts:profile' pk=user.id %}">Profile</a></li>
           </ul>
         </nav>
       </div>
@@ -89,7 +89,7 @@
             </thead>
             <tbody>
                 {% for application in filtered %}
-            <tr class="" data-href="profile.html" id="tr-for-app-{{ application.id }}">
+            <tr class="" data-href="{% url 'accounts:profile' pk=application.user.id %}" id="tr-for-app-{{ application.id }}">
                 <td class="clickable-td avatar-td">
                     <div class="image-cropper">
                         <img src="{{ application.user.avatar.url }}" alt="avatar" class="profile-pic">

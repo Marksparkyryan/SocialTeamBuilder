@@ -1394,6 +1394,10 @@ hr {
   color: #a5c4c2;
 
 }
+.circle--clone--remove--positions {
+  float: right;
+  color: #a5c4c2;
+}
 
 .circle--clone--add {
   float: left;

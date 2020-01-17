@@ -1,16 +1,16 @@
 from django import forms
+from django.conf import settings
 from django.forms import formset_factory, modelformset_factory
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from accounts.models import User, PortfolioProject, Skill
+from accounts.models import PortfolioProject, Skill, User
 
 from django_select2.forms import Select2TagWidget, ModelSelect2TagWidget
 from select2_tags import forms as f
 
 
-# Admin Forms
-
+# Admin Form
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -19,7 +19,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email',)
+        fields = ('email', 'first_name')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -34,10 +34,12 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
+            print(user._meta.default_manager_name)
             user.save()
         return user
 
 
+# Admin Form
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
@@ -56,8 +58,14 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
+    def clean_password2(self):
+        # Check that the two password entries match
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+        return password2
 
-# Project and Accounts Forms  
 
 class UserUpdateForm(f.Select2ModelForm):
     skills = f.Select2ModelMultipleChoiceField(
@@ -67,7 +75,6 @@ class UserUpdateForm(f.Select2ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'about', 'avatar', 'skills']
              
-
 
 class PortfolioProjectForm(forms.ModelForm):
     class Meta:
@@ -88,5 +95,3 @@ NewPortfolioProjectFormset = modelformset_factory(
     extra=0,
     can_order=True
     )
-
-
