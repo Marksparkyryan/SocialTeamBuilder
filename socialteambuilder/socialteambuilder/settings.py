@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'projects',
     'django_select2',
     'select2_tags',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -127,9 +128,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ['assets']
+STATIC_ROOT = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "dummy_email_inbox")
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'height': 'auto',
+        'width': '100%',
+    },
+}

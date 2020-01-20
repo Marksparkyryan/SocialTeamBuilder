@@ -39,7 +39,6 @@ class Project(models.Model):
         self.slug = slugify(self.title, allow_unicode=True)
         # set project status based on existance of related positons
         super().save(*args, **kwargs)
-    
 
 
 class Position(models.Model):
@@ -68,8 +67,6 @@ class Position(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title, allow_unicode=True)
         super().save(*args, **kwargs)
-    
-
 
 
 class Application(models.Model):

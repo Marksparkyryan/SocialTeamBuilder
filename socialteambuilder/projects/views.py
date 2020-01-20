@@ -7,16 +7,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, HttpResponse, reverse
-from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView
+from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView, FormView
 from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.text import slugify
 
 from .models import Application, Project, Position
-from .forms import CreateProjectForm, PositionFormset
+from .forms import CreateProjectForm, PositionFormset, SearchBarForm
 
 User = get_user_model()
 
@@ -47,7 +48,6 @@ class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
     queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
     prefetch_related = ['position_set',]
-    paginate_by = 2
 
     def get_queryset(self, *args, **kwargs):
         """get distinct projects that are currently open and have empty
@@ -79,15 +79,45 @@ class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
                 )             
         else:
             filtered = self.get_queryset()
-
+        
+        context['searchform'] = SearchBarForm()
         context['q'] = self.kwargs['q']
+        context['filtered'] = filtered
+        return context
+
+
+class SearchBar(ListView):
+    queryset = Project.objects.all()
+    template_name = 'projects/dashboard.html'
+
+    def get_queryset(self, *args, **kwargs):
+        """get distinct projects that are currently open and have empty
+        positions
+        """
+        super().get_queryset(*args, **kwargs)
+        queryset = self.queryset.filter(
+            status='A',
+            position__status='E' 
+        ).distinct()
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        q = self.request.GET.get('q')
+        filtered = self.get_queryset().filter(
+            Q(title__icontains=q) |
+            Q(description__icontains=q) |
+            Q(applicant_requirements__icontains=q) |
+            Q(position__title__icontains=q) | 
+            Q(position__skills__name__icontains=q)
+        )
+        context['searchform'] = SearchBarForm(initial={'q': q})
         context['filtered'] = filtered
         return context
 
 
 class ApplicationsList(CustomLoginRequired, ListView):
     model = Application
-    paginate_by = 2
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs) 
@@ -123,7 +153,7 @@ class ApplicationsList(CustomLoginRequired, ListView):
                 filtered =  filtered.filter(
                     position__slug=q
                 )
-        
+        context['searchform'] = SearchBarForm()
         context['q'] = self.kwargs['q']
         context['box'] = self.kwargs['box']
         context['filtered'] = filtered
@@ -187,37 +217,60 @@ class ProjectView(CustomLoginRequired, DetailView):
     model = Project
     template_name = 'projects/project.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['searchform'] = SearchBarForm()
+        return context
+
 
 @login_required
-def create_project(request):
+def create_update_project(request, slug=None):
     request_user = request.user
-    project_form = CreateProjectForm()
-    position_formset = PositionFormset(
-        queryset=Position.objects.none()
-    )
+    if slug is not None:
+        project = Project.objects.get(slug=slug)
+        project_form = CreateProjectForm(instance=project)
+        position_formset = PositionFormset(
+            queryset=Position.objects.filter(
+                project=project
+            ))
+    else:
+        project_form = CreateProjectForm()
+        position_formset = PositionFormset(
+            queryset=Position.objects.none()
+        )
 
     if request.method == 'POST':
-        project_form = CreateProjectForm(request.POST)
-        position_formset = PositionFormset(request.POST)
+        project_form = CreateProjectForm(request.POST, instance=project)
+        position_formset = PositionFormset(
+            request.POST, 
+            queryset=Position.objects.filter(project=project)
+            )
         if project_form.is_valid() and position_formset.is_valid():
             project = project_form.save(commit=False)
             project.owner = request_user
-            project.status = 'A'
+            new_project = False
+            if project.status is None:
+                new_project = True
+                project.status = 'A'
             project.save()
             positions = position_formset.save(commit=False)
             for position in positions:
                 position.project = project
-                position.status = 'E'
+                if position.status is None:
+                    position.status = 'E'
                 position.save()
+                print(position)
             position_formset.save_m2m()
-            messages.success(request, 'Project {} created!'.format(project.title))
+            if new_project:
+                messages.success(request, 'Project {} created!'.format(project.title))
+            messages.success(request, 'Project {} updated!'.format(project.title)) 
             return HttpResponseRedirect(reverse('projects:project', kwargs={'slug': project.slug})) 
 
     context = {
         'project_form': project_form,
         'position_formset': position_formset,
     }
-    return render(request, 'projects/create_project.html', context)
+    return render(request, 'projects/create_update_project.html', context)
 
 
 

@@ -6,6 +6,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from accounts.models import PortfolioProject, Skill, User
 
+from ckeditor.widgets import CKEditorWidget
 from django_select2.forms import Select2TagWidget, ModelSelect2TagWidget
 from select2_tags import forms as f
 
@@ -70,6 +71,7 @@ class UserChangeForm(forms.ModelForm):
 class UserUpdateForm(f.Select2ModelForm):
     skills = f.Select2ModelMultipleChoiceField(
         'name', queryset=Skill.objects.all(), required=False, save_new=True)
+    about = forms.CharField(widget=CKEditorWidget())
 
     class Meta:
         model = User
@@ -79,10 +81,11 @@ class UserUpdateForm(f.Select2ModelForm):
 class PortfolioProjectForm(forms.ModelForm):
     class Meta:
         model = PortfolioProject
-        fields = ['name', 'url']
+        fields = ['name', 'url', 'id',]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Project Name'}),
             'url': forms.TextInput(attrs={'placeholder': 'Project URL'}),
+            'id': forms.HiddenInput()
         }
 
     

@@ -32,9 +32,9 @@ from .forms import (
     UserCreationForm, 
     UserUpdateForm,
     NewPortfolioProjectFormset
-    
 )
 from .models import PortfolioProject, Skill
+from projects.forms import SearchBarForm
 from projects.models import Application
 from projects.views import CustomLoginRequired
 
@@ -91,7 +91,7 @@ class Activate(UserPassesTestMixin, RedirectView):
         token = self.kwargs['token']
         print("token received: ", token)
         print("for user: ", user)
-        print("token checker: ", default_token_generator.check_token(user, token))
+        print("token check valid: ", default_token_generator.check_token(user, token))
         if default_token_generator.check_token(user, token):
             user.is_active = True
             print("user activated by token")
@@ -148,15 +148,14 @@ def update_user(request):
             for project in project_formset.deleted_objects:
                 project.delete()
             for project in projects:
-                project.user_id = user.id
+                project.user = user
                 project.save()
-            # print(project_formset.cleaned_data)
-            # print(project_formset.data)
             project_formset.save_m2m()
             messages.success(request, 'Profile updated successfully!')
             return HttpResponseRedirect(reverse('accounts:profile', kwargs={'pk': user.pk}))
 
     context = {
+        'searchform': SearchBarForm(),
         'user_form': user_form,
         'project_formset': project_formset,
         'applications': applications
@@ -171,6 +170,7 @@ class Profile(CustomLoginRequired, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['searchform'] = SearchBarForm()
         # get user's accepted applications from completed projects
         context['applications'] = Application.objects.filter(
             user=self.request.user,

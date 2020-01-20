@@ -4,8 +4,21 @@ from django.forms import formset_factory, modelformset_factory
 from .models import Project, Position
 from accounts.models import Skill
 
+from ckeditor.widgets import CKEditorWidget
 from django_select2.forms import Select2TagWidget, ModelSelect2TagWidget
 from select2_tags import forms as f
+
+
+class SearchBarForm(forms.Form):
+    q = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search projects...',
+                'style': 'margin-bottom:0', 
+                'class': 'search-bar'
+                },
+        ))
 
 
 class CreateProjectForm(forms.ModelForm):
@@ -16,10 +29,7 @@ class CreateProjectForm(forms.ModelForm):
                 'class': 'circle--input--h1',
                 'placeholder': 'Project Title'}
         ))
-    description = forms.CharField(
-        max_length=255,
-        widget=forms.Textarea(
-            attrs={'placeholder': 'Project description...'}))
+    description = forms.CharField(widget=CKEditorWidget())
     time_estimate = forms.CharField(
         max_length=10,
         widget=forms.TextInput(
@@ -30,8 +40,7 @@ class CreateProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ['title', 'description', 'time_estimate', 'applicant_requirements',]
-
+        fields = ['title', 'description', 'time_estimate', 'applicant_requirements', 'status',]
 
 
 class PositionForm(forms.ModelForm):
@@ -44,13 +53,14 @@ class PositionForm(forms.ModelForm):
 
     class Meta:
         model = Position
-        fields = ['title', 'description', 'skills', 'time_estimate']
+        fields = ['title', 'description', 'skills', 'time_estimate', 'id',]
         widgets = {
             'title': forms.TextInput(attrs={
                 'placeholder': 'Position Title',
                 'class': 'circle--input--h3'
             }),
-            'description': forms.Textarea(attrs={'placeholder': 'Position description'}),
+            'description': CKEditorWidget(),
+            'id': forms.HiddenInput(),
         }        
 
     
@@ -63,3 +73,4 @@ PositionFormset = modelformset_factory(
     extra=1,
     can_order=True
     )
+

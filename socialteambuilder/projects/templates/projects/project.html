@@ -12,7 +12,7 @@
 <div class="circle--actions--bar">
         <div class="bounds">
           <div class="grid-100">
-            <a class="button" href="project_edit.html">Edit Project</a>
+            <a class="button" href="{% url 'projects:create_update_project' slug=project.slug %}">Edit Project</a>
             <a class="button button-text" href="index.html">Delete Project</a>
           </div>
         </div>
@@ -27,7 +27,7 @@
           </div>
     
           <div class="circle--article--body">
-            <p>{{ project.description }}</p>
+            <p>{{ project.description|safe }}</p>
             </div>
             
             
@@ -37,8 +37,8 @@
                 <ul class="circle--group--list">
                     {% for position in project.position_set.all %}
                     <li>
-                        <h3>{{ position.title }}</h3>
-                        <p>{% for skill in position.skills.all %}{% if forloop.last %} {{ skill }}{% else %} {{ skill }} |{% endif %}{% endfor %}</p>
+                        <h3 id="{{ position.title }}">{{ position.title }}</h3>
+                        <p>{% for skill in position.skills.all %}{% if forloop.last %} <a class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a> |{% endif %}{% endfor %}</p>
                         <p>{{ position.description }}</p>
 
                         <!-- Filled -->
@@ -49,7 +49,7 @@
                         {% else %}
                         {% already_applied position as var %}
                         {% if var == True %}
-                        <a class="button button-primary button-inactive">You've applied.</a>
+                        <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
                         {% else %}
                         <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}" data-url="{% url 'projects:newapp' %}">Apply</a>
                         {% endif %}  
@@ -66,7 +66,7 @@
             <ul class="circle--link--list">
                 {% select_distinct_positions_from_project as titles %}
                 {% for title in titles %}
-              <li><a>{{ title }}</a></li>
+              <li><a href="#{{ title }}">{{ title }}</a></li>
                 {% endfor %}
             </ul>
           </div>

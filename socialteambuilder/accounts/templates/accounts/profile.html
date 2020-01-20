@@ -36,7 +36,7 @@
         <div class="grid-70">
           <h1>{{ user_profile }}</h1>
           <div class="circle--article--body">
-            <p>{{ user_profile.about }}</p>
+            <p>{{ user_profile.about|safe }}</p>
           </div>
     
           <h2>Past Projects</h2>
@@ -51,7 +51,7 @@
             </thead>
             <tbody>
                 {% for application in applications %}
-              <tr class="clickable-row" data-href="{% url 'projects:project' slug=project.slug %}">
+              <tr class="clickable-row" data-href="{% url 'projects:project' slug=application.position.project.slug %}">
                 <td>
                   <h3>{{ application.position.project.title }}</h3>
                 </td>
