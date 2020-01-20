@@ -10,95 +10,105 @@
 {% endblock %}
 
 {% block body %}
+<!-- Secondary nav bar -->
 <div class="circle--actions--bar">
-        <nav class="bounds">
-          <ul class="circle--pill--list">
-            {% if user.id == user_profile.id %}
-            <li><a href="{% url 'projects:applications' box='inbox' category='status' q='u' %}">Applications</a></li>
-            {% endif %}
-            <li><a class="selected" href="{% url 'accounts:profile' pk=user.id %}">Profile</a></li>
-          </ul>
-        </nav>
+  <nav class="bounds">
+    <ul class="circle--pill--list">
+      {% if user.id == user_profile.id %}
+      <li><a href="{% url 'projects:applications' box='inbox' category='status' q='u' %}">Applications</a></li>
+      {% endif %}
+      <li><a class="selected" href="{% url 'accounts:profile' pk=user.id %}">Profile</a></li>
+    </ul>
+  </nav>
+</div>
+<!-- /Secondary nav bar -->
+    
+<div class="bounds circle--page">
+
+  <div class="circle--page--header circle--fluid">
+    <div class="circle--fluid--cell circle--fluid--primary">
+      <h2>Profile</h2>
+    </div>
+    <div class="circle--fluid--cell circle--fluid--secondary">
+      {% if user.id == user_profile.id %}
+      <a class="button icon-on-left" href="{% url 'accounts:updateuser' %}">Edit</a>
+      {% endif %}
+    </div>
+  </div>
+    
+  <div class="grid-70">
+    <h1>{{ user_profile }}</h1>
+    <div class="circle--article--body">
+      <p>{{ user_profile.about|safe }}</p>
+    </div>
+  
+    <h2>Past Projects</h2>
+    {% if applications %}
+    <table class="u-full-width circle--table">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th>Project Needs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for application in applications %}
+        <tr class="clickable-row" data-href="{% url 'projects:project' slug=application.position.project.slug %}">
+          <td>
+            <h3>{{ application.position.project.title }}</h3>
+          </td>
+          <td class="circle--cell--right">
+            {{ application.position.title }}
+          </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>You haven't completed any projects yet. <a href="{% url 'projects:dashboard' category='all' q='all' %}">See
+            open projects!</a></p>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+    
+  <div class="grid-25 grid-push-5">
+    <!-- Avatar -->
+    <div class="circle--secondary--module">
+      <div class="circle--primary--avatar">
+        {% if user_profile.avatar %}
+        <img src="{{ user_profile.avatar.url }}" class="avatar-photo">
+        {% endif %}
       </div>
-    
-      <div class="bounds circle--page">
-        <div class="circle--page--header circle--fluid">
-          <div class="circle--fluid--cell circle--fluid--primary">
-            <h2>Profile</h2>
-          </div>
-          <div class="circle--fluid--cell circle--fluid--secondary">
-              {% if user.id == user_profile.id %}
-            <a class="button icon-on-left" href="{% url 'accounts:updateuser' %}">Edit</a>
-                {% endif %}
-          </div>
-        </div>
-    
-        <div class="grid-70">
-          <h1>{{ user_profile }}</h1>
-          <div class="circle--article--body">
-            <p>{{ user_profile.about|safe }}</p>
-          </div>
-    
-          <h2>Past Projects</h2>
-          {% if applications %}
-          <table class="u-full-width circle--table">
-            <thead>
-              <tr>
-                <th>Project Title</th>
-                <th>Project Needs</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-                {% for application in applications %}
-              <tr class="clickable-row" data-href="{% url 'projects:project' slug=application.position.project.slug %}">
-                <td>
-                  <h3>{{ application.position.project.title }}</h3>
-                </td>
-                <td class="circle--cell--right">
-                    {{ application.position.title }}
-                </td>
-              </tr>
-              {% endfor %}
-              {% else %}
-              <p>You haven't completed any projects yet. <a href="{% url 'projects:dashboard' category='all' q='all' %}">See open projects!</a></p>
-              {% endif %}
-            </tbody>
-          </table>
-        </div>
-    
-        <div class="grid-25 grid-push-5">
-    
-          <div class="circle--secondary--module">
-            <div class="circle--primary--avatar">
-                    {% if user_profile.avatar %}
-                    <img src="{{ user_profile.avatar.url }}" class="avatar-photo">
-                    {% endif %}
-            </div>
-          </div>
-    
-          <div class="circle--secondary--module">
-            <h4>My Skills</h4>
-            <ul class="unloaded skill-bubble-ul">
-                {% for skill in user_profile.skills.all %}
-              <li><a href="{% url 'projects:dashboard' category='skill' q=skill %}"><span class="skill-bubble">{{ skill }}</span></a></li>
-                {% endfor %}   
-            </ul>
-            <div class="skill-bubble-footer">
-                <p><a href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">see projects that match your skills!</p></a>
-            </div>
-            
-          </div>
-    
-          <div class="circle--secondary--module">
-            <h4>My Portfolio</h4>
-            <ul class="circle--link--list">
-                {% for project in user_profile.portfolio_projects.all %}
-              <li>{{ project.name }}, <a href="#">{{ project.url }}</a></li>
-                {% endfor %}
-            </ul>
-          </div>
-        </div>
+    </div>
+    <!-- /Avatar -->
+  
+    <!-- Skills -->
+    <div class="circle--secondary--module">
+      <h4>My Skills</h4>
+      <ul class="unloaded skill-bubble-ul">
+        {% for skill in user_profile.skills.all %}
+        <li><a href="{% url 'projects:dashboard' category='skill' q=skill %}"><span
+              class="skill-bubble">{{ skill }}</span></a></li>
+        {% endfor %}
+      </ul>
+      <div class="skill-bubble-footer">
+        <p><a href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">see projects that match your skills!
+        </p>
+        </a>
+      </div>
+    </div>
+    <!-- /Skills -->
+  
+    <!-- Portfolio projects -->
+    <div class="circle--secondary--module">
+      <h4>My Portfolio</h4>
+      <ul class="circle--link--list">
+        {% for project in user_profile.portfolio_projects.all %}
+        <li>{{ project.name }}, <a href="#">{{ project.url }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- /Portfolio projects -->
+  </div>
 
 {% endblock %}
 

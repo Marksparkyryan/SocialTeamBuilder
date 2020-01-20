@@ -137,6 +137,8 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "dummy_email_inbox")
 
 
+PASSWORD_RESET_TIMEOUT_DAYS = 7
+
 CKEDITOR_CONFIGS = {
     'default': {
         'height': 'auto',
