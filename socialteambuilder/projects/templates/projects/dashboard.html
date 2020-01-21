@@ -10,84 +10,85 @@
 {% block body %}
 <div class="bounds circle--page">
 
-        <div class="circle--page--header circle--fluid">
-          <div class="circle--fluid--cell circle--fluid--primary">
-            <h2>Projects</h2>
-            <p>
-              that are ready to hire
-            </p>
-          </div>
-          <div class="circle--fluid--cell circle--fluid--secondary">
-            <a class="button button-primary icon-on-left" href="{% url 'projects:create_update_project' %}">
-              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
-                <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "/>
-              </svg>
-              New Project
-            </a>
-          </div>
-        </div>
-    
-        <div class="grid-25">
-          <div class="circle--filter circle--secondary--module">
-            <h4>Project Needs</h4>
-            <ul class="circle--filter--list">
-              {% if object_list %}
-              {% select_distinct_positions_from_projects as titles %}
-              <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
-              {% for title in titles %}
-              <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
-              {% endfor %}
-              {% endif %}
-              
-            </ul>
-          </div>
-          <div class="circle--filter circle--secondary--module">
-              <h4>Personalized</h4>
-              <ul class="circle--filter--list">
-                <li><a {% if q == 'my-skills' %}class="selected"{% endif %} href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Projects that match your skillset</a></li>
-              </ul>
-            </div>
-        </div>
+  <div class="circle--page--header circle--fluid">
+    <div class="circle--fluid--cell circle--fluid--primary">
+      <h2>Projects</h2>
+      <p>
+        that are ready to hire
+      </p>
+    </div>
+    <div class="circle--fluid--cell circle--fluid--secondary">
+      <a class="button button-primary icon-on-left" href="{% url 'projects:create_update_project' %}">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
+          <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 " />
+        </svg>
+        New Project
+      </a>
+    </div>
+  </div>
 
-        
-    
-        <div class="grid-70 grid-push-5">
-            {% if object_list %}
-          <table class="u-full-width circle--table">
-            <thead>
-              <tr>
-                <th>Project Name</th>
-                <th class="circle--cell--right">Project Needs</th>
-              </tr>
-            </thead>
-            {% for project in filtered %}
-            <tbody>
-              <tr class="clickable-row" data-href="{% url 'projects:project' slug=project.slug %}">
-                <td>
-                  <h3>{{ project.title|title }}</h3>
-                </td>
-                <td class="circle--cell--right">
-                    {% with project.position_set.all|length as length %}
-                    {% for position in project.position_set.all|slice:":3" %}
-                  <span class="secondary-label">{{ position.title }}{% if length > 1 %},{% endif %}</span>
-                    {% endfor %}
-                    {% if length > 3 %}
-                    and {{ project.position_set.all|slice:"3:"|length }} more...
-                    {% endif %}
-                    {% endwith %}
-                </td>
-              </tr>
-            </tbody>
+  <div class="grid-25">
+    <div class="circle--filter circle--secondary--module">
+      <h4>Project Needs</h4>
+      <ul class="circle--filter--list">
+        {% if object_list %}
+        {% select_distinct_positions_from_projects as titles %}
+        <li><a {% if q == 'all' %}class="selected" {% endif %}
+            href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
+        {% for title in titles %}
+        <li><a {% if q == title|slugify %}class="selected" {% endif %}
+            href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
+        {% endfor %}
+        {% endif %}
+
+      </ul>
+    </div>
+    <div class="circle--filter circle--secondary--module">
+      <h4>Personalized</h4>
+      <ul class="circle--filter--list">
+        <li><a {% if q == 'my-skills' %}class="selected" {% endif %}
+            href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Projects that match your skillset</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-70 grid-push-5">
+    {% if object_list %}
+    <table class="u-full-width circle--table">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th class="circle--cell--right">Project Needs</th>
+        </tr>
+      </thead>
+      {% for project in filtered %}
+      <tbody>
+        <tr class="clickable-row" data-href="{% url 'projects:project' slug=project.slug %}">
+          <td>
+            <h3>{{ project.title|title }}</h3>
+          </td>
+          <td class="circle--cell--right">
+            {% with project.position_set.all|length as length %}
+            {% for position in project.position_set.all|slice:":3" %}
+            <span class="secondary-label">{{ position.title }}{% if length > 1 %},{% endif %}</span>
             {% endfor %}
-          </table>
-          {% endif %}
-        </div>
+            {% if length > 3 %}
+            and {{ project.position_set.all|slice:"3:"|length }} more...
+            {% endif %}
+            {% endwith %}
+          </td>
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
 
-      </div>
+</div>
 {% endblock %}
 
 {% block js %}
 if ($(".search-bar").val()) $(".search-bar").css('background-color', 'orange');
 {% endblock %}
-
-

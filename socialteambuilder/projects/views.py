@@ -7,14 +7,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, HttpResponse, reverse
-from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView, FormView
+from django.http import (
+    JsonResponse,
+    HttpResponseBadRequest,
+    HttpResponseServerError,
+    HttpResponseRedirect
+)
+from django.shortcuts import render, get_object_or_404, reverse
+from django.views.generic import View, DetailView
 from django.views.generic.list import ListView
-from django.views.generic.detail import SingleObjectMixin
-from django.utils.text import slugify
 
 from .models import Application, Project, Position
 from .forms import CreateProjectForm, PositionFormset, SearchBarForm
@@ -23,6 +25,10 @@ User = get_user_model()
 
 
 class CustomLoginRequired(LoginRequiredMixin):
+    """Custom mixin that inherits LoginRequiredMixin funcitonality but
+    also overlays a pending message delivery feature.
+    """
+
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
@@ -33,10 +39,10 @@ class CustomLoginRequired(LoginRequiredMixin):
         if apps.exists():
             for app in apps:
                 messages.success(
-                    request, 
+                    request,
                     "You've been {} for the position of {}, {}.".format(
-                        app.get_status_display().lower(), 
-                        app.position.title, 
+                        app.get_status_display().lower(),
+                        app.position.title,
                         app.position.project.title
                     ))
                 app.unread = False
@@ -44,10 +50,11 @@ class CustomLoginRequired(LoginRequiredMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
+class DashboardView(CustomLoginRequired, ListView):
+    """View for all open projects
+    """
     queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
-    prefetch_related = ['position_set',]
 
     def get_queryset(self, *args, **kwargs):
         """get distinct projects that are currently open and have empty
@@ -56,30 +63,32 @@ class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
         super().get_queryset(*args, **kwargs)
         queryset = self.queryset.filter(
             status='A',
-            position__status='E' 
+            position__status='E'
+        ).prefetch_related(
+            'position_set'
         ).distinct()
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         category = self.kwargs['category']
         q = self.kwargs['q']
         if q != 'all':
             if category == 'need':
-                filtered =  self.get_queryset().filter(
+                filtered = self.get_queryset().filter(
                     position__slug=q
                 )
             if category == 'skill':
                 filtered = self.get_queryset().filter(
                     position__skills__name=q
-                )       
+                )
             if category == 'skills':
                 filtered = self.get_queryset().filter(
                     position__skills__in=self.request.user.skills.all()
-                )             
+                )
         else:
             filtered = self.get_queryset()
-        
+
         context['searchform'] = SearchBarForm()
         context['q'] = self.kwargs['q']
         context['filtered'] = filtered
@@ -87,6 +96,8 @@ class DashboardView(CustomLoginRequired, PrefetchRelatedMixin, ListView):
 
 
 class SearchBar(ListView):
+    """View that handles queries submitted by the SearchForm
+    """
     queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
 
@@ -97,10 +108,10 @@ class SearchBar(ListView):
         super().get_queryset(*args, **kwargs)
         queryset = self.queryset.filter(
             status='A',
-            position__status='E' 
+            position__status='E'
         ).distinct()
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         q = self.request.GET.get('q')
@@ -108,7 +119,7 @@ class SearchBar(ListView):
             Q(title__icontains=q) |
             Q(description__icontains=q) |
             Q(applicant_requirements__icontains=q) |
-            Q(position__title__icontains=q) | 
+            Q(position__title__icontains=q) |
             Q(position__skills__name__icontains=q)
         )
         context['searchform'] = SearchBarForm(initial={'q': q})
@@ -117,16 +128,21 @@ class SearchBar(ListView):
 
 
 class ApplicationsList(CustomLoginRequired, ListView):
+    """View that displays all applications to the user's projects and
+    any applications from the user to other user's projects
+    """
     model = Application
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs) 
+        queryset = super().get_queryset(*args, **kwargs)
         queryset = queryset = queryset.filter(
             Q(position__project__owner=self.request.user) |
             Q(user=self.request.user)
+        ).select_related(
+            'position', 'user'
         ).distinct()
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         box = self.kwargs['box']
@@ -146,11 +162,11 @@ class ApplicationsList(CustomLoginRequired, ListView):
                     status__icontains=q
                 )
             elif category == 'project':
-                filtered =  filtered.filter(
+                filtered = filtered.filter(
                     position__project__slug=q
                 )
             elif category == 'need':
-                filtered =  filtered.filter(
+                filtered = filtered.filter(
                     position__slug=q
                 )
         context['searchform'] = SearchBarForm()
@@ -162,16 +178,19 @@ class ApplicationsList(CustomLoginRequired, ListView):
             position__project__owner=self.request.user
         ).count()
         return context
-      
+
 
 class UpdateAppStatus(CustomLoginRequired, View):
-    http_method_names = ['post',]
+    """View that handles JSON requests for changing the status of an
+    application
+    """
+    http_method_names = ['post', ]
 
     def post(self, request, *args, **kwargs):
         print(request.POST)
         pk = self.request.POST.get('app_pk')
         status = self.request.POST.get('status')
-        user = self.request.user 
+        user = self.request.user
         print(pk, status, user)
         app = get_object_or_404(Application, pk=pk)
         if user == app.position.project.owner:
@@ -189,23 +208,26 @@ class UpdateAppStatus(CustomLoginRequired, View):
 
 
 class CreateApp(CustomLoginRequired, View):
-    http_method_names = ['post',]
-    
+    """View for creating an application instance - if the user applies
+    to an open position
+    """
+    http_method_names = ['post', ]
+
     def post(self, request, *args, **kwargs):
         print(request.POST)
         position_pk = self.request.POST.get('position_pk')
         position = Position.objects.get(id=position_pk)
-        user = self.request.user 
+        user = self.request.user
         try:
             app = Application(
                 user=user,
                 position=position,
                 status='U'
             )
-            app.save()  
+            app.save()
             data = {
-                    'updated': True,
-                }
+                'updated': True,
+            }
             return JsonResponse(data)
 
         except Exception as err:
@@ -213,9 +235,12 @@ class CreateApp(CustomLoginRequired, View):
             return HttpResponseServerError
 
 
-class ProjectView(CustomLoginRequired, DetailView):
+class ProjectView(CustomLoginRequired, PrefetchRelatedMixin, DetailView):
+    """View for displaying the details of a specific project
+    """
     model = Project
     template_name = 'projects/project.html'
+    prefetch_related = ['position_set', 'position_set__skills', ]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -225,6 +250,9 @@ class ProjectView(CustomLoginRequired, DetailView):
 
 @login_required
 def create_update_project(request, slug=None):
+    """View for handling the editing of a specific project and its
+    related positions
+    """
     request_user = request.user
     if slug is not None:
         project = Project.objects.get(slug=slug)
@@ -242,9 +270,9 @@ def create_update_project(request, slug=None):
     if request.method == 'POST':
         project_form = CreateProjectForm(request.POST, instance=project)
         position_formset = PositionFormset(
-            request.POST, 
+            request.POST,
             queryset=Position.objects.filter(project=project)
-            )
+        )
         if project_form.is_valid() and position_formset.is_valid():
             project = project_form.save(commit=False)
             project.owner = request_user
@@ -262,17 +290,14 @@ def create_update_project(request, slug=None):
                 print(position)
             position_formset.save_m2m()
             if new_project:
-                messages.success(request, 'Project {} created!'.format(project.title))
-            messages.success(request, 'Project {} updated!'.format(project.title)) 
-            return HttpResponseRedirect(reverse('projects:project', kwargs={'slug': project.slug})) 
+                messages.success(
+                    request, 'Project {} created!'.format(project.title))
+            messages.success(
+                request, 'Project {} updated!'.format(project.title))
+            return HttpResponseRedirect(reverse('projects:project', kwargs={'slug': project.slug}))
 
     context = {
         'project_form': project_form,
         'position_formset': position_formset,
     }
     return render(request, 'projects/create_update_project.html', context)
-
-
-
-
-

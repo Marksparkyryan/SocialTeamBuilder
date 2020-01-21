@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = "/projects/dashboard/all/all/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
@@ -46,9 +47,11 @@ INSTALLED_APPS = [
     'django_select2',
     'select2_tags',
     'ckeditor',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,3 +148,10 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
+
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]

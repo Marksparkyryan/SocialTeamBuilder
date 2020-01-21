@@ -1,5 +1,4 @@
 # accounts/views.py
-import datetime
 from django.utils import timezone
 
 from braces.views import PrefetchRelatedMixin
@@ -9,20 +8,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.views import LoginView
 from django.core.mail import EmailMessage
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import (
-    RedirectView,
     TemplateView,
     CreateView,
-    UpdateView,
-    View,
     DetailView
 )
 from django.urls import reverse_lazy, reverse
@@ -36,26 +30,34 @@ from projects.models import Application
 from projects.views import CustomLoginRequired
 
 from .forms import (
-    UserCreationForm, 
+    UserCreationForm,
     UserUpdateForm,
     NewPortfolioProjectFormset
 )
-from .models import PortfolioProject, Skill
+from .models import PortfolioProject
 
 
 User = get_user_model()
 
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
+    """Custom token generator for users to use for one-time account
+    activation
+    """
+
     def _make_hash_value(self, user, timestamp):
         return (
             str(user.pk) + str(timestamp) + str(user.is_active)
         )
 
+
 account_activation_token = AccountActivationTokenGenerator()
 
 
 class Register(CreateView):
+    """View for registering users. Confirmation email and token is 
+    delivered from this view.
+    """
     form_class = UserCreationForm
     success_url = reverse_lazy('accounts:check_inbox')
     template_name = 'accounts/register.html'
@@ -76,17 +78,22 @@ class Register(CreateView):
             'token': token,
         })
         email = EmailMessage(
-                        subject, message, to=[to_email]
-            )
+            subject, message, to=[to_email]
+        )
         email.send()
         return super().form_valid(form)
 
 
 class CheckInbox(TemplateView):
+    """View for registration success message
+    """
     template_name = "accounts/check_inbox.html"
 
 
 def activate(request, uidb64, token):
+    """View for handling the verification of token kwarg. If valid, the
+    user's active status is set to True
+    """
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -97,14 +104,18 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        messages.success(request, "Your account has been confirmed and activated!")
+        messages.success(
+            request, "Your account has been confirmed and activated!")
         return HttpResponseRedirect(reverse('accounts:updateuser'))
     else:
         return render(request, 'accounts/failed_activation.html')
 
 
 class LogIn(LoginView):
-    def form_valid(self, form): 
+    """View for handling logging in of user
+    """
+
+    def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, "You're logged in!")
         return response
@@ -112,13 +123,10 @@ class LogIn(LoginView):
 
 @login_required()
 def update_user(request):
+    """View for handling the editing of a user instance
+    """
     user = request.user
-    instance = User.objects.filter(
-        id=user.id
-    ).prefetch_related(
-        'skills',
-        'portfolio_projects',
-    ).first()
+    instance = User.objects.get(id=user.id)
     user_form = UserUpdateForm(instance=instance)
     project_formset = NewPortfolioProjectFormset(
         queryset=PortfolioProject.objects.filter(user=user)
@@ -128,8 +136,6 @@ def update_user(request):
         user=user,
         status='A',
         position__project__status='C'
-    ).prefetch_related(
-        'position__skills',
     ).select_related(
         'position__project'
     )
@@ -166,9 +172,12 @@ def update_user(request):
 
 
 class Profile(CustomLoginRequired, DetailView):
+    """View for the detail of user's information
+    """
     model = User
     template_name = "accounts/profile.html"
     context_object_name = "user_profile"
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -180,10 +189,3 @@ class Profile(CustomLoginRequired, DetailView):
             position__project__status='C'
         )
         return context
-
-
-
-
-
-
-    

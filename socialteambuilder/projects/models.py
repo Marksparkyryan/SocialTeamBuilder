@@ -1,13 +1,10 @@
 from django.conf import settings
-from django.contrib import messages
 from django.db import models
 from django.utils.text import slugify
 
-from accounts.models import Skill
-
 
 class Project(models.Model):
-    """Model representing a development project that users can create 
+    """Model representing a development project that users can create
     and/or join
     """
     STATUS = (
@@ -33,7 +30,7 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def save(self, *args, **kwargs):
         # set the slug
         self.slug = slugify(self.title, allow_unicode=True)
@@ -63,7 +60,7 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title, allow_unicode=True)
         super().save(*args, **kwargs)
@@ -95,19 +92,16 @@ class Application(models.Model):
 
     def __str__(self):
         if self.status in ('A', 'R'):
-            return "{} was {} for {}".format(self.user.first_name, dict(self.STATUS)[self.status], self.position)
+            return "{} was {} for {}".format(
+                self.user.first_name,
+                dict(self.STATUS)[self.status],
+                self.position
+            )
         return "{} applied to {}".format(
             self.user.first_name,
             self.position.title
         )
-    
+
     class Meta:
         unique_together = ['user', 'position']
         ordering = ['-created']
-    
-
-
-
-    
-
-

@@ -6,7 +6,7 @@ class PositionAdmin(admin.ModelAdmin):
     list_display = ('title', 'project', 'status')
     list_filter = ('status',)
     search_fields = ('title',)
-    
+
 
 class InlinePositionAdmin(admin.TabularInline):
     model = Position
@@ -14,7 +14,7 @@ class InlinePositionAdmin(admin.TabularInline):
 
 
 class ProjectAdmin(admin.ModelAdmin):
-   inlines = [InlinePositionAdmin,]
+    inlines = [InlinePositionAdmin,]
 
 
 class ApplicationAdmin(admin.ModelAdmin):

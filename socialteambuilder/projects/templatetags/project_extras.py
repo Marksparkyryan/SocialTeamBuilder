@@ -38,7 +38,7 @@ def select_distinct_positions_from_projects(context):
         for position in project.position_set.all():
             title = position.title
             positions.add(title)
-    return list(positions)
+    return positions
 
 @register.simple_tag(takes_context=True)
 def select_distinct_positions_from_project(context):

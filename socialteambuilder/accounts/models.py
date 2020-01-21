@@ -7,6 +7,9 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
+    """Custom manager for the User model
+    """
+
     def create_user(self, email, first_name, password=None):
         """
         Creates and saves a User with the given email, date of
@@ -40,6 +43,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    """Custom model for users
+    """
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -48,18 +53,20 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     about = models.TextField(
-        max_length=2500, 
+        max_length=2500,
         default="A little about you"
     )
-    avatar = models.ImageField(default="default_avatars/icons8-customer-100.png")
-    skills = models.ManyToManyField("Skill", related_name="users") # on delete issues?
+    avatar = models.ImageField(
+        default="default_avatars/icons8-customer-100.png")
+    skills = models.ManyToManyField(
+        "Skill", related_name="users")  # on delete issues?
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name',]
+    REQUIRED_FIELDS = ['first_name', ]
 
     def __str__(self):
         if not self.first_name:
@@ -81,6 +88,8 @@ class User(AbstractBaseUser):
 
 
 class Skill(models.Model):
+    """Model for a skill that can be shared by users and positions
+    """
     name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
@@ -92,11 +101,11 @@ class Skill(models.Model):
 
 
 class PortfolioProject(models.Model):
-    """Model representing a website that the user has built 
+    """Model representing a website that the user has built
     """
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
         related_name="portfolio_projects"
     )
     name = models.CharField(max_length=255, unique=True)

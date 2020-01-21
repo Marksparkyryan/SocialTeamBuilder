@@ -1,14 +1,11 @@
 from django import forms
-from django.conf import settings
-from django.forms import formset_factory, modelformset_factory
-from django.contrib.auth import get_user_model
+from django.forms import modelformset_factory
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from accounts.models import PortfolioProject, Skill, User
-
 from ckeditor.widgets import CKEditorWidget
-from django_select2.forms import Select2TagWidget, ModelSelect2TagWidget
 from select2_tags import forms as f
+
+from accounts.models import PortfolioProject, Skill, User
 
 
 # Admin Form
@@ -16,7 +13,8 @@ class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label='Password confirmation', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -58,7 +56,6 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
-
     def clean_password2(self):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")
@@ -69,6 +66,9 @@ class UserChangeForm(forms.ModelForm):
 
 
 class UserUpdateForm(f.Select2ModelForm):
+    """Form for updating user's general information (first_name,
+    last_name, about, avatar, skills)
+    """
     skills = f.Select2ModelMultipleChoiceField(
         'name', queryset=Skill.objects.all(), required=False, save_new=True)
     about = forms.CharField(widget=CKEditorWidget())
@@ -76,20 +76,22 @@ class UserUpdateForm(f.Select2ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'about', 'avatar', 'skills']
-             
+
 
 class PortfolioProjectForm(forms.ModelForm):
+    """Form for updating portfolio projects related toa specific user -
+    (name, url)
+    """
     class Meta:
         model = PortfolioProject
-        fields = ['name', 'url', 'id',]
+        fields = ['name', 'url', 'id', ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Project Name'}),
             'url': forms.TextInput(attrs={'placeholder': 'Project URL'}),
             'id': forms.HiddenInput()
         }
 
-    
-# PortfolioProjectFormset = formset_factory(PortfolioProjectForm, extra=0)
+
 NewPortfolioProjectFormset = modelformset_factory(
     PortfolioProject,
     form=PortfolioProjectForm,
@@ -97,4 +99,4 @@ NewPortfolioProjectFormset = modelformset_factory(
     max_num=5,
     extra=0,
     can_order=True
-    )
+)
