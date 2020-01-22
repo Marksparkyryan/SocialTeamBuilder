@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import modelformset_factory
 
-from ckeditor.widgets import CKEditorWidget
+from markdownx.fields import MarkdownxFormField
 from select2_tags import forms as f
 
 from accounts.models import Skill
@@ -33,7 +33,7 @@ class CreateProjectForm(forms.ModelForm):
                 'class': 'circle--input--h1',
                 'placeholder': 'Project Title'}
         ))
-    description = forms.CharField(widget=CKEditorWidget())
+    description = MarkdownxFormField()
     time_estimate = forms.CharField(
         max_length=10,
         widget=forms.TextInput(
@@ -58,6 +58,7 @@ class PositionForm(forms.ModelForm):
         required=False,
         save_new=True,
     )
+    description = MarkdownxFormField()
 
     class Meta:
         model = Position
@@ -67,7 +68,6 @@ class PositionForm(forms.ModelForm):
                 'placeholder': 'Position Title',
                 'class': 'circle--input--h3'
             }),
-            'description': CKEditorWidget(),
             'id': forms.HiddenInput(),
         }
 

@@ -6,9 +6,9 @@ $( document ).ready(function() {
     var form_idx = $('#id_form-TOTAL_FORMS').val();
     $('.project-cards').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
     $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
-    var forms = $('.project-cards').find("div:visible").length;
+    var forms = $('.project-cards').find(".project-card").length;
     console.log(forms);
-    if (forms > 4) $('#add_form').attr('style', 'display:none');
+    if (forms > 10) $('#add_form').attr('style', 'display:none');
   });
 
   // Remove Form
@@ -20,7 +20,7 @@ $( document ).ready(function() {
     // parent.append('<input type="checkbox" name="form-' + index + '-DELETE" id="id_form-' + index + '-DELETE" checked>')
     parent.attr("style", "display:none");
     forms = parent.length; 
-    if (forms < 4) $('#add_form').attr('style', 'display:inline-block');
+    if (forms < 10) $('#add_form').attr('style', 'display:inline-block');
   });
 
   // Adds class to selected item

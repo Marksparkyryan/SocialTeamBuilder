@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load markdown_deux_tags %}
+
 {% block messages %}
 {{ block.super }}
 {% endblock %}
@@ -39,7 +41,7 @@
   <div class="grid-70">
     <h1>{{ user_profile }}</h1>
     <div class="circle--article--body">
-      <p>{{ user_profile.about|safe }}</p>
+      <p>{{ user_profile.about|markdown }}</p>
     </div>
   
     <h2>Past Projects</h2>

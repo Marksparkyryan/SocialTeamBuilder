@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'django_select2',
     'select2_tags',
     'ckeditor',
+    'markdownx',
+    'markdown_deux',
+    'cropperjs',
     'debug_toolbar',
 ]
 
@@ -130,7 +133,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ['assets']
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, 'node_modules'),
+
+)
 STATIC_ROOT = 'static/'
 
 MEDIA_URL = '/media/'
@@ -144,6 +151,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 7
 
 CKEDITOR_CONFIGS = {
     'default': {
+        'toolbar': 'full',
         'height': 'auto',
         'width': '100%',
     },

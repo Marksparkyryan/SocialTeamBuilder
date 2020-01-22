@@ -3,6 +3,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
 )
+
 from django.db import models
 
 
@@ -54,10 +55,12 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=255)
     about = models.TextField(
         max_length=2500,
-        default="A little about you"
+        default="Markdown available, preview below."
     )
     avatar = models.ImageField(
-        default="default_avatars/icons8-customer-100.png")
+        default="default_avatars/icons8-customer-100.png", 
+        upload_to="avatars"
+    )
     skills = models.ManyToManyField(
         "Skill", related_name="users")  # on delete issues?
     is_active = models.BooleanField(default=False)

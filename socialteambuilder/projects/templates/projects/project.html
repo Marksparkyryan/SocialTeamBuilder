@@ -4,6 +4,7 @@
 {{ block.super }}
 {% endblock %}
 
+{% load markdown_deux_tags %}
 {% load project_extras %}
 {% csrf_token %}
 
@@ -27,7 +28,7 @@
     </div>
 
     <div class="circle--article--body">
-      <p>{{ project.description|safe }}</p>
+      <p>{{ project.description|markdown }}</p>
     </div>
 
 
@@ -42,7 +43,7 @@
               href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
               class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
             |{% endif %}{% endfor %}</p>
-          <p>{{ position.description }}</p>
+          <p>{{ position.description|markdown }}</p>
 
           <!-- Filled -->
           {% if position.status == 'F' %}

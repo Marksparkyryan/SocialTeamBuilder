@@ -32,7 +32,8 @@ from projects.views import CustomLoginRequired
 from .forms import (
     UserCreationForm,
     UserUpdateForm,
-    NewPortfolioProjectFormset
+    NewPortfolioProjectFormset,
+    AvatarForm
 )
 from .models import PortfolioProject
 
@@ -127,6 +128,7 @@ def update_user(request):
     """
     user = request.user
     instance = User.objects.get(id=user.id)
+    avatar_form = AvatarForm(instance=instance)
     user_form = UserUpdateForm(instance=instance)
     project_formset = NewPortfolioProjectFormset(
         queryset=PortfolioProject.objects.filter(user=user)
@@ -141,32 +143,40 @@ def update_user(request):
     )
 
     if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
-        project_formset = NewPortfolioProjectFormset(
-            request.POST,
-            queryset=PortfolioProject.objects.filter(user=user)
-        )
-        # print("request data: ", request.POST)
-        print(project_formset)
-        if user_form.is_valid() and project_formset.is_valid():
-            # user info form
-            user_form.save()
-            # portfolio project forms
-            projects = project_formset.save(commit=False)
-            for project in project_formset.deleted_objects:
-                project.delete()
-            for project in projects:
-                project.user = user
-                project.save()
-            project_formset.save_m2m()
-            messages.success(request, 'Profile updated successfully!')
-            return HttpResponseRedirect(reverse('accounts:profile', kwargs={'pk': user.pk}))
+        if request.is_ajax():
+            avatar_form = AvatarForm(request.POST, request.FILES, instance=instance)
+            if avatar_form.is_valid():
+                user.avatar = request.FILES['id_avatar']
+                user.save()
+        else:
+            user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
+            project_formset = NewPortfolioProjectFormset(
+                request.POST,
+                queryset=PortfolioProject.objects.filter(user=user)
+            )
+            # print("request data: ", request.POST)
+            print(project_formset)
+            if user_form.is_valid() and project_formset.is_valid():
+                # user info form
+                user_form.save()
+                # portfolio project forms
+                projects = project_formset.save(commit=False)
+                for project in project_formset.deleted_objects:
+                    project.delete()
+                for project in projects:
+                    project.user = user
+                    project.save()
+                project_formset.save_m2m()
+                messages.success(request, 'Profile updated successfully!')
+                return HttpResponseRedirect(reverse('accounts:profile', kwargs={'pk': user.pk}))
+        
 
     context = {
         'searchform': SearchBarForm(),
         'user_form': user_form,
         'project_formset': project_formset,
-        'applications': applications
+        'applications': applications,
+        'avatar_form': avatar_form
     }
     return render(request, 'accounts/edit_profile.html', context)
 

@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 
+from markdownx import urls as markdownx
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -13,6 +15,7 @@ urlpatterns = [
     path('projects/', include('projects.urls', namespace='projects')),
     path('select2/', include('django_select2.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
+    path('markdownx/', include(markdownx)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()

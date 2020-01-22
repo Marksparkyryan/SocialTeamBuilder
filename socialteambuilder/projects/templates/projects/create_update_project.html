@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% load static %}
+{% load markdown_deux_tags %}
 
 {% block messages %}
 {{ block.super }}
@@ -35,7 +36,7 @@
         {{ project_form.title }}
         {{ project_form.description }}
       </div>
-
+      
       <!-- Positions -->
       <div class="circle--project--positions" id="positions-container">
         <h2>Positions</h2>
@@ -90,7 +91,7 @@
                 {{ hidden }}
                 {% endfor %}
                 <a class="circle--clone--remove" id="remove_form">- remove</a>
-                <hr>
+                <hr style="margin:100px 0;">
             </div>
         </div>
         <!-- /Empty position form to clone -->
@@ -119,6 +120,8 @@
   </div>
 </form>
 
+
+
 {% endblock %}
 
 {% block js %}
@@ -145,6 +148,26 @@ $("#id_form-0-skills").select2({
                     multiple: true,
                     tags: true
                     });
+                    $("#id_form-5-skills").select2({
+                      multiple: true,
+                      tags: true
+                      });
+                      $("#id_form-6-skills").select2({
+                        multiple: true,
+                        tags: true
+                        });
+                        $("#id_form-7-skills").select2({
+                          multiple: true,
+                          tags: true
+                          });
+                          $("#id_form-8-skills").select2({
+                            multiple: true,
+                            tags: true
+                            });
+                            $("#id_form-9-skills").select2({
+                              multiple: true,
+                              tags: true
+                              });
 
 
 $('#positions-container').on('click', '#add_form', function(){
@@ -171,6 +194,30 @@ $('#positions-container').on('click', '#add_form', function(){
                             multiple: true,
                             tags: true
                             });
+                            $("#id_form-5-skills").select2({
+                              multiple: true,
+                              tags: true
+                              });
+                              $("#id_form-6-skills").select2({
+                                multiple: true,
+                                tags: true
+                                });
+                                $("#id_form-7-skills").select2({
+                                  multiple: true,
+                                  tags: true
+                                  });
+                                  $("#id_form-8-skills").select2({
+                                    multiple: true,
+                                    tags: true
+                                    });
+                                    $("#id_form-9-skills").select2({
+                                      multiple: true,
+                                      tags: true
+                                      });
+                                      $("#id_form-10-skills").select2({
+                                        multiple: true,
+                                        tags: true
+                                        });
       });
 });
 

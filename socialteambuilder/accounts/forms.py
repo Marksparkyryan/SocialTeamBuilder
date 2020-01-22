@@ -2,7 +2,7 @@ from django import forms
 from django.forms import modelformset_factory
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from ckeditor.widgets import CKEditorWidget
+from markdownx.fields import MarkdownxFormField
 from select2_tags import forms as f
 
 from accounts.models import PortfolioProject, Skill, User
@@ -33,7 +33,6 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
-            print(user._meta.default_manager_name)
             user.save()
         return user
 
@@ -71,11 +70,29 @@ class UserUpdateForm(f.Select2ModelForm):
     """
     skills = f.Select2ModelMultipleChoiceField(
         'name', queryset=Skill.objects.all(), required=False, save_new=True)
-    about = forms.CharField(widget=CKEditorWidget())
+    about = MarkdownxFormField()
+
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'about', 'avatar', 'skills']
+        fields = ['first_name', 'last_name', 'about', 'skills']
+
+
+class AvatarForm(forms.ModelForm):
+    """Form holding the user's avatar. We're using a separate form so
+    cropperjs can update outside of the other user data
+    """
+    class Meta:
+        model = User
+        fields = [
+            'avatar',
+        ]
+
+    class Media:
+        css = {'all': ('cropperjs/dist/cropper.css',)}
+        js = ('cropperjs/dist/cropper.js',
+              'jquery-cropper/dist/jquery-cropper.js',
+              )
 
 
 class PortfolioProjectForm(forms.ModelForm):
@@ -96,7 +113,7 @@ NewPortfolioProjectFormset = modelformset_factory(
     PortfolioProject,
     form=PortfolioProjectForm,
     can_delete=True,
-    max_num=5,
+    max_num=10,
     extra=0,
     can_order=True
 )
