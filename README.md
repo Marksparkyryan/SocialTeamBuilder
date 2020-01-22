@@ -13,8 +13,8 @@ skills they have, and what projects they have been connected to that are now com
 
 1. cd into your directory of projects (or wherever you prefer to keep your clones)
 2. git clone ```https://github.com/Marksparkyryan/SocialTeamBuilder.git``` to clone the app
-3. ```virtualenv .venv``` to create your virtual environment
-4. ```source .venv/bin/activate``` to activate the virtual environment
+3. ```virtualenv venv``` to create your virtual environment
+4. ```source venv/bin/activate``` to activate the virtual environment
 5. ```pip install -r SocialTeamBuilder/requirements.txt``` to install app requirements
 6. cd into ```SocialTeamBuilder/socialteambuilder/``` and run ```python manage.py runserver```
 7. the app should now be running on ```http://127.0.0.1:8000/accounts/register/```
