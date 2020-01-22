@@ -1,8 +1,6 @@
 # accounts/views.py
 from django.utils import timezone
 
-from braces.views import PrefetchRelatedMixin
-
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site

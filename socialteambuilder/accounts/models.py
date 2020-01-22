@@ -58,7 +58,7 @@ class User(AbstractBaseUser):
         default="Markdown available, preview below."
     )
     avatar = models.ImageField(
-        default="default_avatars/icons8-customer-100.png", 
+        default="default_avatars/blank.png", 
         upload_to="avatars"
     )
     skills = models.ManyToManyField(
