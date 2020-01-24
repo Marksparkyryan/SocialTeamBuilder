@@ -74,7 +74,6 @@ class User(AbstractBaseUser):
     @property
     def get_avatar_url(self):
         path = settings.MEDIA_ROOT + '/' + self.avatar.name
-        print(path)
         if default_storage.exists(path):
             return self.avatar.url
         else:
