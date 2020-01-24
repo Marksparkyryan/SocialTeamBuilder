@@ -94,7 +94,7 @@
           {% if user.is_authenticated %}
             <div class="image-cropper">
                 <a href="{% url 'accounts:profile' pk=user.id %}">
-                <img src="{{ user.avatar.url }}" alt="avatar" class="profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
+                <img src="{{ user.get_avatar_url }}" alt="avatar" class="profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
                 </a>
               </div> 
           {% endif %}

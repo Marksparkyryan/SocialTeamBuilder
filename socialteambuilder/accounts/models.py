@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.files.storage import default_storage
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -18,7 +19,6 @@ class UserManager(BaseUserManager):
         """
         if not email:
             raise ValueError('Users must have an email address')
-        print("using custom user manager")
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name
@@ -70,6 +70,15 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', ]
+    
+    @property
+    def get_avatar_url(self):
+        path = settings.MEDIA_ROOT + '/' + self.avatar.name
+        print(path)
+        if default_storage.exists(path):
+            return self.avatar.url
+        else:
+            return '/media/default_avatars/blank.png'
 
     def __str__(self):
         if not self.first_name:

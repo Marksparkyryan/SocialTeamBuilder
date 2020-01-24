@@ -77,7 +77,7 @@
     <div class="circle--secondary--module">
       <div class="circle--primary--avatar">
         {% if user_profile.avatar %}
-        <img src="{{ user_profile.avatar.url }}" class="avatar-photo">
+        <img src="{{ user_profile.get_avatar_url }}" class="avatar-photo">
         {% endif %}
       </div>
     </div>

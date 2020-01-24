@@ -57,7 +57,7 @@
           <div class="avatar_wrapper">
               <span class="avatar_base avatar_update">
                   <label class="label" data-toggle="tooltip" title="" data-original-title="Change">
-                      <img name="id_avatar" id="id_avatar" class="avatar_circle" src="{{ user.avatar.url }}"
+                      <img name="id_avatar" id="id_avatar" class="avatar_circle" src="{{ user.get_avatar_url }}"
                           alt="avatar" />
                       <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
                       <p>Change</p>

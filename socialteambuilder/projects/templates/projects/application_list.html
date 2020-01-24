@@ -92,7 +92,7 @@
             <tr class="" data-href="{% url 'accounts:profile' pk=application.user.id %}" id="tr-for-app-{{ application.id }}">
                 <td class="clickable-td avatar-td">
                     <div class="image-cropper">
-                        <img src="{{ application.user.avatar.url }}" alt="avatar" class="profile-pic">
+                        <img src="{{ application.user.get_avatar_url }}" alt="avatar" class="profile-pic">
                       </div> 
                 </td>
                 <td class="clickable-td">

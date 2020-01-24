@@ -1,5 +1,3 @@
-import os
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import IntegrityError
 from django.test import TestCase
