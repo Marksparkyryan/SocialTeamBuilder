@@ -14,7 +14,7 @@
   <div class="bounds">
     <div class="grid-100">
       <a class="button" href="{% url 'projects:create_update_project' slug=project.slug %}">Edit Project</a>
-      <a class="button button-text" href="index.html">Delete Project</a>
+      <a class="button button-text" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
     </div>
   </div>
 </div>

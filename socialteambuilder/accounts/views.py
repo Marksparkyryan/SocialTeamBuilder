@@ -152,8 +152,6 @@ def update_user(request):
                 request.POST,
                 queryset=PortfolioProject.objects.filter(user=user)
             )
-            # print("request data: ", request.POST)
-            print(project_formset)
             if user_form.is_valid() and project_formset.is_valid():
                 # user info form
                 user_form.save()

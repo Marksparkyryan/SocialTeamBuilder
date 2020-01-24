@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="bounds">
+    <div class="grid-30 centered">
+        <form method="post">{% csrf_token %}
+            <h1>Delete project?</h1>
+            <p>Are you sure you want to delete project "{{ object }}"? Deleting this
+                project will remove all related positions, inluding "past project"
+                records for users.
+            </p>
+            <input type="submit" value="Confirm">
+            <button>Cancel</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -15,7 +15,8 @@ from django.http import (
     HttpResponseRedirect
 )
 from django.shortcuts import render, get_object_or_404, reverse
-from django.views.generic import View, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import View, DetailView, DeleteView
 from django.views.generic.list import ListView
 
 from .models import Application, Project, Position
@@ -262,17 +263,24 @@ def create_update_project(request, slug=None):
                 project=project
             ))
     else:
+        project = None
         project_form = CreateProjectForm()
         position_formset = PositionFormset(
             queryset=Position.objects.none()
         )
 
     if request.method == 'POST':
-        project_form = CreateProjectForm(request.POST, instance=project)
+        
+        project_form = CreateProjectForm(
+            request.POST, 
+            instance=project
+        )
         position_formset = PositionFormset(
             request.POST,
             queryset=Position.objects.filter(project=project)
         )
+        
+
         if project_form.is_valid() and position_formset.is_valid():
             project = project_form.save(commit=False)
             project.owner = request_user
@@ -284,10 +292,9 @@ def create_update_project(request, slug=None):
             positions = position_formset.save(commit=False)
             for position in positions:
                 position.project = project
-                if position.status is None:
+                if position.status not in ('E', 'F'):
                     position.status = 'E'
                 position.save()
-                print(position)
             position_formset.save_m2m()
             if new_project:
                 messages.success(
@@ -301,3 +308,10 @@ def create_update_project(request, slug=None):
         'position_formset': position_formset,
     }
     return render(request, 'projects/create_update_project.html', context)
+
+
+class DeleteProject(DeleteView):
+    """Handles the deletion of a specific project
+    """
+    model = Project
+    success_url = reverse_lazy('projects:dashboard', kwargs={'category':'all', 'q':'all'})

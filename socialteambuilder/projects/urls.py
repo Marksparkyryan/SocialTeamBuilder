@@ -12,5 +12,6 @@ urlpatterns = [
     path('ajax/update_app_status/', views.UpdateAppStatus.as_view(), name='update_app_status'),
     path('ajax/create_app/', views.CreateApp.as_view(), name='newapp'),
     path('detail/<slug>/', views.ProjectView.as_view(), name='project'),
+    path('delete_project/<slug>/', views.DeleteProject.as_view(), name='delete_project'),
     re_path(r'^create-update-project/(?:(?P<slug>[-a-zA-Z0-9]+)/)?$', views.create_update_project, name="create_update_project"),
 ]
