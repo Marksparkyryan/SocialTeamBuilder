@@ -92,7 +92,10 @@
 {% endblock %}
 
 {% block js %}
-// Apply Button
+{{ block.super }}
+
+<!-- Apply button -->>
+<script>
 $(".apply-button").click(function () {
 
     // get the csrf token for ajax request  
@@ -147,4 +150,6 @@ $(".apply-button").click(function () {
         }
       });
 });
+</script>
+
 {% endblock %}

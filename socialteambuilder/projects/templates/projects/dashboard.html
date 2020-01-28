@@ -90,5 +90,10 @@
 {% endblock %}
 
 {% block js %}
-if ($(".search-bar").val()) $(".search-bar").css('background-color', 'orange');
+{{ block.super }}
+
+<script>
+  if ($(".search-bar").val()) $(".search-bar").css('background-color', 'orange');
+</script>
+
 {% endblock %}

@@ -139,8 +139,10 @@
 {% endblock %}
 
 {% block js %}
+{{ block.super }}
 
-// Accept Reject User Buttons
+<!-- Accept/reject buttons & inbox counter -->
+<script>
 $(".button-accept-reject").click(function () {
 
     // get the csrf token for ajax request  
@@ -204,5 +206,6 @@ $(".button-accept-reject").click(function () {
         }
       });
 });
+</script>
 
 {% endblock %}

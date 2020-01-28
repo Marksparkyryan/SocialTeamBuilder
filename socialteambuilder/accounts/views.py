@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.views import LoginView
 from django.core.mail import EmailMessage
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import (
@@ -145,7 +145,9 @@ def update_user(request):
             avatar_form = AvatarForm(request.POST, request.FILES, instance=instance)
             if avatar_form.is_valid():
                 user.avatar = request.FILES['id_avatar']
+                print("avatar_form is valid and saving: ", user.avatar)
                 user.save()
+                return HttpResponse(status=200)
         else:
             user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
             project_formset = NewPortfolioProjectFormset(

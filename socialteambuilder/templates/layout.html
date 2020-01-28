@@ -111,16 +111,18 @@
 {% endblock %}
 
 </body>
-<script>
-    $(document).ready(function () {          
-
-        setTimeout(function() {
-            $('.message-container').slideUp("slow");
-        }, 5000);
-});
 
 {% block js %}
+
+<!-- Disappear message at top of screen -->
+<script>
+  $(document).ready(function () {          
+      setTimeout(function() {
+          $('.message-container').slideUp("slow");
+      }, 5000);
+});
+</script>
+
 {% endblock %}
 
-</script>
 </html>

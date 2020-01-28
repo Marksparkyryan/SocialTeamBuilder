@@ -270,7 +270,6 @@ def create_update_project(request, slug=None):
         )
 
     if request.method == 'POST':
-        
         project_form = CreateProjectForm(
             request.POST, 
             instance=project
@@ -279,8 +278,6 @@ def create_update_project(request, slug=None):
             request.POST,
             queryset=Position.objects.filter(project=project)
         )
-        
-
         if project_form.is_valid() and position_formset.is_valid():
             project = project_form.save(commit=False)
             project.owner = request_user
