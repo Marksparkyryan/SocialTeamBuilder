@@ -148,6 +148,7 @@ def update_user(request):
                 print("avatar_form is valid and saving: ", user.avatar)
                 user.save()
                 return HttpResponse(status=200)
+            return HttpResponse(status=400)
         else:
             user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
             project_formset = NewPortfolioProjectFormset(
