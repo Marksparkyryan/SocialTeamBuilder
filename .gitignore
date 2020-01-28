@@ -13,7 +13,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
+# removed dist from ignore
 downloads/
 eggs/
 .eggs/
