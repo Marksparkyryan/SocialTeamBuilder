@@ -1,20 +1,49 @@
 from django import forms
 from django.forms import modelformset_factory
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationForm
 
 from markdownx.fields import MarkdownxFormField
 from select2_tags import forms as f
 
-from accounts.models import PortfolioProject, Skill, User
+from accounts.models import PortfolioProject, Skill
 
+
+User = get_user_model()
+
+class MyAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(
+        label='',
+        widget=forms.TextInput(attrs={'placeholder': 'Email'})
+    )
+    password = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+    )
+
+    class Meta:
+        model = User
 
 # Admin Form
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    email = forms.EmailField(
+        label='', 
+        widget=forms.EmailInput(attrs={'placeholder': 'Email Address'})
+    )
+    first_name = forms.CharField(
+        label='',
+        widget=forms.TextInput(attrs={'placeholder': 'First Name'})
+    )
+    password1 = forms.CharField(
+        label='', 
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+    )
     password2 = forms.CharField(
-        label='Password confirmation', widget=forms.PasswordInput)
+        label='', 
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'})
+    )
 
     class Meta:
         model = User
@@ -114,6 +143,6 @@ NewPortfolioProjectFormset = modelformset_factory(
     form=PortfolioProjectForm,
     can_delete=True,
     max_num=10,
-    extra=0,
+    extra=1,
     can_order=True
 )

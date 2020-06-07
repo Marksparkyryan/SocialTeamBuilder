@@ -16,7 +16,7 @@ from django.http import (
 )
 from django.shortcuts import render, get_object_or_404, reverse
 from django.urls import reverse_lazy
-from django.views.generic import View, DetailView, DeleteView
+from django.views.generic import View, DetailView, DeleteView, CreateView
 from django.views.generic.list import ListView
 
 from .models import Application, Project, Position
@@ -79,14 +79,31 @@ class DashboardView(CustomLoginRequired, ListView):
                 filtered = self.get_queryset().filter(
                     position__slug=q
                 )
-            if category == 'skill':
+            elif category == 'skill':
                 filtered = self.get_queryset().filter(
                     position__skills__name=q
                 )
-            if category == 'skills':
-                filtered = self.get_queryset().filter(
-                    position__skills__in=self.request.user.skills.all()
+            elif category == 'skills':
+                not_user_positions = Position.objects.exclude(
+                    applications__user=self.request.user
                 )
+                filtered = self.get_queryset().filter(
+                    Q(position__skills__in=self.request.user.skills.all()) &
+                    Q(position__in=[position for position in not_user_positions])
+                )
+            elif category == 'my-opps':
+                not_user_positions = Position.objects.exclude(
+                    applications__user=self.request.user
+                )
+                filtered = self.get_queryset().filter(
+                    position__in=[position for position in not_user_positions]
+                )
+            elif category == 'accepted':
+                filtered = self.get_queryset().filter(
+                    Q(position__applications__user=self.request.user) &
+                    Q(position__applications__status='R')
+                )
+
         else:
             filtered = self.get_queryset()
 
@@ -215,7 +232,6 @@ class CreateApp(CustomLoginRequired, View):
     http_method_names = ['post', ]
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         position_pk = self.request.POST.get('position_pk')
         position = Position.objects.get(id=position_pk)
         user = self.request.user
@@ -232,8 +248,10 @@ class CreateApp(CustomLoginRequired, View):
             return JsonResponse(data)
 
         except Exception as err:
-            print("not working: {}".format(err))
-            return HttpResponseServerError
+            data = {
+                'updated': False,
+            }
+            return JsonResponse(data)
 
 
 class ProjectView(CustomLoginRequired, PrefetchRelatedMixin, DetailView):
@@ -293,11 +311,13 @@ def create_update_project(request, slug=None):
                     position.status = 'E'
                 position.save()
             position_formset.save_m2m()
+            position_formset.save()
             if new_project:
                 messages.success(
                     request, 'Project {} created!'.format(project.title))
-            messages.success(
-                request, 'Project {} updated!'.format(project.title))
+            else:
+                messages.success(
+                    request, 'Project {} updated!'.format(project.title))
             return HttpResponseRedirect(reverse('projects:project', kwargs={'slug': project.slug}))
 
     context = {

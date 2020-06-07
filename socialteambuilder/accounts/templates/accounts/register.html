@@ -4,17 +4,17 @@
 {% endblock %}
 
 {% block body %}
-
 <div class="bounds">
-    <div class="grid-30 centered">
+    <div class="register-form">
       <h2>Sign Up</h2>
       <form method="POST">
         {% csrf_token %}
         {{ form }}
-        <button type="submit" button-primary">Sign Up</button>
-        <a class="button" href="{% url 'login' %}">Sign In</a>
+        <div class="signup-buttons">
+            <button type="submit" class="button-signup">Sign Up</button>
+            <a class="button" href="{% url 'login' %}">Sign In</a>
+        </div>
       </form>
     </div>
   </div>
-
 {% endblock %}

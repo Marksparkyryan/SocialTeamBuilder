@@ -61,5 +61,5 @@ def select_distinct_positions_from_project(context):
 def already_applied(context, position):
     for application in position.applications.all():
         if application.user == context['user']:
-            return True
+            return application.status
     return False

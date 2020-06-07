@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
+from django.utils import timezone
 
 
 class Project(models.Model):
@@ -72,7 +73,7 @@ class Application(models.Model):
     """
     STATUS = (
         ('A', 'Accepted'),
-        ('R', 'Rejected'),
+        ('R', 'Declined'),
         ('U', 'Undecided')
     )
 
@@ -87,8 +88,8 @@ class Application(models.Model):
         related_name="applications"
     )
     status = models.CharField(max_length=1, choices=STATUS)
-    unread = models.NullBooleanField()
-    created = models.DateTimeField(auto_now_add=True)
+    unread = models.NullBooleanField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True) #auto_now_add=True
 
     def __str__(self):
         if self.status in ('A', 'R'):

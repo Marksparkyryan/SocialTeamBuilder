@@ -102,7 +102,7 @@ class Skill(models.Model):
     """Model for a skill that can be shared by users and positions
     """
     name = models.CharField(max_length=255, unique=True)
-
+    
     def __str__(self):
         return self.name
 

@@ -1,14 +1,10 @@
 {% extends 'layout.html' %}
 
-{% block messages %}
-    {% if form.errors %}
-    <li>Your username and password didn't match. Please try again.</li>
-    {% endif %}
-{% endblock %}
+
 
 {% block body %}
 <div class="bounds">
-    <div class="grid-30 centered">
+    <div class="login-form">
       <h2>Sign In</h2>
 
 {% if next %}
@@ -22,6 +18,7 @@
 
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
+{{ form.error }}
 {{ form }}
 <input type="submit" value="login">
 <input type="hidden" name="next" value="{{ next }}">

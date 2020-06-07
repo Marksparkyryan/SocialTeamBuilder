@@ -20,69 +20,64 @@
 
 {% block body %}
 
-<div class="bounds circle--page">
-  {{ user_form.errors }}
-  <div class="circle--page--header circle--fluid">
-    <div class="circle--fluid--cell circle--fluid--primary">
-      <h2>Profile</h2>
-    </div>
+<!-- Form (all forms) -->
+<div class="bounds">
+<form method="POST" id="userform_and_projectforms" enctype="multipart/form-data" action="">
+{% csrf_token %}
 
-    <!-- Form (all forms) -->
-    <form method="POST" id="userform_and_projectforms" enctype="multipart/form-data" action="">
-      {% csrf_token %}
-
-      <div class="circle--fluid--cell circle--fluid--secondary">
+<div class="top-button-container">
         <input type="submit" class="button button-primary icon-on-left" action="" value="Save Changes">
-      </div>
-  </div>
+</div>
+{{ user_form.errors }}
+
+<h2>Edit Profile</h2>
+
+<!-- Avatar -->
+<div class="avatar-wrapper">
+    <label class="label" data-toggle="tooltip" title="" data-original-title="Change">
+        <img name="id_avatar" id="id_avatar" class="profile-edit-pic" src="{{ user.get_avatar_url }}"
+            alt="avatar" />
+        <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
+    <div class="pencil-wrapper">
+        <i class="fas fa-pencil-alt pencil fa-lg"></i>
+    </div>
+    </label>
+</div>
+
+  
+<!-- /Avatar -->
 
   <!-- User general info -->
   <div class="grid-70">
     {{ user_form.media }}
-    {{ user_form.first_name.label}}
     {{ user_form.first_name }}
-    {{ user_form.last_name.label }}
     {{ user_form.last_name }}
-    <div class="circle--article--body">
-      {{ user_form.about.label }}
+    <div class="project-spacer">
       {{ user_form.about }}
     </div>
     <!-- /User general info -->
   </div>
 
-  <!-- Avatar -->
-  <div class="grid-25 grid-push-5">
-    <div class="circle--secondary--module">
-      
-          <div class="avatar_wrapper">
-              <span class="avatar_base avatar_update">
-                  <label class="label" data-toggle="tooltip" title="" data-original-title="Change">
-                      <img name="id_avatar" id="id_avatar" class="avatar_circle" src="{{ user.get_avatar_url }}"
-                          alt="avatar" />
-                      <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
-                      <p>Change</p>
-                  </label>
-          </div>
-      
-    </div>
-    <!-- /Avatar -->
+
 
     <!-- Skills -->
-    <div class="circle--secondary--module">
-      <h4>My Skills</h4>
-      {{ user_form.skills }}
+    <div class="project-spacer">
+        {{ user_form.skills }}
     </div>
 
+    
     <!-- /Skills-->
+</div>
 
-    <div class="circle--secondary--module">
-      <h4>My Portfolio</h4>
-      <div class="project-cards">
-
-        <!-- Portfolio Project forms -->
+    <div class="project-spacer">
+      <h4 class="center-text-wrapper">My Portfolio</h4>
+      
+        <!-- Portfolios -->
+        <div class="position-edit-cards">
         {{ project_formset.management_form }}
         {% for form in project_formset %}
-        <div class="project-card" style="display:block">
+        <div class="position-edit-card" style="display:block">
+        <div class="bounds">
           {{ form.id }}
           {{ form.name }}
           {{ form.url }}
@@ -92,34 +87,47 @@
           {% for hidden in form.hidden_fields %}
           {{ hidden }}
           {% endfor %}
-          <a class="circle--clone--remove" id="remove_form">- remove</a>
-          <hr>
-        </div>
-        {% endfor %}
-        <!-- /Portfolio Project forms -->
-
-        <!-- Empty form to clone -->
-        <div id="empty_form" style="display:none">
-          <div class="project-card" style="display:block">
-            {{ project_formset.empty_form.id }}
-            {{ project_formset.empty_form.name }}
-            {{ project_formset.empty_form.url }}
-            <span style="display:none">
-              {{ project_formset.empty_form.DELETE }}
-            </span>
-            {% for hidden in project_formset.empty_form.hidden_fields %}
-            {{ hidden }}
-            {% endfor %}
-            <a class="circle--clone--remove" id="remove_form">- remove</a>
-            <hr>
+          <div class="remove-button-wrapper">
+                <a class="button remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
           </div>
         </div>
-        <!-- /Empty form to clone -->
-
+        </div>
+        {% endfor %}
       </div>
-      <a class="circle--clone--add" id="add_form">+ add</a>
+      <!-- /Portfolios -->
+
+      <!-- Add portfolio form -->
+      <div class="bounds">
+            <div class="top-button-container">
+                  <a class="button" id="add_form"><i class="fas fa-plus"></i> add</a>
+            </div>
+        </div>
+        <!-- /Add portfolio form -->
+
+      <!-- Empty form to clone -->
+      <div id="empty_form" style="display:none">
+            <div class="position-edit-card" style="display:block">
+                <div class="bounds">
+              {{ project_formset.empty_form.id }}
+              {{ project_formset.empty_form.name }}
+              {{ project_formset.empty_form.url }}
+              <span style="display:none">
+                {{ project_formset.empty_form.DELETE }}
+              </span>
+              {% for hidden in project_formset.empty_form.hidden_fields %}
+              {{ hidden }}
+              {% endfor %}
+              <div class="remove-button-wrapper">
+                  <a class="button remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
+              </div>
+            </div>
+          </div>
+          </div>
+          <!-- /Empty form to clone -->
+      
+      
     </div>
-  </div>
+  
   </form>
   <!-- /Form -->
 
@@ -166,6 +174,10 @@
         multiple: true,
         tags: true
       });
+    
+    // Skills container width correction
+    skillsContainer = document.getElementById('id_skills').nextSibling;
+    skillsContainer.style.width = '100%';
 </script>
 
 <!-- Cropper JS & Bootstrap modal -->
@@ -313,4 +325,31 @@ window.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+
+<script>
+  // Remove Form Event Listener
+  $(".remove-form").click(function() {
+    var parent = $(this).parents(".position-edit-card");
+    var index = parent.find("input").attr("id")[8];
+    $('#id_form-' + index + '-DELETE').attr('checked', 'checked');
+    parent.attr("style", "display:none"); 
+  })
+
+    // Add new position form
+    $('#add_form').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('.position-edit-cards').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        let removeButtons = document.querySelectorAll('.remove-form')
+        let lastButton = removeButtons[removeButtons.length-2]
+        lastButton.addEventListener('click', function(e) {
+          var parent = $(this).parents(".position-edit-card");
+          var index = parent.find("input").attr("id")[8];
+          $('#id_form-' + index + '-DELETE').attr('checked', 'checked');
+          parent.attr("style", "display:none"); 
+        })
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        var forms = $('.position-edit-cards').find(".position-edit-card").length;
+        if (forms > 10) $('#add_form').attr('style', 'display:none');
+      });
+</script>
 {% endblock %}

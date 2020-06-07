@@ -1,11 +1,14 @@
 from django import forms
 from django.forms import modelformset_factory
 
+from markdownx.widgets import MarkdownxWidget
 from markdownx.fields import MarkdownxFormField
 from select2_tags import forms as f
 
 from accounts.models import Skill
-from .models import Project, Position
+from .models import Project, Position, Application
+
+from django.utils import timezone
 
 
 class SearchBarForm(forms.Form):
@@ -33,7 +36,9 @@ class CreateProjectForm(forms.ModelForm):
                 'class': 'circle--input--h1',
                 'placeholder': 'Project Title'}
         ))
-    description = MarkdownxFormField()
+    description = forms.CharField(
+        widget=MarkdownxWidget(attrs={'placeholder': 'Project description'})
+    )
     time_estimate = forms.CharField(
         max_length=10,
         widget=forms.TextInput(
@@ -56,9 +61,12 @@ class PositionForm(forms.ModelForm):
         'name',
         queryset=Skill.objects.all(),
         required=False,
-        save_new=True,
+        save_new=True
     )
-    description = MarkdownxFormField()
+    description = forms.CharField(
+        label='',
+        widget=MarkdownxWidget(attrs={'placeholder': 'Position Description'})
+    )
 
     class Meta:
         model = Position
@@ -80,3 +88,13 @@ PositionFormset = modelformset_factory(
     extra=1,
     can_order=True
 )
+
+
+# Review if this really needed
+class ApplicationForm(forms.ModelForm):
+    created = forms.HiddenInput()
+
+    class Meta:
+        model = Application
+        fields = ['user', 'position', 'status', 'unread']
+    

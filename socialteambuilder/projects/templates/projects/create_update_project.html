@@ -16,110 +16,105 @@
 <form method='POST'>
 {% csrf_token %}
     
-<div class="circle--actions--bar">
-    <div class="bounds">
-      <div class="grid-100">
-        
-        <input class="button button-primary" type="submit" action="" value="Save Project">
-        <a class="button button-text" href="{% url 'projects:dashboard' category='all' q='all' %}">Discard</a>
-      </div>
-    </div>
-  </div>
 
+<div class="bounds">
+    <div class="top-button-container">  
+        <input class="" type="submit" action="" value="Save Project">
+        <a class="button" href="{% url 'projects:dashboard' category='all' q='all' %}">Discard</a>
+    </div>
+</div>
+    
   {{ project_form.errors }}
   {{ project_form.media }}
 
-  <div class="bounds circle--page circle--article">
-    <div class="grid-70">
-      <div class="circle--article--body">
+  <div class="bounds">
+    <h1 id="project-edit-title">Edit Project</h1>
+      <div class="project-info-edit-container">
         {{ project_form.title }}
         {{ project_form.description }}
       </div>
+  </div>
       
-      <!-- Positions -->
-      <div class="circle--project--positions" id="positions-container">
-        <h2>Positions</h2>
-        <div class="project-cards">
-        
+      <div class="positions-edit-container" id="positions-container">
+        <div class="center-text-wrapper">
+            <h2>Positions</h2>
+        </div>
+
+        <!-- Positions -->
+        <div class="position-edit-cards">
             {{ position_formset.management_form }}
             {% for position_form in position_formset %}
-            <div class="project-card" style="display:block">
+            <div class="position-edit-card" style="display:block">
+            <div class="bounds">
             {{ position_form.id }}
             {{ position_form.title}}
-            <p></p>
-            Description
             {{ position_form.description }}
-            <p></p>
-            Skills
             {{ position_form.skills }}
-            <p></p>
-            Time Estimate
             {{ position_form.time_estimate }}
             <span style="display:none">
-                {{ form.DELETE }}
+                {{ position_form.DELETE }}
             </span>
             {% for hidden in form.hidden_fields %}
             {{ hidden }}
             {% endfor %}
-            <a class="circle--clone--remove" id="remove_form">- remove</a>
-            <hr style="margin:100px 0">
+            <div class="remove-button-wrapper">
+                <a class="button remove-form"><i class="fas fa-trash-alt"></i> remove</a>
             </div>
+          </div>
+          </div>
             {% endfor %}
-        
+    </div>
+<!-- /Positions -->
 
-        <!-- Empty position form to clone -->
-        <div id="empty_form" style="display:none">
-            <div class="project-card" style="display:block">
-                {{ position_formset.empty_form.id }}
-                {{ position_formset.empty_form.title }}
-                <p></p>
-                Description
-                {{ position_formset.empty_form.description }}
-                <p></p>
-                Skills
-                <span class="skills-container">
-                {{ position_formset.empty_form.skills }}
-                </span>
-                <p></p>
-                Time Estimate
-                {{ position_formset.empty_form.time_estimate }}
-                <span style="display:none">
-                    {{ position_formset.empty_form.DELETE }}
-                </span>
-                {% for hidden in position_formset.empty_form.hidden_fields %}
-                {{ hidden }}
-                {% endfor %}
-                <a class="circle--clone--remove" id="remove_form">- remove</a>
-                <hr style="margin:100px 0;">
-            </div>
+<!-- Add position form -->
+    <div class="bounds">
+        <div class="top-button-container">
+            <a class="button" id="add_form"><i class="fas fa-plus"></i>  add position</a> 
         </div>
-        <!-- /Empty position form to clone -->
-
-    </div>
-    <a class="circle--clone--add" id="add_form">+ add</a> 
+    </div>    
+<!-- /Add position form -->
       </div>
-    </div>
-    
-    
-    
-    
-    
+
+      <!-- Empty position form to clone -->
+      <div id="empty_form" style="display:none">
+          <div class="position-edit-card" style="display:block">
+            <div class="bounds">
+              {{ position_formset.empty_form.id }}
+              {{ position_formset.empty_form.title }}
+              {{ position_formset.empty_form.description }}
+              {{ position_formset.empty_form.skills }}
+              {{ position_formset.empty_form.time_estimate }}
+              <span style="display:none">
+                  {{ position_formset.empty_form.DELETE }}
+              </span>
+              {% for hidden in position_formset.empty_form.hidden_fields %}
+              {{ hidden }}
+              {% endfor %}
+              <div class="remove-button-wrapper">
+                  <a class="button remove-form"><i class="fas fa-trash-alt"></i> remove</a>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!-- /Empty position form to clone -->
+   
     <div class="grid-25 grid-push-5">
-      <div class="circle--secondary--module project-status-{{ project_form.status.value }}">
-        <h3>Project Status</h3>
-          {{ project_form.status }}
-        <h3>Project Timeline</h3>
-        {{ project_form.time_estimate }}
+      <div class="project-status project-status-{{ project_form.status.value }}">
+        <div class="bounds">
+            <h3>Project Status</h3>
+            {{ project_form.status }}
+        </div>
       </div>
-      <div class="circle--secondary--module">
-        <h3>Applicant Requirements</h3>
-        {{ project_form.applicant_requirements }}
+      <div class="bounds">
+          <div class="project-edit-secondary-info">
+              <h3>Project Timeline</h3>
+              {{ project_form.time_estimate }}
+            <h3>Applicant Requirements</h3>
+            {{ project_form.applicant_requirements }}
+          </div>
       </div>
     </div>
-  </div>
 </form>
-
-
 
 {% endblock %}
 
@@ -127,99 +122,59 @@
 {{ block.super }}
 
 <script>
-$("#id_form-0-skills").select2({
-    multiple: true,
-    tags: true
+  // Add Select2 to existing forms
+  var total_forms = document.getElementById('id_form-TOTAL_FORMS').value;
+  for (let i = 0; i < total_forms; i++) {
+    var skillBox = document.getElementById(`id_form-${i}-skills`);
+    $(`#id_form-${i}-skills`).select2({
+      multiple: true,
+      tags: true
     });
-    $("#id_form-1-skills").select2({
-        multiple: true,
-        tags: true
-        });
-        $("#id_form-2-skills").select2({
-            multiple: true,
-            tags: true
-            });
-            $("#id_form-3-skills").select2({
-                multiple: true,
-                tags: true
-                });
-                $("#id_form-4-skills").select2({
-                    multiple: true,
-                    tags: true
-                    });
-                    $("#id_form-5-skills").select2({
-                      multiple: true,
-                      tags: true
-                      });
-                      $("#id_form-6-skills").select2({
-                        multiple: true,
-                        tags: true
-                        });
-                        $("#id_form-7-skills").select2({
-                          multiple: true,
-                          tags: true
-                          });
-                          $("#id_form-8-skills").select2({
-                            multiple: true,
-                            tags: true
-                            });
-                            $("#id_form-9-skills").select2({
-                              multiple: true,
-                              tags: true
-                              });
-                            </script>
+  };
 
-<script>                         
-$('#positions-container').on('click', '#add_form', function(){
-    var form_idx = $('#id_form-TOTAL_FORMS').val(); 
+  // Remove Form Event Listener
+  $(".remove-form").click(function() {
+    console.log('remove clicked')
+    var parent = $(this).parents(".position-edit-card");
+    console.log(parent)
+    var index = parent.find("input").attr("id")[8];
+    $('#id_form-' + index + '-DELETE').attr('checked', 'checked');
+    parent.attr("style", "display:none"); 
+    console.log(index)
+  })
 
-    $( ".project-card" ).each(function( index ) {
-        $("#id_form-0-skills").select2({
-            multiple: true,
-            tags: true
-            });
-            $("#id_form-1-skills").select2({
-                multiple: true,
-                tags: true
-                });
-                $("#id_form-2-skills").select2({
-                    multiple: true,
-                    tags: true
-                    });
-                    $("#id_form-3-skills").select2({
-                        multiple: true,
-                        tags: true
-                        });
-                        $("#id_form-4-skills").select2({
-                            multiple: true,
-                            tags: true
-                            });
-                            $("#id_form-5-skills").select2({
-                              multiple: true,
-                              tags: true
-                              });
-                              $("#id_form-6-skills").select2({
-                                multiple: true,
-                                tags: true
-                                });
-                                $("#id_form-7-skills").select2({
-                                  multiple: true,
-                                  tags: true
-                                  });
-                                  $("#id_form-8-skills").select2({
-                                    multiple: true,
-                                    tags: true
-                                    });
-                                    $("#id_form-9-skills").select2({
-                                      multiple: true,
-                                      tags: true
-                                      });
-                                      $("#id_form-10-skills").select2({
-                                        multiple: true,
-                                        tags: true
-                                        });
-      });
-});
+  // Add new position form
+  $('#add_form').click(function() {
+    var form_idx = $('#id_form-TOTAL_FORMS').val();
+    $('.position-edit-cards').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+    let removeButtons = document.querySelectorAll('.remove-form')
+    let lastButton = removeButtons[removeButtons.length-2]
+    lastButton.addEventListener('click', function(e) {
+      console.log('remove clicked')
+      var parent = $(this).parents(".position-edit-card");
+      console.log(parent)
+      var index = parent.find("input").attr("id")[8];
+      $('#id_form-' + index + '-DELETE').attr('checked', 'checked');
+      parent.attr("style", "display:none"); 
+      console.log(index)
+    })
+    $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    var forms = $('.position-edit-cards').find(".position-edit-card").length;
+    if (forms > 10) $('#add_form').attr('style', 'display:none');
+  });
+
+  // Add Select2 to newly created form
+  var addForm = document.getElementById('add_form');
+  addForm.addEventListener('click', function() {
+    var allForms = document.querySelectorAll('.position-edit-card');
+    console.log('adding select2')
+    var newId = allForms.length-2;
+    $(`#id_form-${newId}-skills`).select2({
+      multiple: true,
+      tags: true
+    });
+    console.log(newId)
+  })
 </script>
 
 {% endblock %}

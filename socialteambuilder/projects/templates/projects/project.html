@@ -10,41 +10,67 @@
 
 {% block body %}
 
-<div class="circle--actions--bar">
+<!-- Top Buttons -->
   <div class="bounds">
-    <div class="grid-100">
+    <div class="top-button-container">
       <a class="button" href="{% url 'projects:create_update_project' slug=project.slug %}">Edit Project</a>
-      <a class="button button-text" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
+      <a class="button" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
     </div>
   </div>
-</div>
-
-<div class="bounds circle--page circle--article">
-  <div class="grid-70">
-    <div class="circle--article--header">
-      <h4 class="circle--article--section">Project</h4>
-      <h1 class="circle--article--title">{{ project.title }}</h1>
-      <p class="circle--article--byline">Project Owner: <a>{{ project.owner }}</a></p>
+  
+    <div class="project-spacer">
+      <div class="project-title-container">
+        <div class="bounds">
+            <h3 class="">Project</h3>
+            <h1 class="">{{ project.title }}</h1>
+            <p class="">Project Owner: <a>{{ project.owner }}</a></p>
+            <p>Project Status: 
+              {% if project.status == 'A' %}
+              <span class="status-{{ project.status }}">Open</span> 
+              {% elif project.status == 'B' %}
+              <span class="status-{{ project.status }}">Closed</span> 
+              {% elif project.status == 'C' %}
+              <span class="status-{{ project.status }}">Complete</span> 
+              {% endif %}
+            </p>
+        </div>
+      </div>
     </div>
-
-    <div class="circle--article--body">
-      <p>{{ project.description|markdown }}</p>
+      
+    <div class="bounds">
+    <div class="project-spacer">
+        <div class="project-description-container">
+            {{ project.description|markdown }}
+          </div>
     </div>
+      
+    <div class="project-spacer">
+        <div class="project-needs-container">
+            <h3>Project Needs</h3>
+            <ul class="project-needs-list">
+              {% select_distinct_positions_from_project as titles %}
+              {% for title in titles %}
+              <li><a href="#{{ title }}">{{ title }}</a></li>
+              {% endfor %}
+            </ul>
+        </div>
+    </div>    
+  </div>
 
-
-    <div class="circle--project--positions">
-      <h2>Positions</h2>
-
-      <ul class="circle--group--list">
+    <div class="positions-container">
+      <div class="positions-header">
+          <h3>Positions</h3>
+      </div>
+      {% if project.position_set %} 
         {% for position in project.position_set.all %}
-        <li>
+          <div class="position-card">
           <h3 id="{{ position.title }}">{{ position.title }}</h3>
-          <p>{% for skill in position.skills.all %}{% if forloop.last %} <a class="skill-text"
+          <p class="position-skill">{% for skill in position.skills.all %}{% if forloop.last %} <a class="skill-text"
               href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
               class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
             |{% endif %}{% endfor %}</p>
-          <p>{{ position.description|markdown }}</p>
-
+            <div class="position-description">{{ position.description|markdown }}</div>
+      
           <!-- Filled -->
           {% if position.status == 'F' %}
           <a class="button button-primary button-inactive">Position Filled</a>
@@ -52,49 +78,44 @@
           <!-- Empty-->
           {% else %}
           {% already_applied position as var %}
-          {% if var == True %}
+          {% if var == 'U' %}
           <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
+          {% elif var == 'A' %}
+          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> You've been accepted</a>
+          {% elif var == 'R' %}
+          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-times-circle fa-lg"></i> You've been declined</a>
           {% else %}
           <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}"
             data-url="{% url 'projects:newapp' %}">Apply</a>
           {% endif %}
           {% endif %}
-        </li>
+        </div>
         {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <div class="grid-25 grid-push-5">
-    <div class="circle--secondary--module">
-      <h3>Project Needs</h3>
-      <ul class="circle--link--list">
-        {% select_distinct_positions_from_project as titles %}
-        {% for title in titles %}
-        <li><a href="#{{ title }}">{{ title }}</a></li>
-        {% endfor %}
-      </ul>
+        {% else %}
+        <div class="position-card">
+          <p>there are currently no positions</p>
+        </div>
+        {% endif %}
     </div>
 
-    <div class="circle--secondary--module">
-      <h3>Project Timeline</h3>
-      <p>{{ project.time_estimate }} hours</p>
+    <div class="bounds">
+        <div class="project-timeline">
+            <h3>Project Timeline</h3>
+            <p>{{ project.time_estimate }} hours</p>
+          </div>
+      
+          <div class="applicant-req">
+            <h3>Applicant Requirements</h3>
+            <p>{{ project.applicant_requirements}}</p>
+          </div>
     </div>
-
-    <div class="circle--secondary--module">
-      <h3>Applicant Requirements</h3>
-      <p>{{ project.applicant_requirements}}</p>
-    </div>
-
-  </div>
-</div>
 
 {% endblock %}
 
 {% block js %}
 {{ block.super }}
 
-<!-- Apply button -->>
+<!-- Apply button -->
 <script>
 $(".apply-button").click(function () {
 
@@ -144,8 +165,9 @@ $(".apply-button").click(function () {
         success: function (data) {
           if (data.updated) {
             button.replaceWith('<a class="button button-primary button-inactive">Applied!</a>');
+            console.log("Application created: ", data.updated);
           } else {
-            alert("Error.", data.error);
+            console.log("Application created: ", data.updated);
           }
         }
       });

@@ -1480,7 +1480,7 @@ hr {
 
 /* line 2, ../sass/circle/components/headers.sass */
 .circle--header {
-  background: #537d7b;
+  background: lightslategray;
   padding: 20px 0;
   margin-bottom: 30px;
 }

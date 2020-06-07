@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
@@ -28,6 +29,7 @@ from projects.models import Application
 from projects.views import CustomLoginRequired
 
 from .forms import (
+    MyAuthenticationForm,
     UserCreationForm,
     UserUpdateForm,
     NewPortfolioProjectFormset,
@@ -53,13 +55,18 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
 account_activation_token = AccountActivationTokenGenerator()
 
 
-class Register(CreateView):
+class Register(SuccessMessageMixin, CreateView):
     """View for registering users. Confirmation email and token is 
     delivered from this view.
     """
+    token = '5h1-055bc6a4e5abff931d98'
     form_class = UserCreationForm
-    success_url = reverse_lazy('accounts:check_inbox')
+    success_url = reverse_lazy('accounts:check_inbox', kwargs={
+        'token': token
+    })
+    success_message = "Check your inbox!"
     template_name = 'accounts/register.html'
+
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -70,10 +77,11 @@ class Register(CreateView):
         to_email = form.cleaned_data.get('email')
         subject = 'Activate Your Social Team Builder Account'
         token = account_activation_token.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
         message = render_to_string('accounts/account_activation_email.html', {
             'user': user,
             'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'uid': uid,
             'token': token,
         })
         email = EmailMessage(
@@ -88,6 +96,12 @@ class CheckInbox(TemplateView):
     """
     template_name = "accounts/check_inbox.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['domain'] = get_current_site(self.request)
+        context['uid'] = urlsafe_base64_encode(force_bytes(self.request.user.pk))
+        context['token'] = kwargs['token']
+        return context
 
 def activate(request, uidb64, token):
     """View for handling the verification of token kwarg. If valid, the
@@ -110,14 +124,17 @@ def activate(request, uidb64, token):
         return render(request, 'accounts/failed_activation.html')
 
 
-class LogIn(LoginView):
+class LogIn(SuccessMessageMixin, LoginView):
     """View for handling logging in of user
     """
+    form_class = MyAuthenticationForm
+    
+    def get_success_message(self, cleaned_data):
+        super().get_success_message(cleaned_data)
+        return 'Welcome back, {}!'.format(self.request.user.first_name)
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, "You're logged in!")
-        return response
+    def get_current_user(self):
+        return self.request.user.first_name
 
 
 @login_required()
@@ -153,19 +170,21 @@ def update_user(request):
             user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
             project_formset = NewPortfolioProjectFormset(
                 request.POST,
-                queryset=PortfolioProject.objects.filter(user=user)
+                # queryset=PortfolioProject.objects.filter(user=user)
             )
             if user_form.is_valid() and project_formset.is_valid():
                 # user info form
                 user_form.save()
                 # portfolio project forms
+                for proj in project_formset:
+                    print(proj)
                 projects = project_formset.save(commit=False)
-                for project in project_formset.deleted_objects:
-                    project.delete()
                 for project in projects:
+                    print(project)
                     project.user = user
                     project.save()
                 project_formset.save_m2m()
+                project_formset.save()
                 messages.success(request, 'Profile updated successfully!')
                 return HttpResponseRedirect(reverse('accounts:profile', kwargs={'pk': user.pk}))
         

@@ -2,8 +2,14 @@
 
 {% block body %}
 <div class="bounds">
-    <div class="grid-30 centered">
-        <h2>You've registered! Check your inbox and follow the link to confirm your account.</h2>
+    <div class="check-inbox">
+        <h2>You're Almost There!</h2>
+        <p>At this point, the backend would create and send a confirmation token to your inbox. Since this is a prototype, we'll provide a confirmation token below. Click the token below to complete your registration.
+        </p>
+        <p>Activation Token:</p>
+        <a class="token" 
+        href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}"><h1>{{ token }}</h1></a>
+        {% debug %}
     </div>
 </div>
 {% endblock %}
