@@ -21,15 +21,29 @@
 {% block body %}
 
 <!-- Form (all forms) -->
-<div class="bounds">
 <form method="POST" id="userform_and_projectforms" enctype="multipart/form-data" action="">
 {% csrf_token %}
+
+<div class="bounds">
 
 <div class="top-button-container">
         <input type="submit" class="button button-primary icon-on-left" action="" value="Save Changes">
 </div>
-{{ user_form.errors }}
+<div class="profile-desktop-wrapper">
 
+{% if user_form.errors or project_formset.errors %}
+<div class="error-wrapper">
+    <i class="fas fa-exclamation-circle fa-lg"></i>
+    {% for error in user_form.errors %}
+    {{error}}
+    {% endfor %}
+    {% for error in project_formset.errors %}
+    {{error}}
+    {% endfor %}
+</div>
+{% endif %}
+
+        
 <h2>Edit Profile</h2>
 
 <!-- Avatar -->
@@ -68,8 +82,9 @@
     
     <!-- /Skills-->
 </div>
-
+</div>
     <div class="project-spacer">
+        <div class="profile-desktop-wrapper">
       <h4 class="center-text-wrapper">My Portfolio</h4>
       
         <!-- Portfolios -->
@@ -156,6 +171,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <!--avatar modal end-->
 

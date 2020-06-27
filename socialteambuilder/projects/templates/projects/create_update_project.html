@@ -29,11 +29,12 @@
 
   <div class="bounds">
     <h1 id="project-edit-title">Edit Project</h1>
+    <div class="profile-desktop-wrapper">
       <div class="project-info-edit-container">
         {{ project_form.title }}
         {{ project_form.description }}
       </div>
-  </div>
+ 
       
       <div class="positions-edit-container" id="positions-container">
         <div class="center-text-wrapper">
@@ -74,6 +75,7 @@
     </div>    
 <!-- /Add position form -->
       </div>
+    
 
       <!-- Empty position form to clone -->
       <div id="empty_form" style="display:none">
@@ -115,7 +117,7 @@
       </div>
     </div>
 </form>
-
+</div>
 {% endblock %}
 
 {% block js %}

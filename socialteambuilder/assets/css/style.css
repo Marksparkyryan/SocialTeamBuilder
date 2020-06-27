@@ -2,11 +2,16 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background: white;
     color: black;
     font-family: Arial, Geneva, Tahoma, sans-serif;
     margin: 0;
+    min-height: 100;
 }
 
 header {
@@ -170,9 +175,10 @@ button {
     background: none;
     border: none;
     border-radius: 2rem;
-    color: black;
+    color: green;
     margin: 0.1rem 0;
     text-align: center;
+    cursor: pointer;
 }
 
 .button-reject {
@@ -182,6 +188,7 @@ button {
     color: lightcoral;
     margin: 0.1rem 0;
     text-align: center;
+    cursor: pointer;
 }
 
 .status-button {
@@ -227,13 +234,27 @@ button {
   }
 
   .errorlist {
-      color: lightgray;
+      background-color: lightcoral;
+      color: white;
       list-style: none;
       text-align: center;
-      margin: 0;
-      padding: 0;
+      padding: 1rem 1rem 0;
+      border-radius: 1rem;
       font-style: italic;
-  }
+}
+
+.error-wrapper {
+    position: relative;
+    margin: 1rem 0 2rem;
+}
+
+.error-wrapper svg {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+}
+
 
 .bounds {
     width: 100%;
@@ -251,12 +272,15 @@ button {
     margin: 0;
 }
 
+#search-bar {
+    position: relative;
+}
+
 .search button {
     position: absolute;
     right: 1.75rem;
-    transform: translateX(50%);
-    top: 50%;
-    transform: translateY(-50%);
+    top: 6px;
+    right: 5px;
     height: 40px;
     width: 40px;
     padding: 0;
@@ -368,6 +392,7 @@ button {
     background: rgba(0,0,0, 0.09);
     width: 100%;
     padding: 1rem;
+    min-height: 450px;
 }
 
 .projects-header {
@@ -407,10 +432,28 @@ button {
     justify-content: center;
     align-items: center;
     background-color: white;
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 0.25rem;
     color: grey;
     margin-bottom: 2rem;
+    height: 450px;
+}
+
+.position-card.hidden {
+    display: none;
+}
+
+.position-card h3 {
+    flex: 1
+}
+
+.position-card .position-skill {
+    flex: 1;
+    text-align: center;
+}
+
+.position-card .position-description {
+    flex: 3;
 }
 
 
@@ -783,7 +826,7 @@ button {
 }
 
 .modal-dialog {
-    margin: 1rem;
+    margin: 1rem 1rem;
 }
 
 .modal-content {
@@ -809,4 +852,80 @@ button {
     padding: .25rem .75rem;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
+
+
+@media (min-width: 1200px) {
+    .flex-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .bounds {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .desktop-flex-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        justify-content: space-evenly;
+    }
+
+    .project-card {
+        width: 375px;
+        height: 150px;
+        margin: 0 auto;
+    }
+
+    .desktop-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .top-button-desktop {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .profile-desktop-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .modal-dialog {
+        margin: 5rem auto;
+    }
+
+    .position-card {
+        width: 375px;
+        height: 450px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .position-card.hidden {
+        display: block;
+    }
+
+    .position-card h3 {
+        flex: 1
+    }
+
+    .position-card .position-skill {
+        flex: 1;
+        text-align: center;
+    }
+
+    .position-card .position-description {
+        flex: 3;
+    }
+}
 

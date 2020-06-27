@@ -63,7 +63,7 @@
   <div class="second-header">
         <div class="search">
             <div class="bounds">   
-            <form method="GET" action={% url 'projects:searchbar' %}>
+            <form method="GET" action={% url 'projects:searchbar' %} id="search-bar">
                 {% csrf_token %}
                 {{ searchform.q }}
                 <button type="submit">

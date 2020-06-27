@@ -61,15 +61,17 @@
       <div class="positions-header">
           <h3>Positions</h3>
       </div>
+      <div class="desktop-flex-wrapper">
       {% if project.position_set %} 
         {% for position in project.position_set.all %}
           <div class="position-card">
           <h3 id="{{ position.title }}">{{ position.title }}</h3>
-          <p class="position-skill">{% for skill in position.skills.all %}{% if forloop.last %} <a class="skill-text"
+          <p class="position-skill">{% for skill in position.skills.all|slice:":12" %}{% if forloop.last %} <a class="skill-text"
               href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
               class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
-            |{% endif %}{% endfor %}</p>
-            <div class="position-description">{{ position.description|markdown }}</div>
+            {% endif %}{% endfor %}</p>
+
+            <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
       
           <!-- Filled -->
           {% if position.status == 'F' %}
@@ -81,7 +83,17 @@
           {% if var == 'U' %}
           <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
           {% elif var == 'A' %}
-          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> You've been accepted</a>
+          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> 
+          {% for app in completed %}
+          {% if app.position == position %}
+            {% if app.user == user %}
+            You've been accepted
+            {% else %}
+            {{ app.user.first_name }} has been accepted
+            {% endif %}
+          {% endif %}
+          {% endfor %}
+          </a>
           {% elif var == 'R' %}
           <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-times-circle fa-lg"></i> You've been declined</a>
           {% else %}
@@ -96,8 +108,10 @@
           <p>there are currently no positions</p>
         </div>
         {% endif %}
+        <div class="position-card hidden"></div>
+        <div class="position-card hidden"></div>
     </div>
-
+  </div>
     <div class="bounds">
         <div class="project-timeline">
             <h3>Project Timeline</h3>
@@ -109,7 +123,7 @@
             <p>{{ project.applicant_requirements}}</p>
           </div>
     </div>
-
+  
 {% endblock %}
 
 {% block js %}

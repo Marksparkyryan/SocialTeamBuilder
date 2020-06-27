@@ -57,7 +57,9 @@
         <h3>Projects</h3>
       </div>
       {% if filtered %}
+      <div class="desktop-flex-wrapper">
         {% for project in filtered %}
+          
           <a href="{% url 'projects:project' slug=project.slug %}">
             <div class="project-card">
                 <h3>{{ project.title|title }}</h3>
@@ -73,16 +75,26 @@
           </a>
         
           {% endfor %}
+          <a href=""><div class="project-card hidden"></div></a>
+          <a href=""><div class="project-card hidden"></div></a>
+        
           {% else %}
-          <div class="application-card">
-              <i class="fas fa-info-circle "></i>
-            <p> There are no projects here</p>
-            <p></p>
+          
+            <div class="bounds">
+              <div class="desktop-container">
+                <div class="application-card">
+                <i class="fas fa-info-circle "></i>
+                <p>There are no {% if query %}<i>"{{ query }}"</i>{% endif%} projects here</p> 
+                <p></p>
+            </div>
           </div>
           {% endif %}
+        </div>
+        </div>
     </div>  
     
 </div>
+
 {% endblock %}
 
 {% block js %}

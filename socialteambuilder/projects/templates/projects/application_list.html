@@ -13,7 +13,7 @@
 {% block body %}
 
 
-<div class="top-button-container">
+<div class="top-button-container top-button-desktop">
     <a {% if box == 'inbox' %}class="button selected-button"{% else %}class="button"{% endif %} href="{% url 'projects:applications' box='inbox' category='status' q='u' %}" id="inbox-button"><i class="far fa-envelope"></i> Inbox {% if inbox_count %}<span class="inbox-count" id="inbox-count">{{ inbox_count }}</span>{% endif %}</a>
     <a {% if box == 'outbox' %}class="button selected-button"{% else %}class="button"{% endif %} href="{% url 'projects:applications' box='outbox' category='all' q='all' %}"><i class="far fa-paper-plane"></i> Outbox</a>
     <a class="button" id="application-profile-button" href="{% url 'accounts:profile' pk=user.id %}"><i class="far fa-user-circle"></i> Profile</a>
@@ -65,12 +65,17 @@
 {% if filtered %}
 <!-- New cards -->
     <div class="projects-container">
+      <div class="desktop-container">
       <div class="bounds">
-          <div class="applications-header">
-              <h4>Applicant & Position</h4>
-              <h4>Status</h4>
-          </div>
+          
+              <div class="applications-header">
+                  <h4>Applicant & Position</h4>
+                  <h4>Status</h4>
+              </div>
+          
+          
       </div>
+
       
         {% for application in filtered %}
           <div class="application-card" id="app-id-{{ application.id }}">
@@ -78,7 +83,7 @@
             <!-- Applicant Pic -->
             <div class="application-pic">
             <a href="{% url 'accounts:profile' pk=user.id %}">
-              <img src="{{ user.get_avatar_url }}" alt="avatar" class="application-card-profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
+              <img src="{{ application.user.get_avatar_url }}" alt="avatar" class="application-card-profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
             </a>
             </div>
 
@@ -113,20 +118,25 @@
             <!-- if not owner of project -->
             {% else %}
                 {% if application.status == 'U' %}
-                <span class="secondary-label status-button">Pending</span>
-                {% else %}
-                <span class="secondary-label status-button">{{ application.get_status_display }}</span>
+                <i class="far fa-clock fa-lg"></i>
+                <p>Pending</p>
+                {% elif application.status == 'R' %}
+                <i class="far fa-frown fa-lg"></i>
+                <p>{{ application.get_status_display }}</p>
+                {% elif application.status == 'A' %}
+                <i class="far fa-smile fa-lg"></i>
+            <p>{{ application.get_status_display }}</p>
                 {% endif %}
             {% endif %}  
                 </div>
 
               </div>
             {% endfor %}
-          </div>
             <!-- /Buttons -->
 
     {% else %}
     <div class="projects-container">
+      <div class="desktop-container">
         <div class="application-card">
             <i class="fas fa-info-circle"></i>
             <p>You have no applications here</p>
@@ -134,6 +144,9 @@
           </div>
     </div>
     {% endif %}
+  </div>
+  </div>
+  </div>
 <!-- /New cards -->
 
 {% endblock %}

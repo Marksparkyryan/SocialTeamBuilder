@@ -142,6 +142,7 @@ class SearchBar(ListView):
         )
         context['searchform'] = SearchBarForm(initial={'q': q})
         context['filtered'] = filtered
+        context['query'] = q
         return context
 
 
@@ -205,14 +206,30 @@ class UpdateAppStatus(CustomLoginRequired, View):
     http_method_names = ['post', ]
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         pk = self.request.POST.get('app_pk')
         status = self.request.POST.get('status')
         user = self.request.user
-        print(pk, status, user)
         app = get_object_or_404(Application, pk=pk)
         if user == app.position.project.owner:
-            if status in ('A', 'R'):
+            if status == 'A':
+                app.status = status
+                app.unread = True
+                app.save()
+                #update all other applications as Rejected
+                others = Application.objects.filter(
+                    position=app.position,
+                    status='U'
+                )
+                for app in others:
+                    app.status = 'R'
+                    app.unread = True
+                    app.save()
+                data = {
+                    'updated': True,
+                    'new_status': app.get_status_display()
+                }
+                return JsonResponse(data)
+            elif status == 'R':
                 app.status = status
                 app.unread = True
                 app.save()
@@ -259,11 +276,16 @@ class ProjectView(CustomLoginRequired, PrefetchRelatedMixin, DetailView):
     """
     model = Project
     template_name = 'projects/project.html'
-    prefetch_related = ['position_set', 'position_set__skills', ]
+    prefetch_related = ['position_set', 'position_set__skills',]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['searchform'] = SearchBarForm()
+        completed = Application.objects.filter(
+            position__project=self.get_object(),
+            status='A'
+        )
+        context['completed'] = completed
         return context
 
 

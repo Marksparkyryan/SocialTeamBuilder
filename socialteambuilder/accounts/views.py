@@ -37,7 +37,6 @@ from .forms import (
 )
 from .models import PortfolioProject
 
-
 User = get_user_model()
 
 
@@ -170,21 +169,18 @@ def update_user(request):
             user_form = UserUpdateForm(request.POST, request.FILES, instance=user)
             project_formset = NewPortfolioProjectFormset(
                 request.POST,
-                # queryset=PortfolioProject.objects.filter(user=user)
+                queryset=PortfolioProject.objects.filter(user=user)
             )
+            print('----------------')
+            print(project_formset.data)
             if user_form.is_valid() and project_formset.is_valid():
-                # user info form
-                user_form.save()
-                # portfolio project forms
-                for proj in project_formset:
-                    print(proj)
+                user_form.save() 
                 projects = project_formset.save(commit=False)
                 for project in projects:
-                    print(project)
                     project.user = user
                     project.save()
-                project_formset.save_m2m()
                 project_formset.save()
+
                 messages.success(request, 'Profile updated successfully!')
                 return HttpResponseRedirect(reverse('accounts:profile', kwargs={'pk': user.pk}))
         
