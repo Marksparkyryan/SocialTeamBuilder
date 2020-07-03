@@ -13,6 +13,8 @@ django-markdown-deux==1.0.5
 django-markdownx==3.0.1
 django-searchable-select==1.5.0
 django-select2==7.2.0
+# Editable install with no version control (django-select2-tags==0.0.1)
+-e /Users/markryan/Dev/Projects/SocialTeamBuilder/teamenv/lib/python3.7/site-packages/django_select2_tags-0.0.1-py3.7.egg
 entrypoints==0.3
 flake8==3.7.9
 gunicorn==20.0.4
