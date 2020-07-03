@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="bounds-container">
+    <div class="center-center">
+        <h1>500</h1>
+        <p>Oops. There was a problem on the server side...</p> 
+        <a href="{% url 'projects:dashboard' category='all' q='all' %}">Go to the Dashboard</a>
+    </div>
+</div>
+  
+{% endblock %}

@@ -28,126 +28,132 @@
     <p>for projects you've applied to</p>
     {% endif %}
   </div>
-
-  <div class="dashboard-project-needs">
-    <hr>
-      <h4>Filter by Status</h4>
-      <ul class="ul-list">
-          <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='all' %}">All Applications</a></li>
-          <li><a {% if q == 'u' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='u' %}" id="new-applications">New Applications</a></li>
-          <li><a {% if q == 'a' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='a' %}">Accepted</a></li>
-          <li><a {% if q == 'r' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='r' %}">Rejected</a></li>
-      </ul>
-      <hr>
-      <h4>Filter by Project</h4>
-      <ul class="ul-list">
-          <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q='all' %}">All Projects</a></li>
-          {% if filtered %}
-          {% select_distinct_projects as titles %}
-          {% for title in titles %}
-          <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q=title|slugify %}">{{ title }}</a></li>
-          {% endfor %}
-          {% endif %}
-      </ul>
-      <hr>
-      <h4>Filter by Project Needs</h4>
-          <ul class="ul-list">
-            {% select_distinct_positions as titles %}
-            <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='all' q='all' %}">All Needs</a></li>
-            {% for title in titles %}
-            <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='need' q=title|slugify %}">{{ title }}</a></li>
-            {% endfor %}
-          </ul>
-          
-  </div>
 </div>
 
-{% if filtered %}
-<!-- New cards -->
-    <div class="projects-container">
-      <div class="desktop-container">
-      <div class="bounds">
-          
-              <div class="applications-header">
-                  <h4>Applicant & Position</h4>
-                  <h4>Status</h4>
-              </div>
-          
-          
+<div class="desktop-hflex-wrapper">
+    <div class="dashboard-project-needs">
+        <div class="bounds">
+            <hr>
+            <h4>Filter by Status</h4>
+            <ul class="ul-list">
+                <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='all' %}">All Applications</a></li>
+                <li><a {% if q == 'u' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='u' %}" id="new-applications">New Applications</a></li>
+                <li><a {% if q == 'a' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='a' %}">Accepted</a></li>
+                <li><a {% if q == 'r' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='status' q='r' %}">Rejected</a></li>
+            </ul>
+            <hr>
+            <h4>Filter by Project</h4>
+            <ul class="ul-list">
+                <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q='all' %}">All Projects</a></li>
+                {% if filtered %}
+                {% select_distinct_projects as titles %}
+                {% for title in titles %}
+                <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='project' q=title|slugify %}">{{ title }}</a></li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+            <hr>
+            <h4>Filter by Project Needs</h4>
+                <ul class="ul-list">
+                  {% select_distinct_positions as titles %}
+                  <li><a {% if q == 'all' %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='all' q='all' %}">All Needs</a></li>
+                  {% for title in titles %}
+                  <li><a {% if q == title|slugify %}class="selected"{% endif %} href="{% url 'projects:applications' box=box category='need' q=title|slugify %}">{{ title }}</a></li>
+                  {% endfor %}
+                </ul>
+        </div>     
       </div>
-
-      
-        {% for application in filtered %}
-          <div class="application-card" id="app-id-{{ application.id }}">
-
-            <!-- Applicant Pic -->
-            <div class="application-pic">
-            <a href="{% url 'accounts:profile' pk=user.id %}">
-              <img src="{{ application.user.get_avatar_url }}" alt="avatar" class="application-card-profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
-            </a>
-            </div>
-
-            <!-- Applicant Info -->
-            <div class="application-info">
-            <h3>{% if user == application.user %}You{% else%}
-                {{ application.user.first_name}} {{ application.user.last_name }}{% endif %}
-            </h3>
-            <p>{{ application.position }} for {{ application.position.project }}</p>
-            <span class="role"></span>
-            </div>
-
-            <!-- Buttons -->
-            <!-- if owner of project -->
-            <div class="application-buttons">
-            {% if application.position.project.owner == user %}
-            {% if application.status == 'U' %}
-            <a class="button-accept-reject button-accept" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="A"><i class="far fa-thumbs-up"></i></a>
-            <a class="button-accept-reject button-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="R"><i class="far fa-thumbs-down"></i></a>
-            {% else %}
-            {% if application.status == 'R' %}
-            <i class="far fa-frown fa-lg"></i>
-            <p>{{ application.get_status_display }}</p>
-            
-            {% elif application.status == 'A' %}
-            <i class="far fa-smile fa-lg"></i>
-            <p>{{ application.get_status_display }}</p>
-            
-            {% endif %}
-            {% endif %}
-
-            <!-- if not owner of project -->
-            {% else %}
+    
+    
+    {% if filtered %}
+    <!-- New cards -->
+        <div class="projects-container">
+          <div class="desktop-container">
+          <div class="bounds">
+              
+                  <div class="applications-header">
+                      <h4>Applicant & Position</h4>
+                      <h4>Status</h4>
+                  </div>
+              
+              
+          </div>
+    
+          
+            {% for application in filtered %}
+              <div class="application-card" id="app-id-{{ application.id }}">
+    
+                <!-- Applicant Pic -->
+                <div class="application-pic">
+                <a href="{% url 'accounts:profile' pk=user.id %}">
+                  <img src="{{ application.user.get_avatar_url }}" alt="avatar" class="application-card-profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
+                </a>
+                </div>
+    
+                <!-- Applicant Info -->
+                <div class="application-info">
+                <h3>{% if user == application.user %}You{% else%}
+                    {{ application.user.first_name}} {{ application.user.last_name }}{% endif %}
+                </h3>
+                <p>{{ application.position }} for {{ application.position.project }}</p>
+                <span class="role"></span>
+                </div>
+    
+                <!-- Buttons -->
+                <!-- if owner of project -->
+                <div class="application-buttons">
+                {% if application.position.project.owner == user %}
                 {% if application.status == 'U' %}
-                <i class="far fa-clock fa-lg"></i>
-                <p>Pending</p>
-                {% elif application.status == 'R' %}
+                <a class="button-accept-reject button-accept" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="A"><i class="far fa-thumbs-up"></i></a>
+                <a class="button-accept-reject button-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="R"><i class="far fa-thumbs-down"></i></a>
+                {% else %}
+                {% if application.status == 'R' %}
                 <i class="far fa-frown fa-lg"></i>
                 <p>{{ application.get_status_display }}</p>
+                
                 {% elif application.status == 'A' %}
                 <i class="far fa-smile fa-lg"></i>
-            <p>{{ application.get_status_display }}</p>
+                <p>{{ application.get_status_display }}</p>
+                
                 {% endif %}
-            {% endif %}  
-                </div>
-
+                {% endif %}
+    
+                <!-- if not owner of project -->
+                {% else %}
+                    {% if application.status == 'U' %}
+                    <i class="far fa-clock fa-lg"></i>
+                    <p>Pending</p>
+                    {% elif application.status == 'R' %}
+                    <i class="far fa-frown fa-lg"></i>
+                    <p>{{ application.get_status_display }}</p>
+                    {% elif application.status == 'A' %}
+                    <i class="far fa-smile fa-lg"></i>
+                <p>{{ application.get_status_display }}</p>
+                    {% endif %}
+                {% endif %}  
+                    </div>
+    
+                  </div>
+                {% endfor %}
+                <!-- /Buttons -->
+    
+        {% else %}
+        <div class="projects-container">
+          <div class="desktop-container">
+            <div class="application-card">
+                <i class="fas fa-info-circle fa-lg"></i>
+                <p>You have no applications here</p>
+                <p></p>
               </div>
-            {% endfor %}
-            <!-- /Buttons -->
+        </div>
+        {% endif %}
+      </div>
+      </div>
+      </div>
+    <!-- /New cards -->
+</div>
 
-    {% else %}
-    <div class="projects-container">
-      <div class="desktop-container">
-        <div class="application-card">
-            <i class="fas fa-info-circle"></i>
-            <p>You have no applications here</p>
-            <p></p>
-          </div>
-    </div>
-    {% endif %}
-  </div>
-  </div>
-  </div>
-<!-- /New cards -->
+
 
 {% endblock %}
 

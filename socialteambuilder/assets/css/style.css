@@ -17,12 +17,16 @@ body {
 header {
     width: 100%;
     height: 75px; 
-    background-color: #f3f3f3;
+    background-color: white;
     color: black;
 }
 
 hr {
     border: 1px #f3f3f3 solid;
+}
+
+.logo {
+    color: #374645;
 }
 
 .second-header {
@@ -31,7 +35,7 @@ hr {
     align-items: center;
     width: 100%;
     height: 75px;
-    background-color: lightgray;
+    background-color: #a5aef8;
     color: black;
 }
 
@@ -40,24 +44,33 @@ hr {
 }
 
 a {
-    color: black;
+    color: #a5aef8;
     text-decoration: none;
     padding: 0.5rem;
-    line-height: 1.3rem;
+    line-height: 1rem;
 }
 
 a:hover {
-    color: slateblue;
+    color: #b34f6d;
     text-decoration: none;
 }
 
 h1 {
     font-size: 2rem;
     font-weight: bold;
+    color: #374645;
 }
 
 h2 {
-    color: black;
+    color: #374645;
+}
+
+h3 {
+    color: #374645;
+}
+
+h4 {
+    color: #374645;
 }
 
 .h2-less-margin {
@@ -65,7 +78,7 @@ h2 {
 }
 
 p {
-    color: #444;
+    color: #385050;
 }
 
 label {
@@ -73,7 +86,7 @@ label {
 }
 
 textarea {
-    background: #f3f3f3;
+    background: #f4f4f4;
     border: none;
     border-radius: 1rem;
     width: 100%;
@@ -101,6 +114,7 @@ textarea {
     padding: 0;
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .ul-list-skills a {
@@ -109,17 +123,17 @@ textarea {
 }
 
 .skill-button {
-    background: lightgrey;
+    background: whitesmoke;
     border: none;
     border-radius: 2rem;
-    padding: .75rem 1.5rem;
-    color: white; 
+    padding: .75rem 1rem;
+    color: black; 
     margin: 0;
 }
 
 input {
     width: 100%;
-    background-color: #f3f3f3;
+    background-color: #f4f4f4;
     border: none;
     border-radius: 2rem; 
     color: black;
@@ -130,12 +144,12 @@ input {
 }
 
 input[type='submit'] {
-    background: #444;
+    background: #f5beb4;
     color: white;
     width: auto;
     padding: 0.75rem 1.5rem;
-    margin: 0;
-    line-height: 1.3rem;
+    margin: 1rem 0;
+    line-height: 1rem;
 }
 
 input:focus {
@@ -143,7 +157,7 @@ input:focus {
 }
 
 button {
-    background: slategray;
+    background: #f5beb4;
     border: none;
     border-radius: 2rem;
     padding: .75rem 1.5rem;
@@ -152,17 +166,16 @@ button {
 }
 
 .button {
-    background: #444;
+    background: #f5beb4;
     border: none;
     border-radius: 2rem;
     padding: .75rem 1.5rem;
-    color: white !important;
+    color: white;
     cursor: pointer;
 }
 
 .button-signup {
     display: block;
-    background: #444;
     border: none;
     border-radius: 2rem;
     padding: .75rem 1.5rem;
@@ -175,7 +188,7 @@ button {
     background: none;
     border: none;
     border-radius: 2rem;
-    color: green;
+    color: black;
     margin: 0.1rem 0;
     text-align: center;
     cursor: pointer;
@@ -185,7 +198,7 @@ button {
     background: none;
     border: none;
     border-radius: 2rem;
-    color: lightcoral;
+    color: black;
     margin: 0.1rem 0;
     text-align: center;
     cursor: pointer;
@@ -204,14 +217,14 @@ button {
 .message-container {
     position: fixed;
     width: 100%;
-    background-color: #444;
+    background-color: #a5aef8;
     color: white;
     padding: 0 1rem;
     animation-name: example;
     animation-duration: 5s;
     animation-timing-function: ease-in-out;
-    bottom: 0;
-    transform: translateY(100%);
+    top: 0;
+    transform: translateY(-100%);
 }
 
 .message-container ul {
@@ -227,21 +240,28 @@ button {
 }
 
 @keyframes example {
-    0% {transform: translateY(100%)}
+    0% {transform: translateY(-100%)}
     15% {transform: translateY(0%)}
     85% {transform: translateY(0%)}
-    100% {transform: translateY(100%)}
+    100% {transform: translateY(-100%)}
   }
 
-  .errorlist {
-      background-color: lightcoral;
-      color: white;
-      list-style: none;
-      text-align: center;
-      padding: 1rem 1rem 0;
-      border-radius: 1rem;
-      font-style: italic;
+.errorlist {
+    background-color: #a5aef8;
+    color: white;
+    list-style: none;
+    text-align: center;
+    border-radius: 1rem;
+    font-style: italic;
+    padding: 0;
 }
+
+.errorlist li {
+    margin: 0;
+    padding: 1rem;
+    line-height: 1.5rem;
+}
+
 
 .error-wrapper {
     position: relative;
@@ -309,7 +329,7 @@ button {
     overflow: hidden;
     justify-content: space-between;
     align-items: center;
-    background: #f3f3f3;
+    background: white;
     padding: 0 1.5rem;
 }
 
@@ -389,10 +409,12 @@ button {
 }
 
 .projects-container {
-    background: rgba(0,0,0, 0.09);
+    background: whitesmoke;
     width: 100%;
     padding: 1rem;
     min-height: 450px;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
 }
 
 .projects-header {
@@ -403,13 +425,10 @@ button {
 .project-card {
     background-color: white;
     padding: 1.5rem;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     color: grey;
 }
 
-.project-card h3 {
-    color: black;
-}
 
 .role {
     color: grey;
@@ -433,7 +452,7 @@ button {
     align-items: center;
     background-color: white;
     padding: 2rem;
-    border-radius: 0.25rem;
+    border-radius: .25rem;
     color: grey;
     margin-bottom: 2rem;
     height: 450px;
@@ -441,6 +460,7 @@ button {
 
 .position-card.hidden {
     display: none;
+    height: 1px;
 }
 
 .position-card h3 {
@@ -466,7 +486,7 @@ button {
 }
 
 .positions-container {
-    background: lightgrey;
+    background-color: #a5aef8;
     width: 100%;
     padding: 2rem;
 }
@@ -487,7 +507,10 @@ button {
 }
 
 .skill-text {
-    color: grey;
+    color: black;
+    background-color: whitesmoke;
+    border-radius: 2rem;
+    padding: 0.75rem 1rem;
 }
 
 .position-description {
@@ -503,7 +526,7 @@ button {
 }
 
 .project-description-container {
-    text-align: center;
+    text-align: left;
 }
 
 .project-spacer {
@@ -511,21 +534,16 @@ button {
 }
 
 .project-title-container {
-    background: #f3f3f3;
     width: 100%;
-    padding: 1rem 0;
+    padding: 2rem 0;
 }
 
 .project-title-container h3, h1, p {
     text-align: left;
-    margin: 0;
+    margin: 1rem 0 0;
     padding: 0.3rem 0;
-    color: #444;
 }
 
-.project-title-container h1 {
-    color: black;
-}
 
 .project-timeline {
     margin: 3rem 0;
@@ -541,7 +559,7 @@ button {
 }
 
 .markdownx-preview {
-    background: lightgrey;
+    background: #dedede;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
     padding: 1.5rem;
@@ -554,7 +572,7 @@ button {
 }
 
 .markdownx-preview p {
-    color: white;
+    color: black;
 }
 
 .positions-edit-container {
@@ -569,9 +587,21 @@ button {
     padding: 1rem 0 .5rem;
 }
 
-.position-edit-card:nth-child(odd) {
-    background-color: rgba(0,0,0, 0.09)
+.position-edit-card textarea {
+    background-color: #f4f4f4;
 }
+
+.position-edit-card:nth-child(odd) {
+    background-color: #a5aef8;
+}
+
+.position-edit-card:nth-child(odd) input{
+    background-color: white;
+}
+
+.position-edit-card:nth-child(odd) textarea {
+    background-color: white;
+} 
 
 .position-edit-card a {
     display: inline-block;
@@ -598,10 +628,14 @@ button {
 .select2-container--default .select2-selection--multiple {
     border: none;
     margin : 1rem 0 0;
-    background-color: #f3f3f3;
     padding: 1.5rem 0.25rem .5rem;
     border-radius: 1rem;
-    /* width: 500px; */
+    border: solid 1px #dedede;
+    background-color: #d5ecf0;
+}
+
+.select2-container--default .select2-selection--multiple:nth-child(odd) {
+    background-color: white;
 }
 
 .select2-container--default.select2-container--focus .select2-selection--multiple {
@@ -610,7 +644,7 @@ button {
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     border: none;
-    background-color: white;
+    background-color: whitesmoke;
     padding: 0.25rem 1rem;
     border-radius: 2rem;
     margin: .3rem 0.3rem;
@@ -645,7 +679,7 @@ button {
 }
 
 .project-status {
-    background-color: slategrey;
+    background-color: #a5aef8;
     padding: 1rem 0 2rem;
     outline: none;
 }
@@ -666,15 +700,17 @@ button {
 }
 
 .inbox-count {
-    color: slateblue;
+    color: #a5aef8;
 }
 
 .selected {
-    color: slateblue;
+    color: #f5beb4;
 }
 
 .selected-button {
-    background-color: lightgrey;
+    background-color: white;
+    border: 1px solid #f9afab;
+    color: #374645;
 }
 
 #application-profile-button {
@@ -687,7 +723,7 @@ button {
     align-content: center;
     background-color: white;
     padding: 1.5rem;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     color: grey;
     margin: 1rem 0;
 }
@@ -795,7 +831,7 @@ button {
 
 .text-link {
     text-decoration: underline;
-    color: slateblue;
+    color: #a5aef8;
     font-weight: bold;
 }
 
@@ -803,7 +839,8 @@ button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding: 0 0 1.5rem;
 }
 
 .profile-center-ul ul {
@@ -835,25 +872,30 @@ button {
 }
 
 .status-A {
-    color: white;
-    background: lightgreen;
-    padding: .25rem .75rem;
+
 }
 
 .status-B {
-    color: white;
-    background: lightcoral;
-    padding: .25rem .75rem;
+
 }
 
 .status-C {
-    color: white;
-    background: #444;
-    padding: .25rem .75rem;
 }
 
 .hidden {
     visibility: hidden;
+}
+
+@media (max-width: 375px) {
+    a.button {
+        font-size: .75rem;
+        padding: .5rem 1rem;
+    }
+
+    input[type='submit'] {
+        font-size: .75rem;
+        padding: .5rem 1rem;
+    }
 }
 
 
@@ -878,14 +920,43 @@ button {
         justify-content: space-evenly;
     }
 
+    .desktop-hflex-wrapper {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .desktop-hflex-wrapper-project {
+        display: flex;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .project-left-wrapper {
+        flex: 2;
+    }
+
+    .ul-list li {
+        display: block;
+    }
+
+    .dashboard-project-needs {
+        flex: 1;
+        text-align: left;
+    }
+
+    .projects-container {
+        flex: 3;
+    }
+
     .project-card {
-        width: 375px;
+        flex-basis: auto;
+        width: 400px;
         height: 150px;
         margin: 0 auto;
     }
 
     .desktop-container {
-        max-width: 600px;
         margin: 0 auto;
     }
 
@@ -895,7 +966,7 @@ button {
     }
 
     .profile-desktop-wrapper {
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
     }
 
@@ -903,9 +974,13 @@ button {
         margin: 5rem auto;
     }
 
+    .positions-container {
+        flex: 3;
+    }
+
     .position-card {
-        width: 375px;
-        height: 450px;
+        width: 30%;
+        height: 400px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -929,3 +1004,20 @@ button {
     }
 }
 
+.circle--secondary--module {
+    padding: 1.5rem 0;
+}
+
+.center-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.bounds-container {
+    height: calc(100vh - 75px);
+    padding: 1.5rem;
+}

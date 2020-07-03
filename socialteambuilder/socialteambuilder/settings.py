@@ -16,6 +16,7 @@ import os
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_REDIRECT_URL = "/projects/dashboard/all/all/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
+USE_TOKEN_AUTH_WITH_DUMMY_INBOX = False
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,8 +31,20 @@ SECRET_KEY = '4*-h=z-y735b4bg6#)#g7)dlli4!gnn^1vou)pbnk(d0$v5tu('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+SECURE_HSTS_SECONDS = 600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+SECURE_HSTS_PRELOAD = True
+
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+SECURE_REFERRER_POLICY = 'same-origin'
 
 # Application definition
 
@@ -94,6 +107,8 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+USE_DATA_MIGRATIONS = True
 
 
 # Password validation
@@ -163,22 +178,3 @@ INTERNAL_IPS = [
     '127.0.0.1',
     # ...
 ]
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

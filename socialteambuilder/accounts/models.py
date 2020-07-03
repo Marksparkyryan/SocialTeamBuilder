@@ -12,11 +12,13 @@ class UserManager(BaseUserManager):
     """Custom manager for the User model
     """
 
-    def create_user(self, email, first_name, password=None):
+    def create_user(self, email, first_name, password=None, **kwargs):
         """
         Creates and saves a User with the given email, date of
         birth and password.
         """
+        use_in_migrations = True
+
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
@@ -27,7 +29,7 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, email, first_name, password=None):
+    def create_superuser(self, email, first_name, password=None, **kwargs):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.

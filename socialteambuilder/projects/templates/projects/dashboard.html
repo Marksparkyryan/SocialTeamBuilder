@@ -16,82 +16,92 @@
     </a>
   </div>
 </div>
+
 <div class="bounds">
 <h2 class="h2-less-margin">Dashboard</h2>
 <p>find projects to join here</p>
+</div>
+
+<div class="desktop-hflex-wrapper">
     <div class="dashboard-project-needs">
-      <hr>
-      <h4>Project Needs</h4>
-      <ul class="ul-list">
-        {% if object_list %}
-        {% select_distinct_positions_from_projects as titles %}
-        <li><a {% if q == 'all' %}class="selected" {% endif %}
-            href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
-        {% for title in titles %}
-        <li><a {% if q == title|slugify %}class="selected" {% endif %}
-            href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
-        {% endfor %}
-        {% endif %}
-      </ul>
-      <hr>
-      <h4>Personalized</h4>
-      <ul class="ul-list">
-        <li><a {% if q == 'my-skills' %}class="selected" {% endif %}
-            href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Skills Match</a>
-        </li>
-        <li><a {% if q == 'my-opps' %}class="selected" {% endif %}
-            href="{% url 'projects:dashboard' category='my-opps' q='my-opps' %}">Open to Apply</a>
-        </li>
-        <li><a {% if q == 'accepted' %}class="selected" {% endif %}
-          href="{% url 'projects:dashboard' category='accepted' q='accepted' %}">Accepted</a>
-      </li>
-      </ul>
-    </div>
-  </div>
-  
-  
-    
-    <div class="projects-container">
-        
-      <div class="projects-header">
-        <h3>Projects</h3>
+
+      <div class="bounds">
+          <hr>
+          <h4>Project Needs</h4>
+          <ul class="ul-list">
+            {% if object_list %}
+            {% select_distinct_positions_from_projects as titles %}
+            <li><a {% if q == 'all' %}class="selected" {% endif %}
+                href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
+            {% for title in titles %}
+            <li><a {% if q == title|slugify %}class="selected" {% endif %}
+                href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+          <hr>
+          <h4>Personalized</h4>
+          <ul class="ul-list">
+            <li><a {% if q == 'my-skills' %}class="selected" {% endif %}
+                href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Skills Match</a>
+            </li>
+            <li><a {% if q == 'my-opps' %}class="selected" {% endif %}
+                href="{% url 'projects:dashboard' category='my-opps' q='my-opps' %}">Open to Apply</a>
+            </li>
+            <li><a {% if q == 'accepted' %}class="selected" {% endif %}
+              href="{% url 'projects:dashboard' category='accepted' q='accepted' %}">Accepted</a>
+          </li>
+          </ul>
       </div>
-      {% if filtered %}
-      <div class="desktop-flex-wrapper">
-        {% for project in filtered %}
+      
+      </div>
+   
+    
+    
+      
+      <div class="projects-container">
           
-          <a href="{% url 'projects:project' slug=project.slug %}">
-            <div class="project-card">
-                <h3>{{ project.title|title }}</h3>
-                {% with project.position_set.all|length as length %}
-                {% for position in project.position_set.all|slice:":3" %}
-                <span class="role">{{ position.title }}{% if length > 1 %},{% endif %}</span>
-                {% endfor %}
-                {% if length > 3 %}
-                and {{ project.position_set.all|slice:"3:"|length }} more...
-                {% endif %}
-                {% endwith %}
+        <div class="projects-header">
+          <h3>Projects</h3>
+        </div>
+        {% if filtered %}
+        <div class="desktop-flex-wrapper">
+          {% for project in filtered %}
+            
+            <a href="{% url 'projects:project' slug=project.slug %}">
+              <div class="project-card">
+                  <h3>{{ project.title|title }}</h3>
+                  {% with project.position_set.all|length as length %}
+                  {% for position in project.position_set.all|slice:":3" %}
+                  <span class="role">{{ position.title }}{% if length > 1 %},{% endif %}</span>
+                  {% endfor %}
+                  {% if length > 3 %}
+                  and {{ project.position_set.all|slice:"3:"|length }} more...
+                  {% endif %}
+                  {% endwith %}
+                </div>
+            </a>
+          
+            {% endfor %}
+            <a href=""><div class="project-card hidden"></div></a>
+            <a href=""><div class="project-card hidden"></div></a>
+          
+            {% else %}
+            
+              <div class="bounds">
+                <div class="desktop-container">
+                  <div class="application-card">
+                  <i class="fas fa-info-circle "></i>
+                  <p>There are no {% if query %}<i>"{{ query }}"</i>{% endif%} projects here</p> 
+                  <p></p>
               </div>
-          </a>
-        
-          {% endfor %}
-          <a href=""><div class="project-card hidden"></div></a>
-          <a href=""><div class="project-card hidden"></div></a>
-        
-          {% else %}
-          
-            <div class="bounds">
-              <div class="desktop-container">
-                <div class="application-card">
-                <i class="fas fa-info-circle "></i>
-                <p>There are no {% if query %}<i>"{{ query }}"</i>{% endif%} projects here</p> 
-                <p></p>
             </div>
+            {% endif %}
           </div>
-          {% endif %}
-        </div>
-        </div>
-    </div>  
+          </div>
+      </div> 
+</div>
+ 
     
 </div>
 

@@ -12,7 +12,7 @@ from .views import RootRedirect
 
 urlpatterns = [
     path('', RootRedirect.as_view()),
-    path('admin/', admin.site.urls),
+    path('adminymin/', admin.site.urls),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('projects/', include('projects.urls', namespace='projects')),

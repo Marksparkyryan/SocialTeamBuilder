@@ -17,101 +17,117 @@
       <a class="button" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
     </div>
   </div>
+
   
-    <div class="project-spacer">
-      <div class="project-title-container">
-        <div class="bounds">
-            <h3 class="">Project</h3>
-            <h1 class="">{{ project.title }}</h1>
-            <p class="">Project Owner: <a>{{ project.owner }}</a></p>
-            <p>Project Status: 
-              {% if project.status == 'A' %}
-              <span class="status-{{ project.status }}">Open</span> 
-              {% elif project.status == 'B' %}
-              <span class="status-{{ project.status }}">Closed</span> 
-              {% elif project.status == 'C' %}
-              <span class="status-{{ project.status }}">Complete</span> 
-              {% endif %}
-            </p>
-        </div>
-      </div>
-    </div>
-      
-    <div class="bounds">
-    <div class="project-spacer">
-        <div class="project-description-container">
-            {{ project.description|markdown }}
+      <div class="project-left-wrapper">
+          <div class="project-spacer">
+              <div class="project-title-container">
+                <div class="bounds">
+                    <h3 class="">Project Name</h3>
+                    <h1 class="">{{ project.title }}</h1>
+                    <p class="">Project Owner: <a>{{ project.owner }}</a></p>
+                    <p>Project Status: 
+                      {% if project.status == 'A' %}
+                      <span class="status-{{ project.status }}">Open</span> 
+                      {% elif project.status == 'B' %}
+                      <span class="status-{{ project.status }}">Closed</span> 
+                      {% elif project.status == 'C' %}
+                      <span class="status-{{ project.status }}">Complete</span> 
+                      {% endif %}
+                    </p>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="bounds">
+              <hr>
+            </div>
+              
+            <div class="bounds">
+
+            <div class="project-spacer">
+                <div class="project-description-container">
+                    <h3>Project Description</h3>
+                    {{ project.description|markdown }}
+                  </div>
+            </div>
+              
+            <hr>
+            <div class="project-spacer">
+                <div class="project-needs-container">
+                    <h3>Project Needs</h3>
+                    <ul class="project-needs-list">
+                      {% select_distinct_positions_from_project as titles %}
+                      {% for title in titles %}
+                      <li><a href="#{{ title }}">{{ title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                </div>
+            </div>    
           </div>
-    </div>
-      
-    <div class="project-spacer">
-        <div class="project-needs-container">
-            <h3>Project Needs</h3>
-            <ul class="project-needs-list">
-              {% select_distinct_positions_from_project as titles %}
-              {% for title in titles %}
-              <li><a href="#{{ title }}">{{ title }}</a></li>
-              {% endfor %}
-            </ul>
-        </div>
-    </div>    
-  </div>
-
-    <div class="positions-container">
-      <div class="positions-header">
-          <h3>Positions</h3>
       </div>
-      <div class="desktop-flex-wrapper">
-      {% if project.position_set %} 
-        {% for position in project.position_set.all %}
-          <div class="position-card">
-          <h3 id="{{ position.title }}">{{ position.title }}</h3>
-          <p class="position-skill">{% for skill in position.skills.all|slice:":12" %}{% if forloop.last %} <a class="skill-text"
-              href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
-              class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
-            {% endif %}{% endfor %}</p>
-
-            <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
       
-          <!-- Filled -->
-          {% if position.status == 'F' %}
-          <a class="button button-primary button-inactive">Position Filled</a>
-
-          <!-- Empty-->
-          {% else %}
-          {% already_applied position as var %}
-          {% if var == 'U' %}
-          <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
-          {% elif var == 'A' %}
-          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> 
-          {% for app in completed %}
-          {% if app.position == position %}
-            {% if app.user == user %}
-            You've been accepted
+     
+    
+        <div class="positions-container">
+          <div class="positions-header">
+              <h3>Positions</h3>
+          </div>
+          <div class="desktop-flex-wrapper">
+          {% if project.position_set %} 
+            {% for position in project.position_set.all %}
+              <div class="position-card">
+              <h3 id="{{ position.title }}">{{ position.title }}</h3>
+              <p class="position-skill">{% for skill in position.skills.all|slice:":12" %}{% if forloop.last %} <a class="skill-text"
+                  href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
+                  class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
+                {% endif %}{% endfor %}</p>
+    
+                <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
+          
+              <!-- Filled -->
+              {% if position.status == 'F' %}
+              <a class="button button-primary button-inactive">Position Filled</a>
+    
+              <!-- Empty-->
+              {% else %}
+              {% already_applied position as var %}
+              {% if var == 'U' %}
+              <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
+              {% elif var == 'A' %}
+              <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> 
+              {% for app in completed %}
+              {% if app.position == position %}
+                {% if app.user == user %}
+                You've been accepted
+                {% else %}
+                {{ app.user.first_name }} has been accepted
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              </a>
+              {% elif var == 'R' %}
+              <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-times-circle fa-lg"></i> You've been declined</a>
+              {% else %}
+              <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}"
+                data-url="{% url 'projects:newapp' %}">Apply</a>
+              {% endif %}
+              {% endif %}
+            </div>
+            {% endfor %}
             {% else %}
-            {{ app.user.first_name }} has been accepted
+            <div class="position-card">
+              <p>there are currently no positions</p>
+            </div>
             {% endif %}
-          {% endif %}
-          {% endfor %}
-          </a>
-          {% elif var == 'R' %}
-          <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-times-circle fa-lg"></i> You've been declined</a>
-          {% else %}
-          <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}"
-            data-url="{% url 'projects:newapp' %}">Apply</a>
-          {% endif %}
-          {% endif %}
+            <div class="position-card hidden"></div>
+            <div class="position-card hidden"></div>
         </div>
-        {% endfor %}
-        {% else %}
-        <div class="position-card">
-          <p>there are currently no positions</p>
-        </div>
-        {% endif %}
-        <div class="position-card hidden"></div>
-        <div class="position-card hidden"></div>
-    </div>
-  </div>
+      </div>
+
+
+
     <div class="bounds">
         <div class="project-timeline">
             <h3>Project Timeline</h3>

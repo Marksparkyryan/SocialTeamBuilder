@@ -1,8 +1,8 @@
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 
 from django.http import HttpResponseRedirect, HttpResponseGone
 from django.urls import reverse_lazy
-from django.shortcuts import HttpResponsePermanentRedirect
+from django.shortcuts import HttpResponsePermanentRedirect, render
 
 
 class RootRedirect(RedirectView):
@@ -30,4 +30,5 @@ class RootRedirect(RedirectView):
                 extra={'status_code': 410, 'request': request}
             )
             return HttpResponseGone()
+
 
