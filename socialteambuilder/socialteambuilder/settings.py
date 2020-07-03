@@ -10,7 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, warnings
+
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the {} env variable".fomrat(var_name)
+        if DEBUG:
+            warnings.warn(error_msg)
+        else:
+            raise ImproperlyConfigured(error_msg)
 
 
 AUTH_USER_MODEL = "accounts.User"
@@ -31,20 +41,7 @@ SECRET_KEY = '4*-h=z-y735b4bg6#)#g7)dlli4!gnn^1vou)pbnk(d0$v5tu('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
-SECURE_HSTS_SECONDS = 600
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-SECURE_HSTS_PRELOAD = True
-
-SECURE_SSL_REDIRECT = True
-
-SESSION_COOKIE_SECURE = True
-
-CSRF_COOKIE_SECURE = True
-
-SECURE_REFERRER_POLICY = 'same-origin'
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
@@ -151,9 +148,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
     os.path.join(BASE_DIR, 'node_modules'),
-
 )
-STATIC_ROOT = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -171,7 +167,6 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
-
 
 INTERNAL_IPS = [
     # ...
