@@ -1,6 +1,8 @@
 asgiref==3.2.3
 astroid==2.3.3
 autopep8==1.4.4
+boto3==1.14.16
+botocore==1.17.16
 coverage==5.0.3
 dj-database-url==0.5.0
 Django==3.0.2
@@ -14,10 +16,13 @@ django-markdown-deux==1.0.5
 django-markdownx==3.0.1
 django-searchable-select==1.5.0
 django-select2==7.2.0
+django-storages==1.9.1
+docutils==0.15.2
 entrypoints==0.3
 flake8==3.7.9
 gunicorn==20.0.4
 isort==4.3.21
+jmespath==0.10.0
 lazy-object-proxy==1.4.3
 Markdown==3.1.1
 markdown2==2.3.8
@@ -27,8 +32,11 @@ psycopg2==2.8.5
 pycodestyle==2.5.0
 pyflakes==2.1.1
 pylint==2.4.4
+python-dateutil==2.8.1
 pytz==2019.3
+s3transfer==0.3.3
 six==1.13.0
 sqlparse==0.3.0
 typed-ast==1.4.0
+urllib3==1.25.9
 wrapt==1.11.2
