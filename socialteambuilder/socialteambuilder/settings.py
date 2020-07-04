@@ -41,7 +41,10 @@ SECRET_KEY = '4*-h=z-y735b4bg6#)#g7)dlli4!gnn^1vou)pbnk(d0$v5tu('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1'
+    ]
 
 # Application definition
 
@@ -55,7 +58,6 @@ INSTALLED_APPS = [
     'accounts',
     'projects',
     'django_select2',
-    'select2_tags',
     'ckeditor',
     'markdownx',
     'markdown_deux',

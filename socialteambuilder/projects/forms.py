@@ -3,7 +3,8 @@ from django.forms import modelformset_factory
 
 from markdownx.widgets import MarkdownxWidget
 from markdownx.fields import MarkdownxFormField
-from select2_tags import forms as f
+# from select2_tags import forms as f
+from django_select2.forms import ModelSelect2Widget
 
 from accounts.models import Skill
 from .models import Project, Position, Application
@@ -57,12 +58,6 @@ class PositionForm(forms.ModelForm):
     """Form representing a position. This form is inserted into
     PositionFormset
     """
-    skills = f.Select2ModelMultipleChoiceField(
-        'name',
-        queryset=Skill.objects.all(),
-        required=False,
-        save_new=True
-    )
     description = forms.CharField(
         label='',
         widget=MarkdownxWidget(attrs={'placeholder': 'Position Description'})

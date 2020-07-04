@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationForm
 
 from markdownx.fields import MarkdownxFormField
-from select2_tags import forms as f
+# from select2_tags import forms as f
 
 from accounts.models import PortfolioProject, Skill
 
@@ -93,14 +93,11 @@ class UserChangeForm(forms.ModelForm):
         return password2
 
 
-class UserUpdateForm(f.Select2ModelForm):
+class UserUpdateForm(forms.ModelForm):
     """Form for updating user's general information (first_name,
     last_name, about, avatar, skills)
     """
-    skills = f.Select2ModelMultipleChoiceField(
-        'name', queryset=Skill.objects.all(), required=False, save_new=True)
     about = MarkdownxFormField()
-
 
     class Meta:
         model = User
