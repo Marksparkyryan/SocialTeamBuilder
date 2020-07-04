@@ -3,7 +3,7 @@
 import dj_database_url
 from socialteambuilder.settings import *
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 SECURE_HSTS_SECONDS = 600
@@ -30,8 +30,6 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'socialteambuilder.storage_backends.MediaStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = '//{}.s3.amazonaws.com/media/'.format(AWS_STORAGE_BUCKET_NAME)
-MEDIA_ROOT = MEDIA_URL
 
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
