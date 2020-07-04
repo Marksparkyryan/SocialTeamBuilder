@@ -72,14 +72,6 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', ]
-    
-    @property
-    def get_avatar_url(self):
-        path = settings.MEDIA_ROOT + '/' + self.avatar.name
-        if default_storage.exists(path):
-            return self.avatar.url
-        else:
-            return '/media/default_avatars/blank.png'
 
     def __str__(self):
         if not self.first_name:
