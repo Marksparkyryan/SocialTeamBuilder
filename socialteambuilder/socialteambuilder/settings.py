@@ -81,7 +81,7 @@ ROOT_URLCONF = 'socialteambuilder.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates',],
+        'DIRS': ['socialteambuilder/templates', ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,10 +93,6 @@ TEMPLATES = [
         },
     },
 ]
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates')
-)
 
 WSGI_APPLICATION = 'socialteambuilder.wsgi.application'
 
