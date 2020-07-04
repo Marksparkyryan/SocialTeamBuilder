@@ -21,7 +21,7 @@ urlpatterns = [
     path('markdownx/', include(markdownx)),
 ]
 
-if settings.Debug:
+if settings.DEBUG:
     urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += staticfiles_urlpatterns()
