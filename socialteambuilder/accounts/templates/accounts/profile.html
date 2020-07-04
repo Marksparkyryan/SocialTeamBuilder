@@ -31,7 +31,7 @@
 <!-- Avatar -->
 <div class="circle--primary--avatar">
     {% if user_profile.avatar %}
-    <img src="{{ user_profile.get_avatar_url }}" class="profile-profile-pic">
+    <img src="{{ user_profile.avatar.url }}" class="profile-profile-pic">
     {% endif %}
   </div>
   <h1>{{ user_profile }}</h1>
