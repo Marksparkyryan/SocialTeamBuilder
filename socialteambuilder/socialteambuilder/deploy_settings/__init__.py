@@ -14,7 +14,7 @@ CSRF_COOKIE_SECURE = True
 SECURE_REFERRER_POLICY = 'same-origin'
 
 ALLOWED_HOSTS = [
-    'localhost', 
+    'localhost',
     '.herokuapp.com'
 ]
 
