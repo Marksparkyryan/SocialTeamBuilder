@@ -1,0 +1,374 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+* {
+  box-sizing: border-box;
+}
+
+.ul-list {
+  list-style: none;
+  padding: 0;
+}
+.ul-list li {
+  display: inline-block;
+}
+
+.status-list {
+  padding: 0;
+  list-style: none;
+}
+.status-list li {
+  padding: 0.5rem;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.bounds {
+  padding: 0.5rem 1.5rem;
+  height: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.flex-h-container {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-h-container .bubble-dark:last-of-type {
+  margin-right: 0;
+}
+
+.top-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.top-button-container .bubble-dark:last-of-type {
+  margin-right: 0;
+}
+
+.select2 {
+  margin: 1rem 0 0.5rem;
+}
+.select2 .select2-selection--multiple {
+  border: solid 1px lightgrey;
+  min-height: 75px;
+  padding: 4px 3px;
+}
+.select2 .select2-selection__choice {
+  padding: 0.4rem 0.75rem !important;
+  background: none !important;
+  border-radius: 0.3rem !important;
+  border: solid 1px slateblue !important;
+  margin: 0.25rem !important;
+  cursor: pointer !important;
+  color: slateblue;
+}
+.select2 .select2-selection__choice__remove {
+  margin-right: 0.5rem !important;
+  color: lightgray;
+}
+
+.avatar-label {
+  position: relative;
+}
+.avatar-label .plus-wrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  border: solid 1px white;
+  border-radius: 50%;
+  color: slateblue;
+  cursor: pointer;
+}
+
+button {
+  margin: 0em;
+  font: "Lato";
+  padding: 0;
+  border-width: 0;
+  border-style: none;
+  border-color: none;
+  border-image: none;
+  line-height: unset;
+}
+
+input[type=text] {
+  background-color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 0.3rem;
+}
+input[type=submit] {
+  border: none;
+  font-size: 1rem;
+  border-radius: 0.3rem;
+}
+
+a {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: slateblue;
+}
+a.bubble-dark {
+  color: white;
+}
+
+header {
+  width: 100%;
+  height: 75px;
+}
+
+body {
+  background-color: whitesmoke;
+  font-family: "Lato", sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 18.4px;
+}
+
+ul.select2-selection {
+  width: 100%;
+}
+
+.italic {
+  font-style: italic;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h4 .margin-bottom-0 {
+  margin-bottom: 0;
+}
+
+.card {
+  background-color: white;
+  width: 100%;
+  border-radius: 0.25rem;
+  border: none;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.card .card-input {
+  width: 100%;
+  border: solid 1px lightgray;
+  margin: 0.5rem 0;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: "lato";
+}
+.card .card-input:focus {
+  outline: none;
+  border: 1px solid slateblue;
+}
+
+.mini-card {
+  padding: 0.75rem 0;
+  margin: 1rem 0;
+}
+.mini-card h3 {
+  margin-left: 0.25rem;
+}
+.mini-card p {
+  margin-left: 0.25rem;
+}
+.mini-card .bubble-outline:first-of-type {
+  margin-left: 0;
+}
+
+.button-accept-reject {
+  cursor: pointer;
+}
+
+.bubble {
+  display: inline-block;
+  padding: 0.65rem 1.25rem;
+  background-color: white;
+  border-radius: 0.3rem;
+  margin: 0.25rem;
+  cursor: pointer;
+}
+
+.bubble-dark {
+  display: inline-block;
+  padding: 0.65rem 1.25rem;
+  background-color: slateblue;
+  border-radius: 0.3rem;
+  margin: 0.25rem;
+  color: white;
+  cursor: pointer;
+}
+
+.bubble-outline {
+  padding: 0.4rem 0.75rem;
+  background-color: none;
+  border-radius: 0.3rem;
+  border: solid 1px slateblue;
+  margin: 0 0.25rem 0.5rem 0;
+  line-height: 1.3rem;
+  cursor: pointer;
+}
+.bubble-outline.selected {
+  background-color: slateblue;
+}
+.bubble-outline.selected a {
+  color: white;
+}
+
+.application-container {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+.application-container .application-pic {
+  flex: 0.75;
+}
+.application-container .application-info {
+  flex: 2;
+}
+.application-container .application-info h4 {
+  margin: 0;
+}
+.application-container .application-info p {
+  margin: 0.5rem 0;
+}
+.application-container .application-buttons {
+  flex: 1;
+  text-align: center;
+  color: slateblue;
+}
+
+.headers-container {
+  display: flex;
+}
+.headers-container .title {
+  flex: 3;
+}
+.headers-container .status {
+  flex: 1;
+  text-align: center;
+}
+
+.search-bar {
+  width: 100%;
+  position: relative;
+}
+.search-bar button {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+}
+
+.avatar-xsmall {
+  height: 2rem;
+  border-radius: 50%;
+  margin: 0 0.5rem;
+  border: solid 1px white;
+}
+
+.avatar-small {
+  height: 2.75rem;
+  border-radius: 50%;
+  margin: 0 0.5rem;
+  border: solid 1px white;
+}
+
+.avatar-large {
+  height: 5.5rem;
+  border-radius: 50%;
+  margin: 0 0.25rem;
+  border: solid 1px white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 75px;
+  text-align: center;
+  margin-top: 75px;
+}
+
+.markdownx-editor {
+  font-family: "lato";
+}
+.markdownx-editor.card-input {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.markdownx-preview {
+  border: 1px solid lightgrey;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  padding: 0.5rem;
+}
+.markdownx-preview p {
+  margin: 0;
+}
+.markdownx-preview::before {
+  content: "Markdown preview";
+  color: grey;
+}
+
+.message-container {
+  background-color: black;
+  width: 100%;
+  min-height: 75px;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  transform: translate(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: notify;
+  animation-duration: 7s;
+}
+@keyframes notify {
+  0% {
+    transform: translateY(100%);
+  }
+  10% {
+    transform: translateY(0%);
+  }
+  90% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(100%);
+    display: none;
+  }
+}
+.message-container ul {
+  list-style: none;
+  padding: 0;
+}
+.message-container ul li {
+  color: white;
+}
+
+.img-container {
+  height: 50vh;
+}
+
+/*# sourceMappingURL=style.css.map */

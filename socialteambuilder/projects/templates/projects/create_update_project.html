@@ -19,8 +19,8 @@
 
 <div class="bounds">
     <div class="top-button-container">  
-        <input class="" type="submit" action="" value="Save Project">
-        <a class="button" href="{% url 'projects:dashboard' category='all' q='all' %}">Discard</a>
+        <input class="bubble-dark" type="submit" action="" value="Save Project">
+        <a class="bubble-dark" href="{% url 'projects:dashboard' category='all' q='all' %}">Discard</a>
     </div>
 </div>
     
@@ -28,26 +28,42 @@
   {{ project_form.media }}
 
   <div class="bounds">
-    <h1 id="project-edit-title">Edit Project</h1>
+    <h2>Edit Project</h2>
     <div class="profile-desktop-wrapper">
-      <div class="project-info-edit-container">
+      <div class="card">
         {{ project_form.title }}
         {{ project_form.description }}
       </div>
     </div>
+  
+  <div class="project-status project-status-{{ project_form.status.value }}">
+    <div class="card">
+        <h3>Project Status</h3>
+        {{ project_form.status }}
+    </div>
   </div>
-      
-      <div class="positions-edit-container" id="positions-container">
-        <div class="center-text-wrapper">
-            <h2>Positions</h2>
-        </div>
 
+      <div class="card">
+          <h3>Project Timeline</h3>
+          {{ project_form.time_estimate }}
+      </div>
+      <div class="card">
+        <h3>Applicant Requirements</h3>
+        {{ project_form.applicant_requirements }}
+      </div>
+
+</div>
+      
+<div class="bounds">
+      <div class="positions-edit-container" id="positions-container">
+      
+        <h2>Positions</h2>
         <!-- Positions -->
-        <div class="position-edit-cards">
+        <div class="card">
             {{ position_formset.management_form }}
             {% for position_form in position_formset %}
             <div class="position-edit-card" style="display:block">
-            <div class="bounds">
+            
             {{ position_form.id }}
             {{ position_form.title}}
             {{ position_form.description }}
@@ -59,29 +75,31 @@
             {% for hidden in form.hidden_fields %}
             {{ hidden }}
             {% endfor %}
-            <div class="remove-button-wrapper">
-                <a class="button remove-form"><i class="fas fa-trash-alt"></i> remove</a>
+            <div class="top-button-container">
+              <a class="bubble-dark remove-form"><i class="fas fa-trash-alt"></i> remove</a>
             </div>
+         
           </div>
-          </div>
-            {% endfor %}
+          {% endfor %}
     </div>
+  </div>
 <!-- /Positions -->
 
-<!-- Add position form -->
-    <div class="bounds">
-        <div class="top-button-container">
-            <a class="button" id="add_form"><i class="fas fa-plus"></i>  add position</a> 
-        </div>
-    </div>    
-<!-- /Add position form -->
+
       </div>
+      <!-- Add position form -->
+  <div class="bounds">
+      <div class="top-button-container">
+          <a class="bubble-dark" id="add_form"><i class="fas fa-plus"></i>  add position</a> 
+      </div>
+  </div>    
+<!-- /Add position form -->
     
 
       <!-- Empty position form to clone -->
       <div id="empty_form" style="display:none">
-          <div class="position-edit-card" style="display:block">
-            <div class="bounds">
+          <div class="card position-edit-card" style="display:block">
+            
               {{ position_formset.empty_form.id }}
               {{ position_formset.empty_form.title }}
               {{ position_formset.empty_form.description }}
@@ -93,30 +111,15 @@
               {% for hidden in position_formset.empty_form.hidden_fields %}
               {{ hidden }}
               {% endfor %}
-              <div class="remove-button-wrapper">
-                  <a class="button remove-form"><i class="fas fa-trash-alt"></i> remove</a>
+              <div class="top-button-container">
+                  <a class="bubble-dark remove-form"><i class="fas fa-trash-alt"></i> remove</a>
               </div>
-            </div>
+           
           </div>
       </div>
       <!-- /Empty position form to clone -->
    
-    <div class="grid-25 grid-push-5">
-      <div class="project-status project-status-{{ project_form.status.value }}">
-        <div class="bounds">
-            <h3>Project Status</h3>
-            {{ project_form.status }}
-        </div>
-      </div>
-      <div class="bounds">
-          <div class="project-edit-secondary-info">
-              <h3>Project Timeline</h3>
-              {{ project_form.time_estimate }}
-            <h3>Applicant Requirements</h3>
-            {{ project_form.applicant_requirements }}
-          </div>
-      </div>
-    </div>
+
 </form>
 </div>
 {% endblock %}
@@ -131,7 +134,9 @@
     var skillBox = document.getElementById(`id_form-${i}-skills`);
     $(`#id_form-${i}-skills`).select2({
       multiple: true,
-      tags: true
+      tags: true,
+      width: '100%',
+      placeholder: 'Position Skills'
     });
   };
 
@@ -149,7 +154,7 @@
   // Add new position form
   $('#add_form').click(function() {
     var form_idx = $('#id_form-TOTAL_FORMS').val();
-    $('.position-edit-cards').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+    $('#positions-container').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
     let removeButtons = document.querySelectorAll('.remove-form')
     let lastButton = removeButtons[removeButtons.length-2]
     lastButton.addEventListener('click', function(e) {
@@ -174,7 +179,8 @@
     var newId = allForms.length-2;
     $(`#id_form-${newId}-skills`).select2({
       multiple: true,
-      tags: true
+      tags: true,
+      width: '100%'
     });
     console.log(newId)
   })

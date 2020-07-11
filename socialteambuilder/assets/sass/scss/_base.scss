@@ -1,0 +1,60 @@
+// Base 
+
+@use 'variables';
+
+button {
+    margin: 0em;
+    font: 'Lato';
+    padding: 0;
+    border-width: 0;
+    border-style: none;
+    border-color: none;
+    border-image: none;
+    line-height: unset;
+}
+
+input {
+
+    &[type="text"] {
+        background-color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 0.3rem;
+    }
+
+    &[type=submit] {
+        border: none;
+        font-size: 1rem;
+        border-radius: 0.3rem;
+    }
+}
+
+a {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: variables.$slate;
+
+    &.bubble-dark {
+        color: white;
+    }
+}
+
+header {
+    width: 100%;
+    height: 75px;
+}
+
+body {
+    background-color: variables.$body-background;
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 18.4px;
+}
+ul {
+    
+    &.select2-selection {
+        width: 100%;
+    }
+}

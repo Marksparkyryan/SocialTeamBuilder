@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationForm
 
 from markdownx.fields import MarkdownxFormField
+from markdownx.widgets import MarkdownxWidget
 # from select2_tags import forms as f
 
 from accounts.models import PortfolioProject, Skill
@@ -97,7 +98,29 @@ class UserUpdateForm(forms.ModelForm):
     """Form for updating user's general information (first_name,
     last_name, about, avatar, skills)
     """
-    about = MarkdownxFormField()
+    about = forms.CharField(
+        widget=MarkdownxWidget(
+            attrs={
+                'class': 'card-input'
+            }
+        )
+    )
+
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "card-input"
+            }
+        )
+    )
+
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "card-input"
+            }
+        )
+    )
 
     class Meta:
         model = User
@@ -129,8 +152,14 @@ class PortfolioProjectForm(forms.ModelForm):
         model = PortfolioProject
         fields = ['name', 'url', 'id', ]
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Project Name'}),
-            'url': forms.TextInput(attrs={'placeholder': 'Project URL'}),
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Project Name',
+                'class': 'card-input'
+                }),
+            'url': forms.TextInput(attrs={
+                'placeholder': 'Project URL',
+                'class': 'card-input'
+                }),
             'id': forms.HiddenInput()
         }
 

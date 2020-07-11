@@ -6,7 +6,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Circle</title>
+  <title>Social Team Builder</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -33,46 +33,46 @@
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'sass/css/style.css' %}">
 
 <!-- Nav Bar -->
 </head>
 <body>
   <header class="header">
-      <div class="flex-container">   
-          <a class="logo" href="{% url 'projects:dashboard' category='all' q='all' %}"><i class="fab fa-connectdevelop fa-2x"></i></i></a>
-          <div class="nav">
+    <div class="bounds">
+      <div class="flex-h-container">   
+          <a class="logo" href="{% url 'projects:dashboard' category='all' q='all' %}"><i class="fab fa-connectdevelop fa-2x"></i> Social Team Builder</a>
+          <div class="flex-h-container">
             {% if user.is_authenticated %}
                 <a href="{% url 'accounts:profile' pk=user.id %}">
-                <img src="{{ user.avatar.url }}" alt="avatar" class="profile-pic" href="{% url 'accounts:profile' pk=user.id %}">
+                <img src="{{ user.avatar.url }}" alt="avatar" class="avatar-small" href="{% url 'accounts:profile' pk=user.id %}">
                 </a>
             {% endif %}         
               <div>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}">Sign Out</a>
+                    <a class="bubble-dark" href="{% url 'logout' %}">Sign Out</a>
                 {% else %}
-                    <a href="{% url 'accounts:register' %}">Sign Up</a>
-                    <a href="{% url 'login' %}">Sign In</a>
+                    <a class="bubble-dark" href="{% url 'accounts:register' %}">Sign Up</a>
+                    <a class="bubble-dark" href="{% url 'login' %}">Sign In</a>
                 {% endif %}
               </div>
           </div>        
     </div>
-  
-  </header>
-  {% if searchform %}
-  <div class="second-header">
-        <div class="search">
-            <div class="bounds">   
-            <form method="GET" action={% url 'projects:searchbar' %} id="search-bar">
-                {% csrf_token %}
-                {{ searchform.q }}
-                <button type="submit">
-                <i class="fas fa-search fa-lg"></i>
-                </button>
-            </form>
-          </div>
     </div>
-  </div>
+  </header>
+
+  {% if searchform %}
+  <div class="bounds">  
+      <div class="search-bar">
+          <form method="GET" action={% url 'projects:searchbar' %} id="search-bar">
+              {% csrf_token %}
+              {{ searchform.q }}
+              <button type="submit">
+              <i class="fas fa-search fa-lg"></i>
+              </button>
+          </form>
+        </div>
+    </div>
   {% endif %}
 <!-- /Nav Bar -->
 
@@ -80,15 +80,17 @@
 {% endblock %}
 
  <!-- Message Container -->
- {% if messages %}
- <div class="message-container">
-   <ul>
-     {% for message in messages %}
-     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-     {% endfor %}
-   </ul>
- </div>
- {% endif %}
+ <!-- {% if messages %} -->
+<div class="message-container">
+  <ul>
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+ <!-- {% endif %} -->
 <!-- /Message Container -->
 
 </body>

@@ -1,0 +1,94 @@
+// Layout
+
+@use 'variables'; 
+
+.ul-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+        display: inline-block;
+    }
+}
+
+.status-list {
+    padding: 0;
+    list-style: none;
+
+    li {
+        padding: 0.5rem;
+    }
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.bounds {
+    padding: 0.5rem variables.$bounds;
+    height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.flex-h-container {
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    .bubble-dark:last-of-type {
+        margin-right: 0;
+    }
+}
+
+.top-button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .bubble-dark:last-of-type {
+        margin-right: 0;
+    }
+}
+
+
+.select2 {
+    margin: 1rem 0 0.5rem;
+    
+    .select2-selection--multiple {
+        border: solid 1px lightgrey;
+        min-height: 75px;
+        padding: 4px 3px;
+    }
+
+    .select2-selection__choice {
+        padding: 0.4rem 0.75rem !important;
+        background: none  !important;
+        border-radius: 0.3rem !important;
+        border: solid 1px variables.$slate !important;
+        margin: 0.25rem !important;
+        cursor: pointer !important;
+        color: variables.$slate;
+    }
+
+    .select2-selection__choice__remove {
+        margin-right: 0.5rem !important;
+        color: lightgray;
+    }
+}
+
+.avatar-label {
+    position: relative;
+
+    .plus-wrapper {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        border: solid 1px white;
+        border-radius: 50%;
+        color: variables.$slate;
+        cursor: pointer;
+    }
+}

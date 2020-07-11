@@ -11,113 +11,98 @@
 {% block body %}
 
 <!-- Top Buttons -->
+{% if project.owner == user %}
   <div class="bounds">
     <div class="top-button-container">
-      <a class="button" href="{% url 'projects:create_update_project' slug=project.slug %}">Edit Project</a>
-      <a class="button" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
+      <a class="bubble-dark" href="{% url 'projects:create_update_project' slug=project.slug %}">Edit Project</a>
+      <a class="bubble-dark" href="{% url 'projects:delete_project' slug=project.slug %}">Delete Project</a>
     </div>
   </div>
+  {% endif %}
 
-  
       <div class="project-left-wrapper">
-          <div class="project-spacer">
-              <div class="project-title-container">
-                <div class="bounds">
-                    <h3 class="">Project Name</h3>
-                    <h1 class="">{{ project.title }}</h1>
-                    <p class="">Project Owner: <a>{{ project.owner }}</a></p>
-                    <p>Project Status: 
-                      {% if project.status == 'A' %}
-                      <span class="status-{{ project.status }}">Open</span> 
-                      {% elif project.status == 'B' %}
-                      <span class="status-{{ project.status }}">Closed</span> 
-                      {% elif project.status == 'C' %}
-                      <span class="status-{{ project.status }}">Complete</span> 
-                      {% endif %}
-                    </p>
-
+          <div class="bounds">
+              <div class="card">
+                  <h2 class="">{{ project.title }}</h2>
+                  <p class="">Project Owner: <a>{{ project.owner }}</a></p>
+                  <p>Project Status: 
+                    {% if project.status == 'A' %}
+                    <span class="status-{{ project.status }}">Open</span> 
+                    {% elif project.status == 'B' %}
+                    <span class="status-{{ project.status }}">Closed</span> 
+                    {% elif project.status == 'C' %}
+                    <span class="status-{{ project.status }}">Complete</span> 
+                    {% endif %}
+                  </p>
                 </div>
-              </div>
-            </div>
-
-            <div class="bounds">
-              <hr>
-            </div>
-              
-            <div class="bounds">
-
-            <div class="project-spacer">
-                <div class="project-description-container">
+        
+                <div class="card">
                     <h3>Project Description</h3>
                     {{ project.description|markdown }}
                   </div>
-            </div>
-              
-            <hr>
-            <div class="project-spacer">
-                <div class="project-needs-container">
+        
+                <div class="card">
                     <h3>Project Needs</h3>
-                    <ul class="project-needs-list">
+                    <ul class="ul-list">
                       {% select_distinct_positions_from_project as titles %}
                       {% for title in titles %}
-                      <li><a href="#{{ title }}">{{ title }}</a></li>
+                      <li class="bubble-outline"><a href="#{{ title }}">{{ title }}</a></li>
                       {% endfor %}
                     </ul>
                 </div>
-            </div>    
+                <div class="card">
+                    <h3>Applicant Requirements</h3>
+                    <p>{{ project.applicant_requirements}}</p>
+                  </div>
+                <div class="card">
+                    <h3>Project Timeline</h3>
+                    <p>{{ project.time_estimate }} hours</p>
+                  </div>
+              
+                  
           </div>
       </div>
       
-     
     
-        <div class="positions-container">
+      <div class="bounds">
+        <div class="card">
           <div class="positions-header">
-              <h3>Positions</h3>
+              <h2>Positions</h2>
           </div>
           <div class="desktop-flex-wrapper">
           {% if project.position_set %} 
             {% for position in project.position_set.all %}
-              <div class="position-card">
+              <div class="mini-card">
               <h3 id="{{ position.title }}">{{ position.title }}</h3>
-              <p class="position-skill">{% for skill in position.skills.all|slice:":12" %}{% if forloop.last %} <a class="skill-text"
-                  href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>{% else %} <a
-                  class="skill-text" href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
-                {% endif %}{% endfor %}</p>
-    
-                <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
+              <ul class="ul-list">
+                {% for skill in position.skills.all|slice:":12" %}
+                <li class="bubble-outline">
+                  <a href="{% url 'projects:dashboard' category='skill' q=skill %}">{{ skill }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
           
               <!-- Filled -->
               {% if position.status == 'F' %}
-              <a class="button button-primary button-inactive">Position Filled</a>
+              <a class="bubble-dark" style="cursor:not-allowed">Position Filled</a>
     
               <!-- Empty-->
               {% else %}
               {% already_applied position as var %}
               {% if var == 'U' %}
-              <a class="button button-primary button-inactive" style="cursor:default">You've applied.</a>
-              {% elif var == 'A' %}
-              <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-check-circle fa-lg"></i> 
-              {% for app in completed %}
-              {% if app.position == position %}
-                {% if app.user == user %}
-                You've been accepted
-                {% else %}
-                {{ app.user.first_name }} has been accepted
-                {% endif %}
-              {% endif %}
-              {% endfor %}
-              </a>
+              <a class="bubble-dark" style="cursor:not-allowed">You've applied.</a>
               {% elif var == 'R' %}
-              <a class="button button-primary button-inactive" style="cursor:default"><i class="far fa-times-circle fa-lg"></i> You've been declined</a>
+              <a class="bubble-dark" style="cursor:not-allowed">You can't apply again</a>
               {% else %}
-              <a class="button button-primary apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}"
+              <a class="bubble-dark apply-button" pk="{{ position.id }}" id="apply-button-{{ position_pk }}"
                 data-url="{% url 'projects:newapp' %}">Apply</a>
               {% endif %}
               {% endif %}
             </div>
             {% endfor %}
             {% else %}
-            <div class="position-card">
+            <div class="mini-card">
               <p>there are currently no positions</p>
             </div>
             {% endif %}
@@ -125,19 +110,6 @@
             <div class="position-card hidden"></div>
         </div>
       </div>
-
-
-
-    <div class="bounds">
-        <div class="project-timeline">
-            <h3>Project Timeline</h3>
-            <p>{{ project.time_estimate }} hours</p>
-          </div>
-      
-          <div class="applicant-req">
-            <h3>Applicant Requirements</h3>
-            <p>{{ project.applicant_requirements}}</p>
-          </div>
     </div>
   
 {% endblock %}
@@ -193,11 +165,10 @@ $(".apply-button").click(function () {
         dataType: 'json',
         method: 'POST',
         success: function (data) {
-          if (data.updated) {
-            button.replaceWith('<a class="button button-primary button-inactive">Applied!</a>');
-            console.log("Application created: ", data.updated);
+          console.log(data);
+          if (data.success) {
+            button.replaceWith('<a class="bubble-dark">Applied!</a>');
           } else {
-            console.log("Application created: ", data.updated);
           }
         }
       });

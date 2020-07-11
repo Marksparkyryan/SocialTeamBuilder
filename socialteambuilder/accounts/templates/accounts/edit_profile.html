@@ -27,7 +27,7 @@
 <div class="bounds">
 
 <div class="top-button-container">
-        <input type="submit" class="button button-primary icon-on-left" action="" value="Save Changes">
+        <input type="submit" class="bubble-dark" action="" value="Save Changes">
 </div>
 <div class="profile-desktop-wrapper">
 
@@ -48,12 +48,12 @@
 
 <!-- Avatar -->
 <div class="avatar-wrapper">
-    <label class="label" data-toggle="tooltip" title="" data-original-title="Change">
-        <img name="id_avatar" id="id_avatar" class="profile-edit-pic" src="{{ user.avatar.url }}"
+    <label class="avatar-label" data-toggle="tooltip" title="" data-original-title="Change">
+        <img name="id_avatar" id="id_avatar" class="avatar-large" src="{{ user.avatar.url }}"
             alt="avatar" />
         <input type="file" class="sr-only" id="input" name="image" accept="image/*" hidden="True">
-    <div class="pencil-wrapper">
-        <i class="fas fa-pencil-alt pencil fa-lg"></i>
+    <div class="plus-wrapper">
+        <i class="fas fa-plus-circle fa-2x"></i>
     </div>
     </label>
 </div>
@@ -62,37 +62,27 @@
 <!-- /Avatar -->
 
   <!-- User general info -->
-  <div class="grid-70">
-    {{ user_form.media }}
+  {{ user_form.media }}
+<div class="card">
     {{ user_form.first_name }}
     {{ user_form.last_name }}
-    <div class="project-spacer">
-      {{ user_form.about }}
-    </div>
-    <!-- /User general info -->
-  </div>
-
-
-
-    <!-- Skills -->
-    <div class="project-spacer">
-        {{ user_form.skills }}
-    </div>
-
+</div>
     
-    <!-- /Skills-->
+<div class="card">
+    {{ user_form.about }}
+    {{ user_form.skills }}
+</div>    
 </div>
-</div>
-    <div class="project-spacer">
-        <div class="profile-desktop-wrapper">
+
+
+    <div class="profile-desktop-wrapper">
+        <div class="card">
       <h4 class="center-text-wrapper">My Portfolio</h4>
-      
+      <div class="position-edit-cards">
         <!-- Portfolios -->
-        <div class="position-edit-cards">
         {{ project_formset.management_form }}
         {% for form in project_formset %}
-        <div class="position-edit-card" style="display:block">
-        <div class="bounds">
+        <div class="mini-card position-edit-card" style="display:block">
           {{ form.id }}
           {{ form.name }}
           {{ form.url }}
@@ -102,27 +92,28 @@
           {% for hidden in form.hidden_fields %}
           {{ hidden }}
           {% endfor %}
-          <div class="remove-button-wrapper">
-                <a class="button remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
+          <div class="top-button-container">
+                <a class="bubble-dark remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
           </div>
         </div>
-        </div>
         {% endfor %}
-      </div>
+    </div>
+        <div class="top-button-container">
+                <a class="bubble-dark" id="add_form"><i class="fas fa-plus"></i> add</a>
+          </div>
+    </div>
+</div>
       <!-- /Portfolios -->
 
       <!-- Add portfolio form -->
-      <div class="bounds">
-            <div class="top-button-container">
-                  <a class="button" id="add_form"><i class="fas fa-plus"></i> add</a>
-            </div>
-        </div>
+
+            
+
         <!-- /Add portfolio form -->
 
       <!-- Empty form to clone -->
       <div id="empty_form" style="display:none">
-            <div class="position-edit-card" style="display:block">
-                <div class="bounds">
+            <div class="mini-card position-edit-card" style="display:block">
               {{ project_formset.empty_form.id }}
               {{ project_formset.empty_form.name }}
               {{ project_formset.empty_form.url }}
@@ -132,10 +123,10 @@
               {% for hidden in project_formset.empty_form.hidden_fields %}
               {{ hidden }}
               {% endfor %}
-              <div class="remove-button-wrapper">
-                  <a class="button remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
+              <div class="top-button-container">
+                  <a class="bubble-dark remove-form" id="remove_form"><i class="fas fa-trash-alt"></i> remove</a>
               </div>
-            </div>
+    
           </div>
           </div>
           <!-- /Empty form to clone -->
@@ -165,8 +156,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="button-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="button-primary" id="crop">Crop</button>
+                    <button type="button" class="bubble-dark button-reset" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="bubble-dark button-reset" id="crop">Crop</button>
                 </div>
             </div>
         </div>
@@ -253,8 +244,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
         if (cropper) {
             canvas = cropper.getCroppedCanvas({
-                width: 450,
-                height: 450,
             });
             initialAvatarURL = avatar.src;
             avatar.src = canvas.toDataURL('image/jpeg', 1);

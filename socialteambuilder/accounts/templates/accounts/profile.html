@@ -16,10 +16,10 @@
 <div class="bounds">
 <div class="top-button-container">
       {% if user.id == user_profile.id %}
-      <a class="button" href="{% url 'projects:applications' box='inbox' category='status' q='u' %}"><i class="far fa-comments"></i> Applications</a>
+      <a class="bubble-dark" href="{% url 'projects:applications' box='inbox' category='status' q='u' %}"><i class="far fa-comments"></i> Applications</a>
       {% endif %}
       {% if user.id == user_profile.id %}
-      <a class="button icon-on-left" href="{% url 'accounts:updateuser' %}"><i class="fas fa-user-edit"></i> Edit</a>
+      <a class="bubble-dark" href="{% url 'accounts:updateuser' %}"><i class="fas fa-user-edit"></i> Edit</a>
       {% endif %}
   </div>
 </div>
@@ -29,53 +29,46 @@
 <div class="bounds profile-desktop-wrapper">
 
 <!-- Avatar -->
-<div class="circle--primary--avatar">
+<div class="card">
+<div class="avatar-large">
     {% if user_profile.avatar %}
-    <img src="{{ user_profile.avatar.url }}" class="profile-profile-pic">
+    <img src="{{ user_profile.avatar.url }}" class="avatar-large">
     {% endif %}
   </div>
-  <h1>{{ user_profile }}</h1>
-  <div class="circle--article--body">
+  <h2>{{ user_profile }}</h2>
+  <div>
     {{ user_profile.about|markdown }}
   </div>
-
- 
-
-
-
-
-
+</div>
 
     <!-- Skills -->
-    <div class="circle--secondary--module">
+    <div class="card">
         <h4>My Skills</h4>
-        <ul class="ul-list-skills">
+        <ul class="ul-list">
           {% for skill in user_profile.skills.all %}
-              <li><a href="{% url 'projects:dashboard' category='skill' q=skill %}"><span
+              <li class="bubble-outline"><a href="{% url 'projects:dashboard' category='skill' q=skill %}"><span
                 class="skill-button">{{ skill }}</span></a></li>     
           {% endfor %}
+          <li class="bubble-outline"><a href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">projects that match your skills</a></li>
         </ul>
-        <div class="skill-bubble-footer">
-          <p>See<a class="text-link" href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">projects</a>that match your skills!
-          </p>
-        </div>
       </div>
-    <hr>
+
       <!-- /Skills -->
 
        <!-- Portfolio projects -->
-  <div class="profile-center-ul">
+  <div class="card">
       <h4>My Portfolio</h4>
-      <ul class="">
         {% for project in user_profile.portfolio_projects.all %}
-        <li>{{ project.name }} <a href="#">{{ project.url }}</a></li>
+        <div class="mini-card">
+            <h4>{{ project.name }}</h4>
+            <a href="#">{{ project.url }}</a>
+        </div>
         {% endfor %}
-      </ul>
     </div>
-    <hr>
+
     <!-- /Portfolio projects -->
 
-<div class="profile-center-ul">
+<div class="card">
   <h4>Past Projects</h4>
 
   {% if applications %}

@@ -30,23 +30,49 @@ class SearchBarForm(forms.Form):
 class CreateProjectForm(forms.ModelForm):
     """Form for creating a project
     """
+    STATUS = [
+        ('A', 'Open'),
+        ('B', 'Closed'),
+        ('C', 'Complete'),
+    ]
+
     title = forms.CharField(
         max_length=255,
         widget=forms.TextInput(
             attrs={
-                'class': 'circle--input--h1',
-                'placeholder': 'Project Title'}
-        ))
+                'class': 'card-input',
+                'placeholder': 'Project Title'
+            }))
+
     description = forms.CharField(
-        widget=MarkdownxWidget(attrs={'placeholder': 'Project description'})
-    )
+        widget=MarkdownxWidget(
+            attrs={
+                'class': 'card-input',
+                'placeholder': 'Project description'
+            }))
+
+    status = forms.CharField(
+        widget=forms.RadioSelect(
+            choices=STATUS,
+            attrs={
+                'class': 'status-list'
+        }))
+
     time_estimate = forms.CharField(
         max_length=10,
         widget=forms.TextInput(
             attrs={
-                'class': 'circle--textarea--input',
+                'class': 'card-input',
                 'placeholder': 'Time estimate'}
         ))
+
+    applicant_requirements = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'card-input'
+            }
+        )
+    )
 
     class Meta:
         model = Project
@@ -60,8 +86,18 @@ class PositionForm(forms.ModelForm):
     """
     description = forms.CharField(
         label='',
-        widget=MarkdownxWidget(attrs={'placeholder': 'Position Description'})
+        widget=MarkdownxWidget(
+            attrs={
+                'placeholder': 'Position Description',
+                'class': 'card-input'
+            })
     )
+
+    time_estimate = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'card-input'
+        }))
 
     class Meta:
         model = Position
@@ -69,7 +105,7 @@ class PositionForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={
                 'placeholder': 'Position Title',
-                'class': 'circle--input--h3'
+                'class': 'card-input'
             }),
             'id': forms.HiddenInput(),
         }

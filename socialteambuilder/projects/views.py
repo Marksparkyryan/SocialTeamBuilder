@@ -6,17 +6,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db.models import Q
 from django.http import (
     JsonResponse,
     HttpResponseBadRequest,
     HttpResponseServerError,
-    HttpResponseRedirect
+    HttpResponseRedirect,
+    Http404
 )
 from django.shortcuts import render, get_object_or_404, reverse
 from django.urls import reverse_lazy
 from django.views.generic import View, DetailView, DeleteView, CreateView
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
 
 from .models import Application, Project, Position
@@ -56,6 +58,7 @@ class DashboardView(CustomLoginRequired, ListView):
     """
     queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
+    paginate_by = 5
 
     def get_queryset(self, *args, **kwargs):
         """get distinct projects that are currently open and have empty
@@ -65,29 +68,23 @@ class DashboardView(CustomLoginRequired, ListView):
         queryset = self.queryset.filter(
             status='A',
             position__status='E'
-        ).prefetch_related(
-            'position_set'
         ).distinct()
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         category = self.kwargs['category']
         q = self.kwargs['q']
         if q != 'all':
             if category == 'need':
-                filtered = self.get_queryset().filter(
+                queryset = queryset.filter(
                     position__slug=q
                 )
             elif category == 'skill':
-                filtered = self.get_queryset().filter(
+                queryset = queryset.filter(
                     position__skills__name=q
                 )
             elif category == 'skills':
                 not_user_positions = Position.objects.exclude(
                     applications__user=self.request.user
                 )
-                filtered = self.get_queryset().filter(
+                queryset = queryset.filter(
                     Q(position__skills__in=self.request.user.skills.all()) &
                     Q(position__in=[position for position in not_user_positions])
                 )
@@ -95,29 +92,37 @@ class DashboardView(CustomLoginRequired, ListView):
                 not_user_positions = Position.objects.exclude(
                     applications__user=self.request.user
                 )
-                filtered = self.get_queryset().filter(
+                queryset = queryset.filter(
                     position__in=[position for position in not_user_positions]
                 )
             elif category == 'accepted':
-                filtered = self.get_queryset().filter(
+                queryset = queryset.filter(
                     Q(position__applications__user=self.request.user) &
                     Q(position__applications__status='R')
                 )
+        print(queryset)
+        return queryset
 
-        else:
-            filtered = self.get_queryset()
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['searchform'] = SearchBarForm()
         context['q'] = self.kwargs['q']
-        context['filtered'] = filtered
         return context
 
 
-class SearchBar(ListView):
+class SearchBar(CustomLoginRequired, ListView):
     """View that handles queries submitted by the SearchForm
     """
     queryset = Project.objects.all()
     template_name = 'projects/dashboard.html'
+    paginate_by = 5
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        if request.GET.get('q') is not None:
+            request.session['q'] = request.GET.get('q')
+        self.q = request.session['q']
+        print(self.q)
 
     def get_queryset(self, *args, **kwargs):
         """get distinct projects that are currently open and have empty
@@ -128,21 +133,20 @@ class SearchBar(ListView):
             status='A',
             position__status='E'
         ).distinct()
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        q = self.request.GET.get('q')
-        filtered = self.get_queryset().filter(
+        q = self.q
+        queryset = queryset.filter(
             Q(title__icontains=q) |
             Q(description__icontains=q) |
             Q(applicant_requirements__icontains=q) |
             Q(position__title__icontains=q) |
             Q(position__skills__name__icontains=q)
         )
-        context['searchform'] = SearchBarForm(initial={'q': q})
-        context['filtered'] = filtered
-        context['query'] = q
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['searchform'] = SearchBarForm(initial={'q': self.q})
+        context['query'] = self.q
         return context
 
 
@@ -151,47 +155,47 @@ class ApplicationsList(CustomLoginRequired, ListView):
     any applications from the user to other user's projects
     """
     model = Application
+    paginate_by = 5
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset = queryset.filter(
+        queryset = queryset.filter(
             Q(position__project__owner=self.request.user) |
             Q(user=self.request.user)
         ).select_related(
             'position', 'user'
         ).distinct()
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         box = self.kwargs['box']
         if box == 'inbox':
-            filtered = self.get_queryset().filter(
+            queryset = queryset.filter(
                 position__project__owner=self.request.user
             )
-        else:
-            filtered = self.get_queryset().filter(
+        elif box == 'outbox':
+            queryset = queryset.filter(
                 user=self.request.user
             )
         category = self.kwargs['category']
         q = self.kwargs['q']
         if q != 'all':
             if category == 'status':
-                filtered = filtered.filter(
+                queryset = queryset.filter(
                     status__icontains=q
                 )
             elif category == 'project':
-                filtered = filtered.filter(
+                queryset = queryset.filter(
                     position__project__slug=q
                 )
             elif category == 'need':
-                filtered = filtered.filter(
+                queryset = queryset.filter(
                     position__slug=q
                 )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)  
         context['searchform'] = SearchBarForm()
         context['q'] = self.kwargs['q']
         context['box'] = self.kwargs['box']
-        context['filtered'] = filtered
         context['inbox_count'] = self.get_queryset().filter(
             status='U',
             position__project__owner=self.request.user
@@ -199,76 +203,107 @@ class ApplicationsList(CustomLoginRequired, ListView):
         return context
 
 
-class UpdateAppStatus(CustomLoginRequired, View):
-    """View that handles JSON requests for changing the status of an
+class UpdateAppStatus(CustomLoginRequired, SingleObjectMixin, View):
+    """View that handles ajax requests for changing the status of an
     application
     """
-    http_method_names = ['post', ]
+    model = Application
+    http_method_names = ['post']
+
+    def render_json_response(self, message, success):
+        return JsonResponse({
+            "message": message,
+            "success": success
+        })
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.kwargs.update({"pk": request.POST.get('app_pk')})
+
+    def get_object(self):
+        application = super().get_object()
+        if application.position.project.owner != self.request.user:
+            raise PermissionDenied
+        return application
+
+    def position_is_filled(self):
+        app = self.get_object()
+        return app.position.status == 'F'
+
+    def update_app_status(self, status, unread):
+        app = self.get_object()
+        app.status = status
+        app.unread = unread
+        app.save()
+
+    def update_outstanding_apps(self):
+        app = self.get_object()
+        outstanding = Application.objects.filter(
+                position=app.position,
+                status='U'
+            )
+        for app in outstanding:
+            app.status = 'R'
+            app.unread = True
+            app.save()
 
     def post(self, request, *args, **kwargs):
-        pk = self.request.POST.get('app_pk')
+        if self.position_is_filled():
+            return self.render_json_response("Position is filled", False)
         status = self.request.POST.get('status')
         user = self.request.user
-        app = get_object_or_404(Application, pk=pk)
-        if user == app.position.project.owner:
-            if status == 'A':
-                app.status = status
-                app.unread = True
-                app.save()
-                #update all other applications as Rejected
-                others = Application.objects.filter(
-                    position=app.position,
-                    status='U'
-                )
-                for app in others:
-                    app.status = 'R'
-                    app.unread = True
-                    app.save()
-                data = {
-                    'updated': True,
-                    'new_status': app.get_status_display()
-                }
-                return JsonResponse(data)
-            elif status == 'R':
-                app.status = status
-                app.unread = True
-                app.save()
-                data = {
-                    'updated': True,
-                    'new_status': app.get_status_display()
-                }
-                return JsonResponse(data)
-            return HttpResponseBadRequest()
-        raise PermissionDenied
+        app = self.get_object()
+        position = app.position
+        if status == 'A':
+            self.update_app_status(status, True)
+            position.status = 'F'
+            position.save()
+            self.update_outstanding_apps()
+            # get refreshed app from db
+            app = self.get_object()
+            return self.render_json_response(app.get_status_display(), True)
+        elif status == 'R':
+            self.update_app_status(status, True)
+            return self.render_json_response(app.get_status_display(), True)
+        return self.render_json_response("Invalid or missing status", False)
 
 
 class CreateApp(CustomLoginRequired, View):
-    """View for creating an application instance - if the user applies
-    to an open position
+    """View for handling ajax requests to create applications for requesting
+    user and returning a jsonResponse
     """
-    http_method_names = ['post', ]
+    http_method_names = ['post']
+    model = Application
+
+    def render_json_response(self, message, success, status):
+        return JsonResponse({
+            "message": message,
+            "success": success
+        }, status=status)
 
     def post(self, request, *args, **kwargs):
-        position_pk = self.request.POST.get('position_pk')
-        position = Position.objects.get(id=position_pk)
-        user = self.request.user
+        position = get_object_or_404(
+            Position, 
+            pk=request.POST.get('position_pk')
+        )
         try:
-            app = Application(
-                user=user,
+            app = self.model.objects.get(
+                user=request.user,
+                position=position
+                )
+            return self.render_json_response(
+                "Application already exists for this position and user", 
+                False,
+                400 
+            )
+        except self.model.DoesNotExist:
+            app = self.model(
+                user=request.user,
                 position=position,
                 status='U'
             )
             app.save()
-            data = {
-                'updated': True,
-            }
-            return JsonResponse(data)
-
-        except Exception as err:
-            data = {
-                'updated': False,
-            }
-            return JsonResponse(data)
+            return self.render_json_response(str(app), True, 201)
 
 
 class ProjectView(CustomLoginRequired, PrefetchRelatedMixin, DetailView):
@@ -276,7 +311,7 @@ class ProjectView(CustomLoginRequired, PrefetchRelatedMixin, DetailView):
     """
     model = Project
     template_name = 'projects/project.html'
-    prefetch_related = ['position_set', 'position_set__skills',]
+    prefetch_related = ['position_set', 'position_set__skills']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -297,11 +332,14 @@ def create_update_project(request, slug=None):
     request_user = request.user
     if slug is not None:
         project = Project.objects.get(slug=slug)
-        project_form = CreateProjectForm(instance=project)
-        position_formset = PositionFormset(
-            queryset=Position.objects.filter(
-                project=project
-            ))
+        if project.owner != request.user:
+            raise PermissionDenied
+        else:
+            project_form = CreateProjectForm(instance=project)
+            position_formset = PositionFormset(
+                queryset=Position.objects.filter(
+                    project=project
+                ))
     else:
         project = None
         project_form = CreateProjectForm()

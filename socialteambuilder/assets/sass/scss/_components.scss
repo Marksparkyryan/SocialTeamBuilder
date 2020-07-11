@@ -1,0 +1,239 @@
+// Components
+
+@use 'variables';
+
+.card {
+    background-color: white;
+    width: 100%;
+    border-radius: .25rem;
+    border: none;
+    padding: 1rem;
+    margin: 1rem 0;
+
+    .card-input {
+        width: 100%;
+        border: solid 1px lightgray;
+        margin: 0.5rem 0;
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+        font-family: 'lato';
+
+        &:focus {
+            outline: none;
+            border: 1px solid variables.$slate;
+        }
+    }
+}
+
+.mini-card {
+    padding: 0.75rem 0;
+    margin: 1rem 0;
+
+    h3 {
+        margin-left: 0.25rem;
+    }
+
+    p {
+        margin-left: 0.25rem; 
+    }
+
+    .bubble-outline:first-of-type {
+        margin-left: 0; 
+    }
+}
+
+.button-accept-reject {
+    cursor: pointer;
+}
+
+.bubble {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    background-color: white;
+    border-radius: 0.3rem;
+    margin: 0.25rem;
+    cursor: pointer;
+}
+
+.bubble-dark {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    background-color: variables.$slate;
+    border-radius: 0.3rem;
+    margin: 0.25rem;
+    color: white;
+    cursor: pointer;
+}
+
+.bubble-outline {
+    padding: 0.4rem 0.75rem;
+    background-color: none;
+    border-radius: 0.3rem;
+    border: solid 1px variables.$slate;
+    margin: 0 0.25rem 0.5rem 0;
+    line-height: 1.3rem;
+    cursor: pointer;
+
+    &.selected {
+        background-color: variables.$slate;
+
+        a {
+            color: white;
+        }
+    }
+}
+
+.application-container {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    padding: 1rem 0;
+
+    .application-pic {
+        flex: 0.75;
+    }
+
+    .application-info {
+        flex: 2;
+
+        h4 {
+            margin: 0;
+        }
+
+        p {
+            margin: 0.5rem 0;
+        }
+    }
+
+    .application-buttons {
+        flex: 1;
+        text-align: center;
+        color: variables.$slate;
+    }
+}
+
+.headers-container {
+    display: flex;
+
+    .title {
+        flex: 3;
+    }
+
+    .status {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+.search-bar {
+    width: 100%;
+    position: relative;
+
+    button {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+    }
+}
+
+.avatar-xsmall {
+    height: 2rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+    border: solid 1px white;
+}
+
+.avatar-small {
+    height: 2.75rem;
+    border-radius: 50%;
+    margin: 0 0.5rem;
+    border: solid 1px white;
+}
+
+.avatar-large {
+    height: 5.5rem;
+    border-radius: 50%;
+    margin: 0 0.25rem;
+    border: solid 1px white;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 75px;
+    text-align: center;
+    margin-top: 75px;
+}
+
+.markdownx-editor { 
+    font-family: 'lato';
+
+    &.card-input {
+        margin-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.markdownx-preview {
+    border: 1px solid lightgrey;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    padding: 0.5rem;
+
+    p {
+        margin: 0;
+    }
+
+    &::before {
+        content: 'Markdown preview';
+        color: grey;
+    }
+}
+
+.message-container {
+    background-color: black;
+    width: 100%;
+    min-height: 75px;
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    transform: translate(100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: notify;
+    animation-duration: 7s;
+
+    @keyframes notify {
+        0%   {transform: translateY(100%);}
+        10%  {transform: translateY(0%);}
+        90%  {transform: translateY(0%);}
+        100% {transform: translateY(100%); display: none;}
+      }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+            color: white;
+        }
+    }
+
+    
+}
+
+.img-container {
+    height: 50vh;
+}
+
+
+
+

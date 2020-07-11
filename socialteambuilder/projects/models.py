@@ -8,11 +8,11 @@ class Project(models.Model):
     """Model representing a development project that users can create
     and/or join
     """
-    STATUS = (
+    STATUS = [
         ('A', 'Open'),
         ('B', 'Closed'),
         ('C', 'Complete'),
-    )
+    ]
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
