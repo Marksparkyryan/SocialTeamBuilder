@@ -1,48 +1,60 @@
-# SocialTeamBuilder
+# Social Team Builder
 
-Social Team Builder is a capstone project that helps users create and apply to projects. Projects can have 
-multiple positions (10), and have them linked to specific skills that are then searchable by other users. 
+Social Team Builder is a capstone project that helps users create and apply to coding projects. Projects can have 
+multiple positions, and have them linked to specific skills that are then searchable by other users. 
 Users that create projects have the ability to accept or decline applicants. Applicants are notified via Django's 
 messaging framework of their application outcomes. Users also have a profile that describes who they are, what 
 skills they have, and what projects they have been connected to that are now completed.
 
+Update: 
+This has been deployed for demo purposes. It's running on Heroku with Gunicorn, a PostgreSQL database, and static files served by AW3. This deployment can be found at https://social-team-builder-app.herokuapp.com
+
 
 <br/>
 
-# installation
+# Cloning and Installing
 
 1. cd into your directory of projects (or wherever you prefer to keep your clones)
 2. git clone ```https://github.com/Marksparkyryan/SocialTeamBuilder.git``` to clone the app
 3. ```virtualenv venv``` to create your virtual environment
 4. ```source venv/bin/activate``` to activate the virtual environment
 5. ```pip install -r SocialTeamBuilder/requirements.txt``` to install app requirements
-6. cd into ```SocialTeamBuilder/socialteambuilder/``` and run ```python manage.py runserver```
-7. the app should now be running on ```http://127.0.0.1:8000/accounts/register/```
+6. cd into ```SocialTeamBuilder/socialteambuilder/``` (the directory with manage.py) and run ```python manage.py makemigrations``` to construct/prepare migration files
+7. cd into ```SocialTeamBuilder/socialteambuilder/``` (the directory with manage.py) and run ```python manage.py migrate``` to construct and populate database (this project has a few data migration files that will inject random dummy data for users, projects, skills, and even applications)
+8. cd into ```SocialTeamBuilder/socialteambuilder/``` (the directory with manage.py) and run ```python manage.py runserver```
+9. the app should now be running on ```http://127.0.0.1:8000```
 
 <br/>
 
-# usage
+# Usage
 
-The database has been included with this repo. It contains projects, positions, skills, and users. To test out 
-the site, go ahead and register for a new account. Users need to be activated so you'll have to proceed to 
-the dummy inbox  ```SocialTeamBuilder/socialteambuilder/dummy_email_inbox/``` to copy/paste the token link in your 
+1. Register an account (token activation may be required, see settings below)
+2. Fill out your profile
+3. Browse current and open projects on the dashboard, seeing details by clicking on project
+4. Navigate to your profile by clicking on mini avatar in header. Click Applications to see your inbox and outbox holding applications for each position. If you own a project, you can accept or decline applicants in the inbox. If you've applied to a project, you can see the application status in your outbox.
+5. Projects can be created at the Dashboard (the homepage).
+6. Once projects have a completed status, they will appear on your profile as work history.
+
+
+<br/>
+
+# Settings
+
+USE_TOKEN_AUTH_WITH_DUMMY_INBOX = False
+
+If you'd like to use the token activation feature, set USE_TOKEN_AUTH_WITH_DUMMY_INBOX to True. When True, new users need to be activated before using the site. To simulate emails, you'll have to proceed to the dummy inbox  ```SocialTeamBuilder/socialteambuilder/dummy_email_inbox/``` to copy/paste the token link in your 
 browser. This should automatically activate your account and log you in. 
 
-Once you've filled out your profile, you can navigate open projects and positions. You can try to apply to
-any of these positions. You'll be able to see the status of your applications in your applications outbox. 
-If you'd like to simulate a project owner accepting your application you can log in with the credentials below:
 
-superuser:
-email: sparky@email.com
-password: securepassword
+USE_DATA_MIGRATIONS = True
 
-In Sparky's account, you can access applicants by going to the applications inbox. You can accept or decline 
-applicants. Applicants will be notified via Django's message framework.
+If you don't want the database to automatically populated with dummy data, set USE_DATA_MIGRATIONS to False.
+
 
 <br/>
 
 
-# credits
+# Credits
 
 Treehouse Techdegree Project 12
 
