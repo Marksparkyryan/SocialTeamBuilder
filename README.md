@@ -1,6 +1,6 @@
 # Social Team Builder
 
-Social Team Builder is a capstone project that helps users create and apply to coding projects. Projects can have 
+Social Team Builder is a final capstone project from the Team Treehouse Tech Degree that helps users create and apply to coding projects. Projects can have 
 multiple positions, and have them linked to specific skills that are then searchable by other users. 
 Users that create projects have the ability to accept or decline applicants. Applicants are notified via Django's 
 messaging framework of their application outcomes. Users also have a profile that describes who they are, what 
@@ -9,6 +9,23 @@ skills they have, and what projects they have been connected to that are now com
 Update: 
 This has been deployed for demo purposes. It's running on Heroku with Gunicorn, a PostgreSQL database, and static files served by AW3. This deployment can be found at https://social-team-builder-app.herokuapp.com
 
+
+<br/>
+
+# Features 
+
+Development Mode
+* Addition and deletion of embedded forms within forms (formsets) via JS for projects and user profiles
+* Messaging of application status change on next page reload (would like to change this to asynchronous behaviour in the future)
+* Token confirmation via email
+* Pagination of project and application results
+* Markdown capability in profile and projects
+* Cropping capability for avatars
+* Auto database population via data migration files
+
+Deployment
+* PostgreSQL database
+* Static files served by S3
 
 <br/>
 
@@ -53,10 +70,9 @@ If you don't want the database to automatically populated with dummy data, set U
 
 <br/>
 
-
 # Credits
 
-Treehouse Techdegree Project 12
+Treehouse Techdegree Project 12 (Final Capstone Project)
 
 Many-to-Many display of skills and the saving of additional skills is provided by:
 https://django-select2.readthedocs.io/en/stable/index.html
