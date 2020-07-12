@@ -1,5 +1,15 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<h1>Token activation failed</h1>
+<div class="bounds">
+    <div class="flex-window-container">
+        <h2>Token Activation Failed</h2>
+        <div class="card">
+                <p>The link you have is either incomplete or expired. Please try resetting your password again.</p>
+        </div>
+        <div class="flex-v-container">
+                <a href="{% url 'password_reset' %}">Reset password</a>
+        </div>     
+    </div>
+</div>
 {% endblock %}

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'markdownx',
     'markdown_deux',
     'cropperjs',
+    'django_extensions',
     # 'debug_toolbar',
 ]
 
