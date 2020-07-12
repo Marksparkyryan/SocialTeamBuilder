@@ -41,7 +41,7 @@
   <header class="header">
     <div class="bounds">
       <div class="flex-h-container">   
-          <a class="logo" href="{% url 'projects:dashboard' category='all' q='all' %}"><i class="fab fa-connectdevelop fa-2x"></i> Social Team Builder</a>
+          <a class="logo" href="{% url 'projects:dashboard' category='all' q='all' %}"><i class="fab fa-connectdevelop fa-2x"></i> S-Team Builder</a>
           <div class="flex-h-container">
             {% if user.is_authenticated %}
                 <a href="{% url 'accounts:profile' pk=user.id %}">

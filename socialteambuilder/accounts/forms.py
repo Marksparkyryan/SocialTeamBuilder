@@ -15,11 +15,19 @@ User = get_user_model()
 class MyAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(
         label='',
-        widget=forms.TextInput(attrs={'placeholder': 'Email'})
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Email',
+                'class': 'card-input'
+                })
     )
     password = forms.CharField(
         label='',
-        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Password',
+                'class': 'card-input'
+                })
     )
 
     class Meta:

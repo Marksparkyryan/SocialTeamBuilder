@@ -42,6 +42,27 @@
     }
 }
 
+.flex-v-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .bubble-dark:last-of-type {
+        margin-right: 0;
+    }
+}
+
+.flex-window-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 91px);
+}
+
 .top-button-container {
     display: flex;
     justify-content: flex-end;
