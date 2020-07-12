@@ -16,7 +16,7 @@ def get_env_variable(var_name):
     try:
         return os.environ[var_name]
     except KeyError:
-        error_msg = "Set the {} env variable".fomrat(var_name)
+        error_msg = "Set the {} env variable".format(var_name)
         if DEBUG:
             warnings.warn(error_msg)
         else:
