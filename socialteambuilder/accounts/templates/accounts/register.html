@@ -6,8 +6,12 @@
 {% block body %}
 <div class="bounds">
     <div class="flex-window-container">
-      <h2>Register!</h2>
-      <div class="card">
+        <div class="card">
+          <div class="center-button-container">
+              <h2>Register!</h2>
+          </div>
+      
+      
       <form method="POST">
         {% csrf_token %}
         {{ form }}

@@ -124,7 +124,7 @@ class UserUpdateForm(forms.ModelForm):
     about = forms.CharField(
         widget=MarkdownxWidget(
             attrs={
-                'class': 'card-input'
+                # 'class': 'card-input'
             }
         )
     )
