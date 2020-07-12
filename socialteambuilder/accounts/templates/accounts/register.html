@@ -5,16 +5,19 @@
 
 {% block body %}
 <div class="bounds">
-    <div class="register-form">
-      <h2>Sign Up</h2>
+    <div class="flex-window-container">
+      <h2>Register!</h2>
+      <div class="card">
       <form method="POST">
         {% csrf_token %}
         {{ form }}
-        <div class="signup-buttons">
-            <button type="submit" class="button-signup">Sign Up</button>
-            <a class="button" href="{% url 'login' %}">Sign In</a>
+        <div class="center-button-container">
+            <a class="bubble-dark" href="{% url 'login' %}">Sign In</a>
+            <button type="submit" class="bubble-dark">Sign Up</button>
+            
         </div>
       </form>
+    </div>
     </div>
   </div>
 {% endblock %}

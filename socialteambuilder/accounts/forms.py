@@ -39,19 +39,34 @@ class UserCreationForm(forms.ModelForm):
     fields, plus a repeated password."""
     email = forms.EmailField(
         label='', 
-        widget=forms.EmailInput(attrs={'placeholder': 'Email Address'})
+        widget=forms.EmailInput(
+            attrs={
+                'placeholder': 'Email Address',
+                'class': 'card-input'
+                })
     )
     first_name = forms.CharField(
         label='',
-        widget=forms.TextInput(attrs={'placeholder': 'First Name'})
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'First Name',
+                'class': 'card-input'
+                })
     )
     password1 = forms.CharField(
         label='', 
-        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Password',
+                'class': 'card-input'
+                })
     )
     password2 = forms.CharField(
         label='', 
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'})
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Confirm Password',
+            'class': 'card-input'
+            })
     )
 
     class Meta:

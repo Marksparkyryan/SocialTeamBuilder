@@ -69,6 +69,18 @@
   margin-right: 0;
 }
 
+.center-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.center-button-container .bubble-dark {
+  margin: 0.5rem;
+}
+.center-button-container .bubble-dark:last-of-type {
+  margin-right: 0;
+}
+
 .select2 {
   margin: 1rem 0 0.5rem;
 }
@@ -114,6 +126,7 @@ button {
   border-color: none;
   border-image: none;
   line-height: unset;
+  font-size: unset;
 }
 
 input[type=text] {

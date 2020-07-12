@@ -73,6 +73,19 @@
     }
 }
 
+.center-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .bubble-dark {
+        margin: 0.5rem; 
+    }
+
+    .bubble-dark:last-of-type {
+        margin-right: 0;
+    }
+}
 
 .select2 {
     margin: 1rem 0 0.5rem;
