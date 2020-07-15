@@ -3,7 +3,6 @@ from django.forms import modelformset_factory
 
 from markdownx.widgets import MarkdownxWidget
 from markdownx.fields import MarkdownxFormField
-# from select2_tags import forms as f
 from django_select2.forms import ModelSelect2Widget
 
 from accounts.models import Skill

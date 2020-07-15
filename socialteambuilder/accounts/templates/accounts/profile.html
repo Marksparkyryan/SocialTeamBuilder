@@ -2,8 +2,6 @@
 
 {% load static %}
 
-{% load markdown_deux_tags %}
-
 {% block messages %}
 {{ block.super }}
 {% endblock %}
@@ -37,7 +35,7 @@
   </div>
   <h2>{{ user_profile }}</h2>
   <div>
-    {{ user_profile.about|markdown }}
+    {{ user_profile.about }}
   </div>
 </div>
 

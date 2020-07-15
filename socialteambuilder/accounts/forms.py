@@ -5,7 +5,6 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationF
 
 from markdownx.fields import MarkdownxFormField
 from markdownx.widgets import MarkdownxWidget
-# from select2_tags import forms as f
 
 from accounts.models import PortfolioProject, Skill
 
@@ -123,7 +122,9 @@ class UserUpdateForm(forms.ModelForm):
     """
     about = forms.CharField(
         widget=MarkdownxWidget(
-
+            attrs={
+                "class": "card-input"
+            }
         )
     )
 
