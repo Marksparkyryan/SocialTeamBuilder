@@ -55,10 +55,7 @@ class User(AbstractBaseUser):
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    about = models.TextField(
-        max_length=2500,
-        default="Markdown available, preview below."
-    )
+    about = models.TextField(max_length=2500)
     avatar = models.ImageField(
         default="default_avatars/blank.png", 
         upload_to="avatars"

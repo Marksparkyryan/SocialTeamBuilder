@@ -37,7 +37,7 @@ class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     email = forms.EmailField(
-        label='', 
+        label='',
         widget=forms.EmailInput(
             attrs={
                 'placeholder': 'Email Address',
@@ -53,7 +53,7 @@ class UserCreationForm(forms.ModelForm):
                 })
     )
     password1 = forms.CharField(
-        label='', 
+        label='',
         widget=forms.PasswordInput(
             attrs={
                 'placeholder': 'Password',
@@ -61,7 +61,7 @@ class UserCreationForm(forms.ModelForm):
                 })
     )
     password2 = forms.CharField(
-        label='', 
+        label='',
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Confirm Password',
             'class': 'card-input'
@@ -123,26 +123,23 @@ class UserUpdateForm(forms.ModelForm):
     about = forms.CharField(
         widget=MarkdownxWidget(
             attrs={
-                "class": "card-input"
-            }
-        )
-    )
+                "class": "card-input",
+                "placeholder": "Add a short description about yourself..."
+            }))
 
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "class": "card-input"
-            }
-        )
-    )
+                "class": "card-input",
+                "placeholder": "First Name"
+            }))
 
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "class": "card-input"
-            }
-        )
-    )
+                "class": "card-input",
+                "placeholder": "Last Name"
+            }))
 
     class Meta:
         model = User
