@@ -120,7 +120,13 @@ class UserUpdateForm(forms.ModelForm):
     """Form for updating user's general information (first_name,
     last_name, about, avatar, skills)
     """
-    about = MarkdownxFormField()
+    about = forms.CharField(
+        widget=MarkdownxWidget(
+            attrs={
+                "class": "card-input"
+            }
+        )
+    )
 
     first_name = forms.CharField(
         widget=forms.TextInput(
