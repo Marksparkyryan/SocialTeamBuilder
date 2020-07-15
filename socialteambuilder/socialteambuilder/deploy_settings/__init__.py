@@ -3,7 +3,7 @@
 import dj_database_url
 from socialteambuilder.settings import *
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 SECURE_HSTS_SECONDS = 600
