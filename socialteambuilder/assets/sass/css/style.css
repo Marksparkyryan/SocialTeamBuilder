@@ -368,9 +368,9 @@ h4 .margin-bottom-0 {
   width: 100%;
   min-height: 75px;
   position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   bottom: 0;
-  transform: translate(100%);
+  transform: translateY(100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -380,6 +380,7 @@ h4 .margin-bottom-0 {
 @keyframes notify {
   0% {
     transform: translateY(100%);
+    position: sticky;
   }
   10% {
     transform: translateY(0%);
@@ -389,7 +390,6 @@ h4 .margin-bottom-0 {
   }
   100% {
     transform: translateY(100%);
-    display: none;
   }
 }
 .message-container ul {

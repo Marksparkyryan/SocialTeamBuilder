@@ -202,9 +202,9 @@
     width: 100%;
     min-height: 75px;
     position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     bottom: 0;
-    transform: translate(100%);
+    transform: translateY(100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -212,10 +212,10 @@
     animation-duration: 7s;
 
     @keyframes notify {
-        0%   {transform: translateY(100%);}
+        0%   {transform: translateY(100%); position: sticky}
         10%  {transform: translateY(0%);}
         90%  {transform: translateY(0%);}
-        100% {transform: translateY(100%); display: none;}
+        100% {transform: translateY(100%);}
       }
     
     ul {
