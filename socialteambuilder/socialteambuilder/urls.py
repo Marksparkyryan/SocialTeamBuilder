@@ -17,11 +17,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('projects/', include('projects.urls', namespace='projects')),
     path('select2/', include('django_select2.urls')),
-    # path('__debug__/', include(debug_toolbar.urls)),
-    path('markdownx/', include(markdownx)),
+    path('markdownx/', include(markdownx))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-if settings.DEBUG == False:
-    urlpatterns.pop()
 
 urlpatterns += staticfiles_urlpatterns()
