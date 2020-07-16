@@ -215,13 +215,12 @@
       return cookieValue;
     }
     var csrftoken = getCookie('csrftoken');
-
     var app_pk = $(this).attr("app_pk");
     var status = $(this).attr("value")
     var dataurl = $(this).attr("data-url");
     var category = $('#new-applications').attr('class');
-    var inbox_count = $('#inbox-button').html()[7]
-    console.log(inbox_count)
+    var inbox_count = $('#inbox-button').html()[7];
+    
 
     function csrfSafeMethod(method) {
       // these HTTP methods do not require CSRF protection
@@ -246,14 +245,15 @@
       success: function (data) {
         console.log(data)
         if (data.success) {
-          if (category == 'selected') $('#app-id-' + app_pk).hide('slow');
+          $('#app-id-' + app_pk).addClass('fade-out-bck');
+          setTimeout( () => {$('#app-id-' + app_pk).addClass('hidden');}, 1000);
           if (inbox_count > 1) {
             document.getElementById('inbox-count').innerHTML = inbox_count - 1;
           } else {
             document.getElementById('inbox-count').innerHTML = '';
           };
         } else {
-          alert("Error:", data.message);
+          alert(`Error: ${data.message}`);
         }
       }
     });

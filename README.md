@@ -7,7 +7,7 @@ messaging framework of their application outcomes. Users also have a profile tha
 skills they have, and what projects they have been connected to that are now completed.
 
 Update: 
-This has been deployed for demo purposes. It's running on Heroku with Gunicorn, a PostgreSQL database, and static files served by AW3. This deployment can be found at https://social-team-builder-app.herokuapp.com
+This has been deployed for demo purposes. It's running on Heroku with Gunicorn, a PostgreSQL database, and static files served by AW3. This deployment can be found at https://social-team-builder-pro.herokuapp.com
 
 
 <br/>
