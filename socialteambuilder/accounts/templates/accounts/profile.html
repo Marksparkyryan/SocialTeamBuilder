@@ -29,11 +29,11 @@
   <div class="desktop-wrapper-left">
 <!-- Avatar -->
 <div class="card">
-<div class="avatar-large">
+
     {% if user_profile.avatar %}
     <img src="{{ user_profile.avatar.url }}" class="avatar-large">
     {% endif %}
-  </div>
+
   <h2>{{ user_profile }}</h2>
   <div>
     {{ user_profile.about }}
