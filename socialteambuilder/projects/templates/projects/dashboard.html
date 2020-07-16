@@ -30,10 +30,10 @@
           <ul class="ul-list">
             {% if object_list %}
             {% select_distinct_positions_from_projects as titles %}
-            <li class="bubble-outline"><a {% if q == 'all' %}class="selected" {% endif %}
+            <li class="bubble-outline {% if q == 'all' %}class="selected"{% endif %}"><a 
                 href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
             {% for title in titles %}
-            <li class="bubble-outline"><a {% if q == title|slugify %}class="selected" {% endif %}
+            <li class="bubble-outline {% if q == title|slugify %}class="selected" {% endif %}"><a 
                 href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
             {% endfor %}
             {% endif %}
@@ -43,13 +43,13 @@
           <div class="card">
               <h4 class="">Personalized</h4>
               <ul class="ul-list">
-                <li class="bubble-outline"><a {% if q == 'my-skills' %}class="selected" {% endif %}
+                <li class="bubble-outline {% if q == 'my-skills' %}class="selected" {% endif %}"><a 
                     href="{% url 'projects:dashboard' category='skills' q='my-skills' %}">Skills Match</a>
                 </li>
-                <li class="bubble-outline"><a {% if q == 'my-opps' %}class="selected" {% endif %}
+                <li class="bubble-outline {% if q == 'my-opps' %}class="selected" {% endif %}"><a 
                     href="{% url 'projects:dashboard' category='my-opps' q='my-opps' %}">Open to Apply</a>
                 </li>
-                <li class="bubble-outline"><a {% if q == 'accepted' %}class="selected" {% endif %}
+                <li class="bubble-outline {% if q == 'accepted' %}class="selected" {% endif %}"><a 
                   href="{% url 'projects:dashboard' category='accepted' q='accepted' %}">Accepted</a>
               </li>
               </ul>
