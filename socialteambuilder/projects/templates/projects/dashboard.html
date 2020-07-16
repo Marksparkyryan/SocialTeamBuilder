@@ -71,11 +71,8 @@
               <div class="mini-card">
                   <h4 class="margin-bottom-0">{{ project.title|title }}</h4>
                   {% with project.position_set.all|length as length %}
-                  {% for position in project.position_set.all|slice:":3" %}
-                  <span class="italic">{{ position.title }}{% if length > 1 %},{% endif %}</span>
-                  {% endfor %}
-                  {% if length > 3 %}
-                  and {{ project.position_set.all|slice:"3:"|length }} more...
+                  {{ project.position_set.all|join:", " }}
+                  {% if length > 3 %}and {{ project.position_set.all|slice:"3:"|length }} more...
                   {% endif %}
                   {% endwith %}
                 </div>
