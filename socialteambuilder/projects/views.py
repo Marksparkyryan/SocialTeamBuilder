@@ -26,6 +26,16 @@ from .forms import CreateProjectForm, PositionFormset, SearchBarForm
 
 User = get_user_model()
 
+class OwnerMixin:
+    """ Check if requesting user is owner of object or is a superuser
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.get_object().owner == request.user or request.user.is_admin:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
 
 class CustomLoginRequired(LoginRequiredMixin):
     """Custom mixin that inherits LoginRequiredMixin funcitonality but
@@ -387,16 +397,8 @@ def create_update_project(request, slug=None):
     return render(request, 'projects/create_update_project.html', context)
 
 
-class DeleteProject(DeleteView):
+class DeleteProject(OwnerMixin, DeleteView):
     """Handles the deletion of a specific project
     """
     queryset = Project.objects.all()
     success_url = reverse_lazy('projects:dashboard', kwargs={'category':'all', 'q':'all'})
-
-    def dispatch(self, request, *args, **kwargs):
-        project = self.get_object()
-        if project.owner != request.user:
-            raise PermissionDenied
-        super().dispatch(self, request, *args, **kwargs)
-
-
