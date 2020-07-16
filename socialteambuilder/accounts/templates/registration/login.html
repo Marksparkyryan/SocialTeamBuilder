@@ -33,12 +33,13 @@
         
         <input type="hidden" name="next" value="{{ next }}">
         </div>
+        <div class="center-button-container">
+          <p></p>
+            <a href="{% url 'password_reset' %}">Lost password?</a>
+        </div>
     </form>
   </div>
 
-<div class="flex-v-container">
-  <a href="{% url 'password_reset' %}">Lost password?</a>
-</div>
 
 {# Assumes you setup the password_reset view in your URLconf #}
 </div>
