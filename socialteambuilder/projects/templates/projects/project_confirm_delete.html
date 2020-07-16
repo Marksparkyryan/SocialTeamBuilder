@@ -9,10 +9,11 @@
                     <p style="text-align: center">Are you sure you want to delete project <b>{{ object }}</b>? Deleting this project will remove all related positions, including "past projects" records for users that have worked on this project.</p>
                     <div class="center-button-container">
                     <input class="bubble-dark" type="submit" value="Delete">
-                    <button class="bubble-dark" href="{% url 'projects:project' slug=object.slug %}">Cancel</button>
+                    <a class="bubble-dark" href="{% url 'projects:project' slug=object.slug %}">Cancel</a>
                     </div>
             </div>
         </form>
+        
     </div>
 </div>
 {% endblock %}
