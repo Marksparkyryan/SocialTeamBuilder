@@ -8,7 +8,11 @@
     border-radius: .25rem;
     border: none;
     padding: 1rem;
-    margin: 1rem 0;
+    margin-top: 1rem;
+
+    &:last-child {
+        margin-bottom: 1rem;
+    }
 
     .card-input {
         width: 100%;
@@ -40,6 +44,10 @@
 
     .bubble-outline:first-of-type {
         margin-left: 0; 
+    }
+
+    .bubble-dark {
+        margin: 1rem 0;
     }
 }
 
@@ -91,7 +99,10 @@
     padding: 1rem 0;
 
     .application-pic {
-        flex: 0.75;
+        flex: 0.3;
+        @media (max-width: variables.$desktop) {
+            display: none;
+        }
     }
 
     .application-info {
@@ -117,7 +128,11 @@
     display: flex;
 
     .title {
-        flex: 3;
+        flex: 2.3;
+        
+        @media (max-width: variables.$desktop) {
+            flex: 2;
+        }
     }
 
     .status {

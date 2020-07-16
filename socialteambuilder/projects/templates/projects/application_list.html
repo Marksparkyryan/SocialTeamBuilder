@@ -13,163 +13,178 @@
 {% block body %}
 
 <div class="bounds">
-    <div class="top-button-container">
-        <a class="bubble-dark" {% if box == 'inbox' %}class="button selected-button"{% else %}class="button"{% endif %} href="{% url 'projects:applications' box='inbox' category='status' q='u' %}" id="inbox-button"><i class="far fa-envelope"></i> Inbox {% if inbox_count %}<span class="inbox-count" id="inbox-count">{{ inbox_count }}</span>{% endif %}</a>
-        <a class="bubble-dark" {% if box == 'outbox' %}class="button selected-button"{% else %}class="button"{% endif %} href="{% url 'projects:applications' box='outbox' category='all' q='all' %}"><i class="far fa-paper-plane"></i> Outbox</a>
-        <a class="bubble-dark" id="application-profile-button" href="{% url 'accounts:profile' pk=user.id %}"><i class="far fa-user-circle"></i> Profile</a>
-    </div>
+  <div class="top-button-container">
+    <a class="bubble-dark" {% if box == 'inbox' %}class="button selected-button" {% else %}class="button" {% endif %}
+      href="{% url 'projects:applications' box='inbox' category='status' q='u' %}" id="inbox-button"><i
+        class="far fa-envelope"></i> Inbox {% if inbox_count %}<span class="inbox-count"
+        id="inbox-count">{{ inbox_count }}</span>{% endif %}</a>
+    <a class="bubble-dark" {% if box == 'outbox' %}class="button selected-button" {% else %}class="button" {% endif %}
+      href="{% url 'projects:applications' box='outbox' category='all' q='all' %}"><i class="far fa-paper-plane"></i>
+      Outbox</a>
+    <a class="bubble-dark" id="application-profile-button" href="{% url 'accounts:profile' pk=user.id %}"><i
+        class="far fa-user-circle"></i> Profile</a>
+  </div>
 </div>
 
 <div class="bounds">
-  <div class="">
     <h2 class="">Applications</h2>
     {% if box == 'inbox' %}
     <p>for projects that you manage</p>
     {% else %}
     <p>for projects you've applied to</p>
     {% endif %}
+</div>
+
+<div class="bounds">
+  <div class="desktop-wrapper">
+    <div class="desktop-wrapper-left">
+  <div class="card">
+    <h4>Filter by Status</h4>
+    <ul class="ul-list">
+      <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='status' q='all' %}">All Applications</a></li>
+      <li class="bubble-outline {% if q == 'u' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='status' q='u' %}" id="new-applications">New
+          Applications</a></li>
+      <li class="bubble-outline {% if q == 'a' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='status' q='a' %}">Accepted</a></li>
+      <li class="bubble-outline {% if q == 'r' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='status' q='r' %}">Rejected</a></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Filter by Project</h4>
+    <ul class="ul-list">
+      <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='project' q='all' %}">All Projects</a></li>
+      {% if application_list %}
+      {% select_distinct_projects as titles %}
+      {% for title in titles %}
+      <li class="bubble-outline {% if q == title|slugify %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='project' q=title|slugify %}">{{ title }}</a></li>
+      {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>Filter by Project Needs</h4>
+    <ul class="ul-list">
+      {% select_distinct_positions as titles %}
+      <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='all' q='all' %}">All Needs</a></li>
+      {% for title in titles %}
+      <li class="bubble-outline {% if q == title|slugify %}selected{% endif %}"><a
+          href="{% url 'projects:applications' box=box category='need' q=title|slugify %}">{{ title }}</a></li>
+      {% endfor %}
+    </ul>
   </div>
 </div>
 
-<div class="desktop-hflex-wrapper">
 
-        <div class="bounds">
-           <div class="card">
-              <h4>Filter by Status</h4>
-              <ul class="ul-list">
-                  <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='status' q='all' %}">All Applications</a></li>
-                  <li class="bubble-outline {% if q == 'u' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='status' q='u' %}" id="new-applications">New Applications</a></li>
-                  <li class="bubble-outline {% if q == 'a' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='status' q='a' %}">Accepted</a></li>
-                  <li class="bubble-outline {% if q == 'r' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='status' q='r' %}">Rejected</a></li>
-              </ul>
-           </div>
-           
-           <div class="card">
-              <h4>Filter by Project</h4>
-              <ul class="ul-list">
-                  <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='project' q='all' %}">All Projects</a></li>
-                  {% if application_list %}
-                  {% select_distinct_projects as titles %}
-                  {% for title in titles %}
-                  <li class="bubble-outline {% if q == title|slugify %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='project' q=title|slugify %}">{{ title }}</a></li>
-                  {% endfor %}
-                  {% endif %}
-              </ul>
-           </div>
-            
-          <div class="card">
-              <h4>Filter by Project Needs</h4>
-              <ul class="ul-list">
-                {% select_distinct_positions as titles %}
-                <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='all' q='all' %}">All Needs</a></li>
-                {% for title in titles %}
-                <li class="bubble-outline {% if q == title|slugify %}selected{% endif %}"><a  href="{% url 'projects:applications' box=box category='need' q=title|slugify %}">{{ title }}</a></li>
-                {% endfor %}
-              </ul>
-          </div>
-            
-        </div>     
- 
-    
-    
-    {% if application_list %}
-    <!-- New cards -->
-    <div class="bounds">
-        <div class="card">
 
-            <div class="headers-container">
-                <h4 class="title">Applicant & Position</h4>
-                <h4 class="status">Status</h4>
-            </div>
-   
+<div class="desktop-wrapper-right">
 
-            {% for application in application_list %}
-              <div class="application-container" id="app-id-{{ application.id }}">
-    
-                <!-- Applicant Pic -->
-                <div class="application-pic">
-                <a href="{% url 'accounts:profile' pk=user.id %}">
-                  <img src="{{ application.user.avatar.url }}" alt="avatar" class="avatar-xsmall" href="{% url 'accounts:profile' pk=user.id %}">
-                </a>
-                </div>
-    
-                <!-- Applicant Info -->
-                <div class="application-info">
-                <h4>{% if user == application.user %}You{% else%}
-                    {{ application.user.first_name}} {{ application.user.last_name }}{% endif %}
-                </h4>
-                <p>{{ application.position }} for {{ application.position.project }}</p>
-                <span class="role"></span>
-                </div>
-    
-                <!-- Buttons -->
-                <!-- if owner of project -->
-                <div class="application-buttons">
-                {% if application.position.project.owner == user %}
-                {% if application.status == 'U' %}
-                <a class="button-accept-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="A"><i class="fas fa-check-circle fa-2x"></i></a>
-                <a class="button-accept-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}" value="R"><i class="fas fa-times-circle fa-2x"></i></a>
-                {% else %}
-                {% if application.status == 'R' %}
-                <i class="far fa-frown fa-2x"></i>
+<!-- New cards -->
+{% if application_list %}
+  <div class="card">
+    <h4>{{ box|title }}</h4>
+    <div class="headers-container">
+      <h4 class="title">Applicant & Position</h4>
+      <h4 class="status">Status</h4>
+    </div>
 
-                {% elif application.status == 'A' %}
-                <i class="far fa-smile fa-2x"></i>
-                
-                {% endif %}
-                {% endif %}
     
-                <!-- if not owner of project -->
-                {% else %}
-                    {% if application.status == 'U' %}
-                    <i class="far fa-clock fa-2x"></i>
-                    {% elif application.status == 'R' %}
-                    <i class="far fa-frown fa-2x"></i>
-                    {% elif application.status == 'A' %}
-                    <i class="far fa-smile fa-2x"></i>
-                    {% endif %}
-                {% endif %}  
-                    </div>
-    
-                  </div>
-                {% endfor %}
+    {% for application in application_list %}
+    <div class="application-container" id="app-id-{{ application.id }}">
 
-                <div class="pagination">
-                  <span class="step-links">
-                      {% if page_obj.has_previous %}
-                          <a href="?page=1"><i class="fas fa-angle-double-left"></i> first </a>
-                          <a href="?page={{ page_obj.previous_page_number }}"> previous </a>
-                      {% endif %}
-              
-                      <span class="current">
-                          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                      </span>
-              
-                      {% if page_obj.has_next %}
-                          <a href="?page={{ page_obj.next_page_number }}"> next </i></a>
-                          <a href="?page={{ page_obj.paginator.num_pages }}"> last <i class="fas fa-angle-double-right"></i></a>
-                      {% endif %}
-                  </span>
-              </div>
-          
-                <!-- /Buttons -->
-    
+      <!-- Applicant Pic -->
+      <div class="application-pic">
+        <a href="{% url 'accounts:profile' pk=user.id %}">
+          <img src="{{ application.user.avatar.url }}" alt="avatar" class="avatar-small"
+            href="{% url 'accounts:profile' pk=user.id %}">
+        </a>
+      </div>
+
+      <!-- Applicant Info -->
+      <div class="application-info">
+        <h4>{% if user == application.user %}You{% else%}
+          {{ application.user.first_name}} {{ application.user.last_name }}{% endif %}
+        </h4>
+        <p>{{ application.position }} for {{ application.position.project }}</p>
+        <span class="role"></span>
+      </div>
+
+      <!-- Buttons -->
+      <!-- if owner of project -->
+      <div class="application-buttons">
+        {% if application.position.project.owner == user %}
+        {% if application.status == 'U' %}
+        <a class="button-accept-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}"
+          value="A"><i class="fas fa-check-circle fa-2x"></i></a>
+        <a class="button-accept-reject" app_pk="{{ application.id }}" data-url="{% url 'projects:update_app_status' %}"
+          value="R"><i class="fas fa-times-circle fa-2x"></i></a>
         {% else %}
-        <div class="bounds">
-          <div class="card">
-            <div class="mini-card">
-                <p>You have no applications here</p>
-                <p></p>
-              </div>
+        {% if application.status == 'R' %}
+        <i class="far fa-frown fa-2x"></i>
+
+        {% elif application.status == 'A' %}
+        <i class="far fa-smile fa-2x"></i>
+
+        {% endif %}
+        {% endif %}
+
+        <!-- if not owner of project -->
+        {% else %}
+        {% if application.status == 'U' %}
+        <i class="far fa-clock fa-2x"></i>
+        {% elif application.status == 'R' %}
+        <i class="far fa-frown fa-2x"></i>
+        {% elif application.status == 'A' %}
+        <i class="far fa-smile fa-2x"></i>
+        {% endif %}
         {% endif %}
       </div>
-        </div>
-        
-      </div>
-      </div>
+
     </div>
-    <!-- /New cards -->
+    {% endfor %}
+
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1"><i class="fas fa-angle-double-left"></i> first </a>
+        <a href="?page={{ page_obj.previous_page_number }}"> previous </a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"> next </i></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}"> last <i class="fas fa-angle-double-right"></i></a>
+        {% endif %}
+      </span>
+    </div>
+
+    <!-- /Buttons -->
+
+    {% else %}
+    <div class="card">
+      <div class="mini-card">
+          <div class="center-button-container">
+              <p>You have no applications here</p>
+          </div>
+        </div>
+        {% endif %}
+  
+  </div>
 </div>
+<!-- /New cards -->
+
+</div>
+
 
 
 
@@ -180,69 +195,69 @@
 
 <!-- Accept/reject buttons & inbox counter -->
 <script>
-$(".button-accept-reject").click(function () {
+  $(".button-accept-reject").click(function () {
 
     // get the csrf token for ajax request  
-    
+
     function getCookie(name) {
       var cookieValue = null;
       if (document.cookie && document.cookie !== '') {
-          var cookies = document.cookie.split(';');
-          for (var i = 0; i < cookies.length; i++) {
-              var cookie = cookies[i].trim();
-              // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
           }
+        }
       }
       return cookieValue;
-  }
-  var csrftoken = getCookie('csrftoken');
-  
-  var app_pk = $(this).attr("app_pk");
-  var status = $(this).attr("value")
-  var dataurl = $(this).attr("data-url");
-  var category = $('#new-applications').attr('class');
-  var inbox_count = $('#inbox-button').html()[7]
-  console.log(inbox_count)
-
-  function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
-  $.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
     }
-  });
+    var csrftoken = getCookie('csrftoken');
 
-  $.ajax({
-        url: dataurl,
-        data: {
-          "app_pk": parseInt(app_pk),
-          "status": status
-        },
-        dataType: 'json',
-        method: 'POST',
-        success: function (data) {
-          console.log(data)
-          if (data.success) {
-            if (category == 'selected') $('#app-id-' + app_pk).hide('slow');
-            if (inbox_count > 1) {
-              document.getElementById('inbox-count').innerHTML = inbox_count - 1;
-            } else {
-              document.getElementById('inbox-count').innerHTML = '';
-            };
-          } else {
-            alert("Error:", data.message);
-          }
+    var app_pk = $(this).attr("app_pk");
+    var status = $(this).attr("value")
+    var dataurl = $(this).attr("data-url");
+    var category = $('#new-applications').attr('class');
+    var inbox_count = $('#inbox-button').html()[7]
+    console.log(inbox_count)
+
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
-      });
-});
+      }
+    });
+
+    $.ajax({
+      url: dataurl,
+      data: {
+        "app_pk": parseInt(app_pk),
+        "status": status
+      },
+      dataType: 'json',
+      method: 'POST',
+      success: function (data) {
+        console.log(data)
+        if (data.success) {
+          if (category == 'selected') $('#app-id-' + app_pk).hide('slow');
+          if (inbox_count > 1) {
+            document.getElementById('inbox-count').innerHTML = inbox_count - 1;
+          } else {
+            document.getElementById('inbox-count').innerHTML = '';
+          };
+        } else {
+          alert("Error:", data.message);
+        }
+      }
+    });
+  });
 </script>
 
 {% endblock %}
