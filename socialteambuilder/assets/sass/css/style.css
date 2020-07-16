@@ -117,6 +117,24 @@
   cursor: pointer;
 }
 
+@media (min-width: 1024px) {
+  .desktop-wrapper {
+    display: flex;
+  }
+  .desktop-wrapper .desktop-wrapper-left {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    margin-right: 0.5rem;
+  }
+  .desktop-wrapper .desktop-wrapper-right {
+    flex: 2.5;
+    display: flex;
+    flex-direction: column;
+    margin-left: 0.5rem;
+  }
+}
+
 button {
   margin: 0em;
   font: "Lato";
@@ -182,6 +200,13 @@ h2 {
   font-weight: bold;
 }
 
+h3 {
+  font-size: 1.33rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
 h4 .margin-bottom-0 {
   margin-bottom: 0;
 }
@@ -192,7 +217,10 @@ h4 .margin-bottom-0 {
   border-radius: 0.25rem;
   border: none;
   padding: 1rem;
-  margin: 1rem 0;
+  margin-top: 1rem;
+}
+.card:last-child {
+  margin-bottom: 1rem;
 }
 .card .card-input {
   width: 100%;
@@ -220,6 +248,9 @@ h4 .margin-bottom-0 {
 }
 .mini-card .bubble-outline:first-of-type {
   margin-left: 0;
+}
+.mini-card .bubble-dark {
+  margin: 1rem 0;
 }
 
 .button-accept-reject {
@@ -268,7 +299,12 @@ h4 .margin-bottom-0 {
   padding: 1rem 0;
 }
 .application-container .application-pic {
-  flex: 0.75;
+  flex: 0.3;
+}
+@media (max-width: 1024px) {
+  .application-container .application-pic {
+    display: none;
+  }
 }
 .application-container .application-info {
   flex: 2;
@@ -289,7 +325,12 @@ h4 .margin-bottom-0 {
   display: flex;
 }
 .headers-container .title {
-  flex: 3;
+  flex: 2.3;
+}
+@media (max-width: 1024px) {
+  .headers-container .title {
+    flex: 2;
+  }
 }
 .headers-container .status {
   flex: 1;

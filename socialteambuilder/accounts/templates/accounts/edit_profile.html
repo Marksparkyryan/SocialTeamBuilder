@@ -29,7 +29,7 @@
 <div class="top-button-container">
         <input type="submit" class="bubble-dark" action="" value="Save Changes">
 </div>
-<div class="profile-desktop-wrapper">
+
 
 {% if user_form.errors or project_formset.errors %}
 <div class="error-wrapper">
@@ -45,7 +45,8 @@
 
         
 <h2>Edit Profile</h2>
-
+<div class="desktop-wrapper">
+    <div class="desktop-wrapper-left">
 <!-- Avatar -->
 <div class="avatar-wrapper">
     <label class="avatar-label" data-toggle="tooltip" title="" data-original-title="Change">
@@ -75,7 +76,7 @@
 </div>
 
 
-    <div class="profile-desktop-wrapper">
+    <div class="desktop-wrapper-right">
         <div class="card">
       <h4 class="center-text-wrapper">My Portfolio</h4>
       <div class="position-edit-cards">
@@ -135,6 +136,7 @@
   </form>
   <!-- /Form -->
 
+</div>
 </div>
 
 <!--avatar modal start-->

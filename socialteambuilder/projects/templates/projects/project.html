@@ -4,7 +4,6 @@
 {{ block.super }}
 {% endblock %}
 
-{% load markdown_deux_tags %}
 {% load project_extras %}
 {% csrf_token %}
 
@@ -20,8 +19,9 @@
   </div>
   {% endif %}
 
-      <div class="project-left-wrapper">
           <div class="bounds">
+            <div class="desktop-wrapper">
+              <div class="desktop-wrapper-left">
               <div class="card">
                   <h2 class="">{{ project.title }}</h2>
                   <p class="">Project Owner: <a>{{ project.owner }}</a></p>
@@ -38,7 +38,7 @@
         
                 <div class="card">
                     <h3>Project Description</h3>
-                    {{ project.description|markdown }}
+                    {{ project.description }}
                   </div>
         
                 <div class="card">
@@ -57,23 +57,20 @@
                 <div class="card">
                     <h3>Project Timeline</h3>
                     <p>{{ project.time_estimate }} hours</p>
-                  </div>
-              
-                  
-          </div>
-      </div>
+                  </div>     
+                </div>       
+          
       
-    
-      <div class="bounds">
+        <div class="desktop-wrapper-right">
         <div class="card">
           <div class="positions-header">
-              <h2>Positions</h2>
+              <h3>Positions</h3>
           </div>
           <div class="desktop-flex-wrapper">
           {% if project.position_set %} 
             {% for position in project.position_set.all %}
               <div class="mini-card">
-              <h3 id="{{ position.title }}">{{ position.title }}</h3>
+              <h4 id="{{ position.title }}">{{ position.title }}</h4>
               <ul class="ul-list">
                 {% for skill in position.skills.all|slice:":12" %}
                 <li class="bubble-outline">
@@ -81,7 +78,7 @@
                 </li>
                 {% endfor %}
               </ul>
-              <div class="position-description">{{ position.description|markdown|truncatewords:26 }}</div>
+              <div class="position-description">{{ position.description|truncatewords:26 }}</div>
           
               <!-- Filled -->
               {% if position.status == 'F' %}
@@ -111,6 +108,7 @@
         </div>
       </div>
     </div>
+  </div>
   
 {% endblock %}
 

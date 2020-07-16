@@ -24,8 +24,9 @@
 
 <!-- /Secondary nav bar -->
     
-<div class="bounds profile-desktop-wrapper">
-
+<div class="bounds">
+<div class="desktop-wrapper">
+  <div class="desktop-wrapper-left">
 <!-- Avatar -->
 <div class="card">
 <div class="avatar-large">
@@ -63,9 +64,9 @@
         </div>
         {% endfor %}
     </div>
-
+  </div>
     <!-- /Portfolio projects -->
-
+<div class="desktop-wrapper-right">
 <div class="card">
   <h4>Past Projects</h4>
 
@@ -80,10 +81,10 @@
     </ul>
   {% endif %} 
 </div>
+</div>
+</div>
+</div>
 
-
-
-    </div>
 {% endblock %}
 
 {% block js %}
