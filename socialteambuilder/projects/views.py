@@ -402,3 +402,9 @@ class DeleteProject(OwnerMixin, DeleteView):
     """
     queryset = Project.objects.all()
     success_url = reverse_lazy('projects:dashboard', kwargs={'category':'all', 'q':'all'})
+
+    def delete(self, request, *args, **kwargs):
+        redirect = super().delete(self, request, *args, **kwargs)
+        messages.success(
+                    request, 'Project {} deleted'.format(self.object.title))
+        return redirect
