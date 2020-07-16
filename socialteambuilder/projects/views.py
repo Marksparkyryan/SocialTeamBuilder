@@ -390,5 +390,13 @@ def create_update_project(request, slug=None):
 class DeleteProject(DeleteView):
     """Handles the deletion of a specific project
     """
-    model = Project
+    queryset = Project.objects.all()
     success_url = reverse_lazy('projects:dashboard', kwargs={'category':'all', 'q':'all'})
+
+    def dispatch(self, request, *args, **kwargs):
+        project = self.get_object()
+        if project.owner != request.user:
+            raise PermissionDenied
+        super().dispatch(self, request, *args, **kwargs)
+
+

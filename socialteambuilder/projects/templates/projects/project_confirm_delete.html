@@ -4,13 +4,14 @@
 <div class="bounds">
     <div class="card">
         <form method="post">{% csrf_token %}
-            <h2>Delete project?</h2>
-            <p>Are you sure you want to delete project "{{ object }}"? Deleting this
-                project will remove all related positions, inluding "past project"
-                records for users.
-            </p>
-            <input class="bubble-dark" type="submit" value="Delete">
-            <button>Cancel</button>
+            <div class="flex-v-container">
+                    <h2>Delete project?</h2>
+                    <p style="text-align: center">Are you sure you want to delete project <b>{{ object }}</b>? Deleting this project will remove all related positions, including "past projects" records for users that have worked on this project.</p>
+                    <div class="center-button-container">
+                    <input class="bubble-dark" type="submit" value="Delete">
+                    <button class="bubble-dark" href="{% url 'projects:project' slug=object.slug %}">Cancel</button>
+                    </div>
+            </div>
         </form>
     </div>
 </div>
