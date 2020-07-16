@@ -15,7 +15,6 @@
 <form method='POST'>
 {% csrf_token %}
     
-
 <div class="bounds">
     <div class="top-button-container">  
         <input class="bubble-dark" type="submit" action="" value="Save Project">
@@ -28,13 +27,11 @@
 
   <div class="bounds">
     <h2>Edit Project</h2>
-    <div class="profile-desktop-wrapper">
       <div class="card">
         {{ project_form.title }}
         {{ project_form.description }}
       </div>
-    </div>
-  
+
   <div class="project-status project-status-{{ project_form.status.value }}">
     <div class="card">
         <h3>Project Status</h3>
@@ -50,12 +47,10 @@
         <h3>Applicant Requirements</h3>
         {{ project_form.applicant_requirements }}
       </div>
-
 </div>
       
 <div class="bounds">
       <div class="positions-edit-container" id="positions-container">
-      
         <h2>Positions</h2>
         <!-- Positions -->
         <div class="card">
@@ -83,10 +78,9 @@
     </div>
   </div>
 <!-- /Positions -->
+</div>
 
-
-      </div>
-      <!-- Add position form -->
+<!-- Add position form -->
   <div class="bounds">
       <div class="top-button-container">
           <a class="bubble-dark" id="add_form"><i class="fas fa-plus"></i>  add position</a> 
@@ -117,10 +111,8 @@
           </div>
       </div>
       <!-- /Empty position form to clone -->
-   
 
 </form>
-</div>
 {% endblock %}
 
 {% block js %}
