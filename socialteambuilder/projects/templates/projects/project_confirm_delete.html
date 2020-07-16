@@ -2,14 +2,14 @@
 
 {% block body %}
 <div class="bounds">
-    <div class="grid-30 centered">
+    <div class="card">
         <form method="post">{% csrf_token %}
-            <h1>Delete project?</h1>
+            <h2>Delete project?</h2>
             <p>Are you sure you want to delete project "{{ object }}"? Deleting this
                 project will remove all related positions, inluding "past project"
                 records for users.
             </p>
-            <input type="submit" value="Confirm">
+            <input class="bubble-dark" type="submit" value="Delete">
             <button>Cancel</button>
         </form>
     </div>
