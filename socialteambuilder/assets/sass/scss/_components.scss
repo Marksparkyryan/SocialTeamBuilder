@@ -159,21 +159,21 @@
     height: 2rem;
     border-radius: 50%;
     margin: 0 0.5rem;
-    border: solid 1px white;
+    border: solid 1px variables.$slate;
 }
 
 .avatar-small {
     height: 2.75rem;
     border-radius: 50%;
     margin: 0 0.5rem;
-    border: solid 1px white;
+    border: solid 1px variables.$slate;
 }
 
 .avatar-large {
     height: 5.5rem;
     border-radius: 50%;
     margin: 0;
-    border: solid 1px white;
+    border: solid 1px variables.$slate;
 }
 
 .pagination {
