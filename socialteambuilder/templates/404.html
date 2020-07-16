@@ -1,11 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="bounds-container">
-    <div class="center-center">
+<div class="bounds">
+    <div class="card">
         <h1>404</h1>
         <p>Oops. We couldn't find what you were looking for...</p> 
         <a href="{% url 'projects:dashboard' category='all' q='all' %}">Go to the Dashboard</a>
+        {{ debug }}
     </div>
 </div>
   
