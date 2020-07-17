@@ -30,10 +30,10 @@
           <ul class="ul-list">
             {% if object_list %}
             {% select_distinct_positions_from_projects as titles %}
-            <li class="bubble-outline {% if q == 'all' %}class="selected"{% endif %}"><a 
+            <li class="bubble-outline {% if q == 'all' %}selected{% endif %}"><a 
                 href="{% url 'projects:dashboard' category='all' q='all' %}">All Needs</a></li>
             {% for title in titles %}
-            <li class="bubble-outline {% if q == title|slugify %}class="selected" {% endif %}"><a 
+            <li class="bubble-outline {% if q == title|slugify %}selected{% endif %}"><a 
                 href="{% url 'projects:dashboard' category='need' q=title|slugify %}">{{ title }}</a></li>
             {% endfor %}
             {% endif %}

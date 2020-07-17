@@ -44,7 +44,7 @@
                 <div class="card">
                     <h3>Project Needs</h3>
                     <ul class="ul-list">
-                      {% select_distinct_positions_from_project as titles %}
+                      {% select_distinct_positions_from_project_position_set as titles %}
                       {% for title in titles %}
                       <li class="bubble-outline"><a href="#{{ title }}">{{ title }}</a></li>
                       {% endfor %}
